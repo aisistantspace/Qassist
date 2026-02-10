@@ -1,0 +1,212 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import {
+  Bars3Icon,
+  ChartBarIcon,
+  ChatBubbleLeftRightIcon,
+  UserGroupIcon,
+  DocumentTextIcon,
+  Cog6ToothIcon,
+  HomeIcon,
+  FireIcon,
+  CloudArrowUpIcon,
+  ClipboardDocumentListIcon,
+  ArrowRightOnRectangleIcon,
+} from '@heroicons/react/24/outline'
+import NotificationBell from '@/components/NotificationBell'
+
+const navigation = [
+  { name: 'Overview', href: '/dashboard', icon: HomeIcon },
+  { name: 'Hot Leads', href: '/dashboard/hot-leads', icon: FireIcon },
+  { name: 'Conversations', href: '/dashboard/conversations', icon: ChatBubbleLeftRightIcon },
+  { name: 'Leads', href: '/dashboard/leads', icon: UserGroupIcon },
+  { name: 'Knowledge Base', href: '/dashboard/knowledge-base', icon: DocumentTextIcon },
+  { name: 'Automated Forms', href: '/dashboard/forms', icon: ClipboardDocumentListIcon },
+  { name: 'Deploy', href: '/dashboard/deploy', icon: CloudArrowUpIcon },
+  { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
+]
+
+const pageTitles: Record<string, string> = {
+  '/dashboard': 'Overview',
+  '/dashboard/hot-leads': 'Hot Leads',
+  '/dashboard/conversations': 'Conversations',
+  '/dashboard/leads': 'Leads',
+  '/dashboard/knowledge-base': 'Knowledge Base',
+  '/dashboard/forms': 'Automated Forms',
+  '/dashboard/deploy': 'Deploy',
+  '/dashboard/settings': 'Settings',
+}
+
+function getPageTitle(pathname: string | null): string {
+  if (!pathname) return 'Dashboard'
+  for (const [path, title] of Object.entries(pageTitles)) {
+    if (pathname === path || pathname.startsWith(path + '/')) return title
+  }
+  return 'Dashboard'
+}
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const pathname = usePathname()
+  const router = useRouter()
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [isLg, setIsLg] = useState(true)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const handler = () => {
+      const lg = mq.matches
+      setIsLg(lg)
+      if (lg) setSidebarOpen(true)
+      else setSidebarOpen(false)
+    }
+    handler()
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  useEffect(() => {
+    if (!isLg) setSidebarOpen(false)
+  }, [pathname, isLg])
+
+  useEffect(() => {
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSidebarOpen(false)
+    }
+    document.addEventListener('keydown', onEscape)
+    return () => document.removeEventListener('keydown', onEscape)
+  }, [])
+
+  useEffect(() => {
+    if (sidebarOpen && !isLg) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [sidebarOpen, isLg])
+
+  async function handleLogout() {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      console.error('Logout error:', error)
+      router.push('/login')
+      router.refresh()
+    }
+  }
+
+  const sidebarContent = (
+    <div className="flex flex-col h-full">
+      <div className="p-6 border-b border-gray-200">
+        <h1 className="text-xl font-bold text-gray-900">AI Assistant</h1>
+        <p className="text-sm text-gray-500 mt-1">Dashboard</p>
+      </div>
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        {navigation.map((item) => {
+          const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => !isLg && setSidebarOpen(false)}
+              className={`
+                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px]
+                ${isActive ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-100'}
+              `}
+            >
+              <item.icon className="w-5 h-5 shrink-0" />
+              {item.name}
+            </Link>
+          )
+        })}
+      </nav>
+      <div className="p-4 border-t border-gray-200 space-y-2">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors min-h-[44px]"
+        >
+          <ArrowRightOnRectangleIcon className="w-4 h-4" />
+          Logout
+        </button>
+        <div className="text-[10px] text-gray-400 font-medium mb-2">
+          Developed by <a href="https://astutewebagency.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Astute Web Agency</a>
+        </div>
+        <div className="text-xs text-gray-500">Version 3.0.0 (White Label)</div>
+        <Link href="/chat" className="text-xs text-primary-600 hover:text-primary-700 mt-1 inline-block">
+          ← Test Chat
+        </Link>
+      </div>
+    </div>
+  )
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Mobile backdrop */}
+      {!isLg && sidebarOpen && (
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm lg:hidden"
+        />
+      )}
+
+      {/* Sidebar: desktop fixed, mobile overlay */}
+      <div
+        className={`
+          fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200
+          transition-transform duration-200 ease-out
+          lg:translate-x-0
+          ${isLg ? 'w-64' : 'w-72 max-w-[85vw]'}
+          ${!isLg && !sidebarOpen ? '-translate-x-full' : ''}
+        `}
+      >
+        {sidebarContent}
+      </div>
+
+      {/* Mobile header */}
+      <header className="sticky top-0 z-20 flex items-center justify-between h-14 px-4 bg-white border-b border-gray-200 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          className="flex items-center justify-center min-w-[44px] min-h-[44px] -ml-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          aria-label="Open menu"
+        >
+          <Bars3Icon className="w-6 h-6" />
+        </button>
+        <h1 className="text-lg font-semibold text-gray-900 truncate flex-1 text-center mx-2">
+          {getPageTitle(pathname)}
+        </h1>
+        <div className="min-w-[44px] flex items-center justify-center">
+          <NotificationBell />
+        </div>
+      </header>
+
+      {/* Desktop header bar */}
+      <div className="hidden lg:flex lg:fixed lg:top-0 lg:right-0 lg:left-64 lg:z-20 lg:h-14 lg:items-center lg:justify-between lg:px-8 lg:bg-white lg:border-b lg:border-gray-200">
+        <h1 className="text-lg font-semibold text-gray-900">
+          {getPageTitle(pathname)}
+        </h1>
+        <NotificationBell />
+      </div>
+
+      {/* Main content */}
+      <div className="pl-0 lg:pl-64 lg:pt-14">
+        <main className="p-4 sm:p-6 lg:p-8">
+          {children}
+        </main>
+      </div>
+    </div>
+  )
+}

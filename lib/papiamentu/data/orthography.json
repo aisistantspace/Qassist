@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "source": "Buki di oro (buki_di_oro_grammar.json)",
+    "description": "Minimal orthography rules for Curaçao Papiamentu validation"
+  },
+  "alphabet": {
+    "basic_letters": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
+    "modified_vowels": ["è", "ò", "ù", "ü"],
+    "modified_consonants": ["ñ"],
+    "digraphs": ["ch", "dj", "sh", "zj"]
+  },
+  "consonant_usage": {
+    "restricted": ["c", "j", "q", "x"],
+    "c": "Only in (ch) and mathematics, chemistry, proper names, foreign words",
+    "j": "Only in (dj) and proper names, foreign words",
+    "q": "Only in combinations and proper names, foreign words",
+    "x": "Only in combinations and proper names, foreign words"
+  },
+  "accent_marks": ["à", "è", "ì", "ò", "ù", "ü"]
+}

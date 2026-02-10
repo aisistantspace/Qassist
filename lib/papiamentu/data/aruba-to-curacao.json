@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "description": "Curated Aruba variant -> Curaçao standard (Buki di oro / GOVITU). Used when locale is pap-CW."
+  },
+  "map": {
+    "Papiamento": "Papiamentu",
+    "papiamento": "papiamentu",
+    "bariga": "barika",
+    "lamper": "welek",
+    "hemchi": "hèmber",
+    "bais": "baiskel",
+    "geel": "hel",
+    "colga": "kologá",
+    "kologá": "kologá",
+    "pelon": "kabes limpi",
+    "stichi": "chincha",
+    "Pasco": "Pasku",
+    "Pasko": "Pasku",
+    "palo di Pasco": "palu di Pasku",
+    "nieta": "ñetu",
+    "herbe": "herbé",
+    "coneu": "konènchi",
+    "ha ya": "haña",
+    "dialuna": "djaluna",
+    "cuchiu": "kuchú",
+    "neishi": "nèshi",
+    "cocodek": "bou di brasa",
+    "azeta": "zeta",
+    "omo": "tio",
+    "orea": "orea",
+    "hor ea": "orea"
+  }
+}

@@ -1,0 +1,148 @@
+# Living In Paradise AI Assistant - Cursor Rules
+
+## Project Context
+
+This is a Next.js 14 AI chat assistant for immigration services with:
+- Multilingual support (EN/NL/ES/PA)
+- Custom RAG using OpenAI + Supabase vector search
+- Mailchimp + HubSpot integration
+- WordPress embed capability
+
+## Code Style
+
+- TypeScript strict mode
+- Functional components with hooks
+- Tailwind CSS for styling
+- Server components by default, 'use client' only when needed
+- Edge runtime for API routes when possible
+
+## File Organization
+
+- `/app` - Next.js App Router pages and API routes
+- `/components` - React components
+- `/lib` - Utility functions and integrations
+- `/supabase` - Database schema and migrations
+- `/public` - Static assets and embed scripts
+
+## Conventions
+
+### Naming
+- Components: PascalCase (e.g., `ChatWidget.tsx`)
+- Files: kebab-case (e.g., `wordpress-integration.md`)
+- API routes: descriptive names (e.g., `/api/chat/route.ts`)
+- Database tables: snake_case (e.g., `knowledge_base`)
+
+### Component Structure
+```typescript
+'use client' // only if needed
+
+import statements
+
+interface Props {
+  // props
+}
+
+export default function ComponentName({ props }: Props) {
+  // hooks
+  // functions
+  // render
+}
+```
+
+### API Routes
+```typescript
+import { NextRequest, NextResponse } from 'next/server'
+
+export const runtime = 'edge' // when appropriate
+
+export async function POST(request: NextRequest) {
+  try {
+    // validation
+    // business logic
+    return NextResponse.json({ success: true, data })
+  } catch (error) {
+    console.error('Error:', error)
+    return NextResponse.json({ error: 'Message' }, { status: 500 })
+  }
+}
+```
+
+## Key Patterns
+
+### RAG Flow
+1. Embed user query with OpenAI
+2. Vector search in Supabase
+3. Build context from results
+4. Send to OpenAI with system prompt
+5. Post-process response (add CTAs if needed)
+
+### Lead Management
+1. Capture in Supabase first
+2. Sync to Mailchimp immediately (all leads)
+3. Sync to HubSpot on high-intent signals only
+
+### Error Handling
+- Always wrap API calls in try-catch
+- Log errors with context
+- Return user-friendly error messages
+- Don't expose sensitive info in errors
+
+## Environment Variables
+
+Required:
+- Supabase: URL, anon key, service role key
+- OpenAI: API key
+- Mailchimp: API key, server prefix, audience ID
+- HubSpot: Access token
+- App: URL, WhatsApp number
+
+## Database
+
+- Use `supabaseAdmin` for server-side operations
+- Use `supabase` for client-side operations
+- Always filter by user context when appropriate
+- Use prepared statements (Supabase client handles this)
+
+## Testing
+
+Before committing:
+1. `npm run build` - Check for TypeScript errors
+2. `npm run lint` - Fix linting issues
+3. Test in browser (all 4 languages)
+4. Check mobile responsiveness
+5. Verify API routes in Network tab
+
+## Security
+
+- Never expose service role key to client
+- Validate all user inputs
+- Sanitize before database operations
+- Use HTTPS only
+- Implement rate limiting (future enhancement)
+
+## Performance
+
+- Use Edge runtime where possible
+- Lazy load non-critical components
+- Optimize images (use Next.js Image)
+- Keep embeddings small (currently 1536 dims)
+- Cache frequent queries (future enhancement)
+
+## Accessibility
+
+- Semantic HTML
+- ARIA labels on interactive elements
+- Keyboard navigation support
+- Color contrast WCAG AA minimum
+- Screen reader friendly
+
+## When Making Changes
+
+1. Update relevant documentation (README, DEPLOYMENT, etc.)
+2. Update CHANGELOG.md
+3. Check if Monica needs to know (update MONICA_QUICKSTART.md)
+4. Test in development before deploying
+5. Consider backwards compatibility
+
+
+

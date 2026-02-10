@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "source": "GOVITU (govitu-papiamentu-json.json)",
+    "description": "Core Curaçao Papiamentu phrases - do not change when correcting"
+  },
+  "greetings": {
+    "welcome": "Bon bini",
+    "goodMorning": "Bon dia",
+    "goodAfternoon": "Bon tardi",
+    "goodEvening": "Bon nochi",
+    "goodbye": "Ayo",
+    "seeYouLater": "Te despues",
+    "seeYouTomorrow": "Te mañan"
+  },
+  "common": {
+    "yes": "Si",
+    "no": "Nò",
+    "please": "Por fabor",
+    "thankYou": "Danki",
+    "youreWelcome": "Nada",
+    "excuse": "Pèrmit",
+    "sorry": "Sòri",
+    "good": "Bon",
+    "bad": "Malu",
+    "new": "Nobo",
+    "old": "Bieu",
+    "big": "Gran",
+    "small": "Chikito",
+    "more": "Mas",
+    "less": "Menos",
+    "much": "Hopi",
+    "little": "Tiki",
+    "with": "Ku",
+    "without": "Sin",
+    "fast": "Rápido",
+    "slow": "Tranki"
+  },
+  "numbers": {
+    "zero": "Sero",
+    "one": "Un",
+    "two": "Dos",
+    "three": "Tres",
+    "four": "Kuater",
+    "five": "Sinku",
+    "six": "Seis",
+    "seven": "Shete",
+    "eight": "Ocho",
+    "nine": "Nuebe",
+    "ten": "Dies",
+    "twenty": "Binti",
+    "thirty": "Trinta",
+    "forty": "Kuarenta",
+    "fifty": "Sinkuenta",
+    "seventy": "Setenta",
+    "eighty": "Ochenta",
+    "ninety": "Nobenta",
+    "hundred": "Shen",
+    "thousand": "Mil"
+  },
+  "days": {
+    "monday": "Djaluna",
+    "tuesday": "Djamars",
+    "wednesday": "Djarason",
+    "thursday": "Djawieps",
+    "friday": "Djabièrne",
+    "saturday": "Djasabra",
+    "sunday": "Djadomingu"
+  },
+  "months": {
+    "january": "Yanüari",
+    "february": "Febrüari",
+    "march": "Mart",
+    "april": "Aprel",
+    "may": "Mei",
+    "june": "Yüni",
+    "july": "Yüli",
+    "august": "Ougùstùs",
+    "september": "Sèptèmber",
+    "october": "Òktober",
+    "november": "Novèmber",
+    "december": "Desèmber"
+  },
+  "colors": {
+    "white": "Blanku",
+    "black": "Pretu",
+    "blue": "Blou",
+    "red": "Kòrá",
+    "yellow": "Hel",
+    "green": "Berdè"
+  }
+}

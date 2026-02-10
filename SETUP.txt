@@ -1,0 +1,28 @@
+Astute AIsistant - Setup (independent copy)
+
+This project is a full copy of the Chat Assistant application. It uses its own directory, Git repo, and must use its own Supabase and hosting.
+
+1. SUPABASE
+   - Project URL: https://eqiurktrdkojnhbxqjge.supabase.co (or create a new project at https://supabase.com).
+   - In the project: SQL Editor -> New query -> paste and run in order:
+     supabase/migrations-consolidated.sql, then supabase/migrations-multi-tenant.sql, then supabase/migrations-auth-profiles.sql.
+
+2. ENVIRONMENT
+   - Copy .env.example to .env in this folder.
+   - Fill in NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY from Supabase (Project Settings -> API).
+     - Other keys as needed (OpenAI, DASHBOARD_PASSWORD, email/SMTP, etc.).
+
+3. GIT REMOTE (when ready)
+   - Add your new repo: git remote add origin <your-new-repo-url>
+   - Commit and push: git add -A && git commit -m "Initial commit" && git push -u origin main
+
+4. HOSTING
+   - Deploy this folder as a new project (e.g. new Vercel project pointing at the new Git repo).
+
+No Supabase CLI is required; the app uses env vars and the single SQL migration file.
+
+5. PAPIAMENTU LAYER (Curaçao)
+   - Assistant responses in Papiamentu (PA) are corrected using Buki di oro + GOVITU data in lib/papiamentu/data/.
+   - Self-learning (optional): set PAPIAMENTU_LEARNING_ENABLED=true in .env to log each correction to the papiamentu_corrections table for review. Default is off.
+   - Corrections are stored in Supabase table papiamentu_corrections (tenant_id, from_text, to_text, change_type, context, created_at). Review and curate these to update aruba-to-curacao.json or other data, then re-run scripts/build-papiamentu-wordlist.js if you change the source word list.
+   - To view recent corrections: GET /api/papiamentu/corrections?limit=100&tenant_id=<uuid> (optional tenant_id). Use the returned list to approve good pairs and add them to lib/papiamentu/data/aruba-to-curacao.json (map key = from_text, value = to_text), then redeploy.
