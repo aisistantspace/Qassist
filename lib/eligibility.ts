@@ -1,9 +1,14 @@
 import OpenAI from 'openai'
 import { getAgentSettings } from './openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazy-initialized to avoid crashing during build when env vars aren't set
+let _openai: OpenAI | null = null
+function getOpenAIClient(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || '' })
+  }
+  return _openai
+}
 
 export interface EligibilityResult {
   eligible: boolean
@@ -201,7 +206,7 @@ Respond in JSON format:
 Be honest and realistic. If eligibility is uncertain, set confidence lower and explain why.`
 
   try {
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAIClient().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
