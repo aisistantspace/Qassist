@@ -3,8 +3,21 @@ import { getSupabaseAdmin } from './supabase'
 import { createLLMClient, type LLMProviderKey } from './llm'
 
 // Default OpenAI client (used for embeddings & fallback)
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
+// Lazy-initialized to avoid crashing during Next.js build when env vars aren't set
+let _openai: OpenAI | null = null
+function getOpenAI(): OpenAI {
+  if (!_openai) {
+    _openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || '',
+    })
+  }
+  return _openai
+}
+
+const openai = new Proxy({} as OpenAI, {
+  get(_, prop) {
+    return (getOpenAI() as any)[prop]
+  },
 })
 
 export default openai
