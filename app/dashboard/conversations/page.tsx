@@ -10,6 +10,7 @@ interface Conversation {
   turn_count: number
   status: string
   language: string
+  intent: string | null
   created_at: string
   lead?: {
     name: string
@@ -17,22 +18,31 @@ interface Conversation {
   }
 }
 
+const intentBadge: Record<string, { bg: string; text: string; label: string }> = {
+  sales: { bg: 'bg-green-100', text: 'text-green-700', label: 'Sales' },
+  service: { bg: 'bg-orange-100', text: 'text-orange-700', label: 'Service' },
+  inquiry: { bg: 'bg-gray-100', text: 'text-gray-700', label: 'Inquiry' },
+}
+
 export default function ConversationsPage() {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all')
+  const [intentFilter, setIntentFilter] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     fetchConversations()
-  }, [filter])
+  }, [filter, intentFilter])
 
   async function fetchConversations() {
     setLoading(true)
     try {
-      const url = filter === 'all' 
-        ? '/api/dashboard/conversations'
-        : `/api/dashboard/conversations?status=${filter}`
+      const params = new URLSearchParams()
+      if (filter !== 'all') params.set('status', filter)
+      if (intentFilter !== 'all') params.set('intent', intentFilter)
+      const qs = params.toString()
+      const url = `/api/dashboard/conversations${qs ? `?${qs}` : ''}`
       
       const response = await fetch(url)
       if (response.ok) {
@@ -65,7 +75,7 @@ export default function ConversationsPage() {
 
       {/* Filters & Search */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Filter by Status
@@ -79,6 +89,21 @@ export default function ConversationsPage() {
               <option value="active">Active</option>
               <option value="escalated">Escalated (High Intent)</option>
               <option value="completed">Completed</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter by Intent
+            </label>
+            <select
+              value={intentFilter}
+              onChange={(e) => setIntentFilter(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-gray-900"
+            >
+              <option value="all">All Intents</option>
+              <option value="sales">Sales</option>
+              <option value="service">Service</option>
+              <option value="inquiry">Inquiry</option>
             </select>
           </div>
           <div>
@@ -120,13 +145,20 @@ export default function ConversationsPage() {
                     <span>{format(new Date(conv.created_at), 'MMM d, yyyy')}</span>
                   </div>
                   <div className="flex items-center justify-between pt-2">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      conv.status === 'active' ? 'bg-green-100 text-green-800' :
-                      conv.status === 'escalated' ? 'bg-orange-100 text-orange-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {conv.status}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        conv.status === 'active' ? 'bg-green-100 text-green-800' :
+                        conv.status === 'escalated' ? 'bg-orange-100 text-orange-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {conv.status}
+                      </span>
+                      {conv.intent && intentBadge[conv.intent] && (
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${intentBadge[conv.intent].bg} ${intentBadge[conv.intent].text}`}>
+                          {intentBadge[conv.intent].label}
+                        </span>
+                      )}
+                    </div>
                     <Link
                       href={`/dashboard/conversations/${conv.id}`}
                       className="text-primary-600 text-sm font-medium min-h-[44px] flex items-center"
@@ -153,6 +185,9 @@ export default function ConversationsPage() {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Intent
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Date
@@ -187,6 +222,15 @@ export default function ConversationsPage() {
                     }`}>
                       {conv.status}
                     </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    {conv.intent && intentBadge[conv.intent] ? (
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${intentBadge[conv.intent].bg} ${intentBadge[conv.intent].text}`}>
+                        {intentBadge[conv.intent].label}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-400">—</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
                     {format(new Date(conv.created_at), 'MMM d, yyyy HH:mm')}

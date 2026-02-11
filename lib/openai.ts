@@ -98,6 +98,49 @@ export async function createChatCompletion(
   })
 }
 
+// Classify conversation intent: sales, service, or inquiry
+export async function classifyIntent(
+  messages: OpenAI.Chat.ChatCompletionMessageParam[]
+): Promise<{ intent: 'sales' | 'service' | 'inquiry'; confidence: number }> {
+  const classificationPrompt = `
+    Analyze the following conversation between a visitor and an AI assistant.
+    Classify the visitor's PRIMARY intent into exactly one of these categories:
+
+    sales - The visitor wants to buy, invest, book, get pricing, schedule a consultation, or explore purchasing a service/product.
+    service - The visitor needs help with an existing issue, has a complaint, wants technical support, or the AI could not adequately help them.
+    inquiry - The visitor is asking general questions, browsing for information, or seeking educational content without clear purchase or support intent.
+
+    Return ONLY a JSON object with these fields:
+    - intent: one of "sales", "service", or "inquiry"
+    - confidence: a number between 0 and 1 indicating how confident you are
+
+    Only return the JSON object, nothing else.
+  `
+
+  try {
+    const settings = await getAgentSettings()
+    const client = getLLMClient(settings)
+    const response = await client.chat.completions.create({
+      model: settings.openai_model || 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: classificationPrompt },
+        ...messages.slice(-6),
+      ],
+      response_format: { type: 'json_object' },
+      max_tokens: 50,
+    })
+
+    const result = JSON.parse(response.choices[0].message.content || '{}')
+    const intent = ['sales', 'service', 'inquiry'].includes(result.intent) ? result.intent : 'inquiry'
+    const confidence = typeof result.confidence === 'number' ? Math.min(1, Math.max(0, result.confidence)) : 0.5
+
+    return { intent, confidence }
+  } catch (e) {
+    console.error('Failed to classify intent:', e)
+    return { intent: 'inquiry', confidence: 0 }
+  }
+}
+
 // Extract lead metadata from conversation
 export async function extractLeadMetadata(messages: OpenAI.Chat.ChatCompletionMessageParam[]) {
   const extractionPrompt = `

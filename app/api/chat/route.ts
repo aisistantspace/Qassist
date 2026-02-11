@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getTenantFromRequest, DEFAULT_TENANT_ID } from '@/lib/tenant'
-import { createChatCompletion, extractLeadMetadata, extractFormData } from '@/lib/openai'
+import { createChatCompletion, extractLeadMetadata, extractFormData, classifyIntent } from '@/lib/openai'
 import { searchKnowledgeBase, buildContext, generateSystemPrompt, isCaseSpecific, getRelevantFormLinks, isEligibilityQuery, isFormTriggered, detectLanguageFromText } from '@/lib/rag'
 import { updateLeadScore } from '@/lib/lead-scoring'
 import { getBrandingConfig } from '@/lib/branding'
@@ -518,6 +518,18 @@ export async function POST(request: NextRequest) {
         }
       })
       .catch(err => console.error('Metadata extraction failed:', err))
+
+    // Classify conversation intent (fire and forget)
+    classifyIntent(conversationHistory)
+      .then(({ intent }) => {
+        if (intent) {
+          return supabaseAdmin
+            .from('conversations')
+            .update({ intent })
+            .eq('id', currentConversationId)
+        }
+      })
+      .catch(err => console.error('Intent classification failed:', err))
 
     // If high intent, sync to integrations (if enabled)
     if (shouldShowBooking) {

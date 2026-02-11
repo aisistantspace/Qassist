@@ -11,7 +11,6 @@ import {
   DocumentTextIcon,
   Cog6ToothIcon,
   HomeIcon,
-  FireIcon,
   CloudArrowUpIcon,
   ClipboardDocumentListIcon,
   ArrowRightOnRectangleIcon,
@@ -20,7 +19,6 @@ import NotificationBell from '@/components/NotificationBell'
 
 const navigation = [
   { name: 'Overview', href: '/dashboard', icon: HomeIcon },
-  { name: 'Hot Leads', href: '/dashboard/hot-leads', icon: FireIcon },
   { name: 'Conversations', href: '/dashboard/conversations', icon: ChatBubbleLeftRightIcon },
   { name: 'Leads', href: '/dashboard/leads', icon: UserGroupIcon },
   { name: 'Knowledge Base', href: '/dashboard/knowledge-base', icon: DocumentTextIcon },
@@ -31,7 +29,6 @@ const navigation = [
 
 const pageTitles: Record<string, string> = {
   '/dashboard': 'Overview',
-  '/dashboard/hot-leads': 'Hot Leads',
   '/dashboard/conversations': 'Conversations',
   '/dashboard/leads': 'Leads',
   '/dashboard/knowledge-base': 'Knowledge Base',

@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
+    const intent = searchParams.get('intent')
 
     let query = supabaseAdmin
       .from('conversations')
@@ -21,6 +22,10 @@ export async function GET(request: NextRequest) {
 
     if (status && status !== 'all') {
       query = query.eq('status', status)
+    }
+
+    if (intent && intent !== 'all') {
+      query = query.eq('intent', intent)
     }
 
     const { data: conversations, error } = await query
