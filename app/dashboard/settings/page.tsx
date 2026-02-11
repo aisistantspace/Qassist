@@ -94,7 +94,9 @@ const defaultLeadScoringConfig: LeadScoringConfig = {
 }
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<'branding' | 'agent' | 'widget' | 'integrations' | 'lead-scoring'>('branding')
+  const [activeTab, setActiveTab] = useState<'branding' | 'agent' | 'widget' | 'integrations' | 'lead-scoring' | 'papiamentu'>('branding')
+  const [papiamentuLearning, setPapiamentuLearning] = useState(false)
+  const [papiamentuLocale, setPapiamentuLocale] = useState<'pap-CW' | 'pap-AW'>('pap-CW')
   
   const [widgetConfig, setWidgetConfig] = useState<WidgetConfig>({
     theme: 'light',
@@ -353,6 +355,7 @@ export default function SettingsPage() {
             { id: 'widget', label: 'Widget Styles' },
             { id: 'integrations', label: 'Integrations' },
             { id: 'lead-scoring', label: 'Lead scoring' },
+            { id: 'papiamentu', label: 'Papiamentu' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -1201,6 +1204,107 @@ export default function SettingsPage() {
           >
             {saving ? 'Saving...' : 'Save lead scoring settings'}
           </button>
+        </div>
+      )}
+
+      {/* Papiamentu Tab */}
+      {activeTab === 'papiamentu' && (
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500">
+              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Papiamentu Correction Layer</h2>
+              <p className="text-sm text-gray-500">Automatic language correction using Buki di Oro &amp; GOVITU standards</p>
+            </div>
+          </div>
+
+          <div className="mt-6 space-y-6">
+            {/* Active status */}
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <p className="text-sm font-medium text-green-800">Correction Layer is Active</p>
+                <p className="text-xs text-green-700 mt-0.5">
+                  All Papiamentu chat responses are automatically corrected before being sent to users. No action needed — this runs by default.
+                </p>
+              </div>
+            </div>
+
+            {/* Locale selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Locale / Variant</label>
+              <select
+                value={papiamentuLocale}
+                onChange={(e) => setPapiamentuLocale(e.target.value as 'pap-CW' | 'pap-AW')}
+                className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white text-gray-900"
+              >
+                <option value="pap-CW">Curaçao (pap-CW) — Buki di Oro</option>
+                <option value="pap-AW">Aruba (pap-AW)</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">Aruba variant words will be normalized to the selected locale.</p>
+            </div>
+
+            {/* Self-learning toggle */}
+            <div className="border border-gray-200 rounded-xl p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">Self-Learning Mode</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Log every correction to the database for manual review. View logged corrections in the{' '}
+                    <a href="/dashboard/papiamentu" className="text-primary-600 hover:text-primary-700 font-medium">Papiamentu dashboard</a>.
+                  </p>
+                </div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <span className="text-sm font-medium text-gray-700">{papiamentuLearning ? 'Enabled' : 'Disabled'}</span>
+                  <input
+                    type="checkbox"
+                    checked={papiamentuLearning}
+                    onChange={(e) => setPapiamentuLearning(e.target.checked)}
+                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                  />
+                </label>
+              </div>
+              {papiamentuLearning && (
+                <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                  <p className="text-xs text-amber-800">
+                    <strong>Note:</strong> Self-learning requires the environment variable <code className="bg-amber-100 px-1 rounded text-[11px]">PAPIAMENTU_LEARNING_ENABLED=true</code> to be set on your server. Corrections will be saved to the <code className="bg-amber-100 px-1 rounded text-[11px]">papiamentu_corrections</code> table.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* What gets corrected */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">What Gets Corrected</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="inline-flex px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-700">Spelling</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Words checked against the official Buki di Oro wordlist for correct Papiamentu spelling.</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="inline-flex px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">Orthography</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Diacritics, capitalization, and official orthography rules (GOVITU standard).</p>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="inline-flex px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">Variant</span>
+                  </div>
+                  <p className="text-xs text-gray-600">Aruba ↔ Curaçao dialect differences normalized to your selected locale.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

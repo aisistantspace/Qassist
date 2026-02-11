@@ -15,6 +15,7 @@ import {
   CloudArrowUpIcon,
   ClipboardDocumentListIcon,
   ArrowRightOnRectangleIcon,
+  LanguageIcon,
 } from '@heroicons/react/24/outline'
 import NotificationBell from '@/components/NotificationBell'
 
@@ -25,6 +26,7 @@ const navigation = [
   { name: 'Leads', href: '/dashboard/leads', icon: UserGroupIcon },
   { name: 'Knowledge Base', href: '/dashboard/knowledge-base', icon: DocumentTextIcon },
   { name: 'Automated Forms', href: '/dashboard/forms', icon: ClipboardDocumentListIcon },
+  { name: 'Papiamentu', href: '/dashboard/papiamentu', icon: LanguageIcon },
   { name: 'Deploy', href: '/dashboard/deploy', icon: CloudArrowUpIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
 ]
@@ -36,6 +38,7 @@ const pageTitles: Record<string, string> = {
   '/dashboard/leads': 'Leads',
   '/dashboard/knowledge-base': 'Knowledge Base',
   '/dashboard/forms': 'Automated Forms',
+  '/dashboard/papiamentu': 'Papiamentu',
   '/dashboard/deploy': 'Deploy',
   '/dashboard/settings': 'Settings',
 }
