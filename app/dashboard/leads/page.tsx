@@ -21,14 +21,7 @@ interface Lead {
   nationality: string
   country_residence: string
   applying_from: string
-  latest_intent: string | null
   temperature: 'hot' | 'warm' | 'cold'
-}
-
-const intentBadge: Record<string, { bg: string; text: string; label: string }> = {
-  sales: { bg: 'bg-green-100', text: 'text-green-700', label: 'Sales' },
-  service: { bg: 'bg-orange-100', text: 'text-orange-700', label: 'Service' },
-  inquiry: { bg: 'bg-gray-100', text: 'text-gray-700', label: 'Inquiry' },
 }
 
 const tempBadge: Record<string, { bg: string; text: string; label: string }> = {
@@ -42,7 +35,6 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState('all')
   const [temperatureFilter, setTemperatureFilter] = useState('all')
-  const [intentFilter, setIntentFilter] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
@@ -51,17 +43,16 @@ export default function LeadsPage() {
 
   useEffect(() => {
     fetchLeads()
-  }, [statusFilter, temperatureFilter, intentFilter])
+  }, [statusFilter, temperatureFilter])
 
   async function fetchLeads() {
     setLoading(true)
     try {
       const params = new URLSearchParams()
+      params.set('intent', 'sales')
       if (statusFilter !== 'all') params.set('status', statusFilter)
       if (temperatureFilter !== 'all') params.set('temperature', temperatureFilter)
-      if (intentFilter !== 'all') params.set('intent', intentFilter)
-      const qs = params.toString()
-      const url = `/api/dashboard/leads${qs ? `?${qs}` : ''}`
+      const url = `/api/dashboard/leads?${params.toString()}`
 
       const response = await fetch(url)
       if (response.ok) {
@@ -142,13 +133,13 @@ export default function LeadsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Lead Management</h1>
-        <p className="text-gray-600 mt-2">Manage and track all captured leads</p>
+        <h1 className="text-3xl font-bold text-gray-900">Leads</h1>
+        <p className="text-gray-600 mt-2">Sales and marketing pipeline</p>
       </div>
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Status
@@ -180,21 +171,6 @@ export default function LeadsPage() {
               <option value="hot">Hot (70+)</option>
               <option value="warm">Warm (40-69)</option>
               <option value="cold">Cold (&lt;40)</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Intent
-            </label>
-            <select
-              value={intentFilter}
-              onChange={(e) => setIntentFilter(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 text-gray-900"
-            >
-              <option value="all">All Intents</option>
-              <option value="sales">Sales</option>
-              <option value="service">Service</option>
-              <option value="inquiry">Inquiry</option>
             </select>
           </div>
           <div>
@@ -291,7 +267,7 @@ export default function LeadsPage() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-600">Total</div>
           <div className="text-2xl font-bold text-gray-900">{leads.length}</div>
@@ -309,21 +285,9 @@ export default function LeadsPage() {
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-600">Sales</div>
-          <div className="text-2xl font-bold text-green-600">
-            {leads.filter(l => l.latest_intent === 'sales').length}
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-600">Service</div>
-          <div className="text-2xl font-bold text-orange-600">
-            {leads.filter(l => l.latest_intent === 'service').length}
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-4">
-          <div className="text-sm text-gray-600">Inquiry</div>
-          <div className="text-2xl font-bold text-gray-600">
-            {leads.filter(l => l.latest_intent === 'inquiry').length}
+          <div className="text-sm text-gray-600">Cold</div>
+          <div className="text-2xl font-bold text-blue-600">
+            {leads.filter(l => l.temperature === 'cold').length}
           </div>
         </div>
       </div>
@@ -356,11 +320,6 @@ export default function LeadsPage() {
                         {lead.temperature && tempBadge[lead.temperature] && (
                           <span className={`inline-flex px-1.5 py-0.5 text-[10px] font-semibold rounded-full ${tempBadge[lead.temperature].bg} ${tempBadge[lead.temperature].text}`}>
                             {tempBadge[lead.temperature].label}
-                          </span>
-                        )}
-                        {lead.latest_intent && intentBadge[lead.latest_intent] && (
-                          <span className={`inline-flex px-1.5 py-0.5 text-[10px] font-semibold rounded-full ${intentBadge[lead.latest_intent].bg} ${intentBadge[lead.latest_intent].text}`}>
-                            {intentBadge[lead.latest_intent].label}
                           </span>
                         )}
                       </div>
@@ -514,11 +473,6 @@ export default function LeadsPage() {
                       {lead.temperature && tempBadge[lead.temperature] && (
                         <span className={`inline-flex px-1.5 py-0.5 text-[10px] font-semibold rounded-full ${tempBadge[lead.temperature].bg} ${tempBadge[lead.temperature].text}`}>
                           {tempBadge[lead.temperature].label}
-                        </span>
-                      )}
-                      {lead.latest_intent && intentBadge[lead.latest_intent] && (
-                        <span className={`inline-flex px-1.5 py-0.5 text-[10px] font-semibold rounded-full ${intentBadge[lead.latest_intent].bg} ${intentBadge[lead.latest_intent].text}`}>
-                          {intentBadge[lead.latest_intent].label}
                         </span>
                       )}
                     </div>
