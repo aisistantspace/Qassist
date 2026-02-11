@@ -22,7 +22,7 @@ This project is a full copy of the Chat Assistant application. It uses its own d
 No Supabase CLI is required; the app uses env vars and the single SQL migration file.
 
 5. PAPIAMENTU LAYER (Curaçao)
-   - Assistant responses in Papiamentu (PA) are corrected using Buki di oro + GOVITU data in lib/papiamentu/data/.
+   - Assistant responses in Papiamentu (PA) are corrected using Buki di oro + official Curaçao orthography data in lib/papiamentu/data/.
    - Self-learning (optional): set PAPIAMENTU_LEARNING_ENABLED=true in .env to log each correction to the papiamentu_corrections table for review. Default is off.
    - Corrections are stored in Supabase table papiamentu_corrections (tenant_id, from_text, to_text, change_type, context, created_at). Review and curate these to update aruba-to-curacao.json or other data, then re-run scripts/build-papiamentu-wordlist.js if you change the source word list.
    - To view recent corrections: GET /api/papiamentu/corrections?limit=100&tenant_id=<uuid> (optional tenant_id). Use the returned list to approve good pairs and add them to lib/papiamentu/data/aruba-to-curacao.json (map key = from_text, value = to_text), then redeploy.

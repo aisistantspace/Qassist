@@ -1219,7 +1219,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Papiamentu Correction Layer</h2>
-              <p className="text-sm text-gray-500">Automatic language correction using Buki di Oro &amp; GOVITU standards</p>
+              <p className="text-sm text-gray-500">Automatic language correction using Buki di Oro &amp; official Curaçao orthography</p>
             </div>
           </div>
 
@@ -1280,6 +1280,21 @@ export default function SettingsPage() {
               )}
             </div>
 
+            {/* View Correction Log */}
+            <a
+              href="/dashboard/papiamentu"
+              className="flex items-center justify-between p-4 border border-primary-200 bg-primary-50 rounded-xl hover:bg-primary-100 transition-colors group"
+            >
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900">Correction Log</h3>
+                <p className="text-xs text-gray-500 mt-0.5">View all logged corrections, stats, and filter by type</p>
+              </div>
+              <svg className="w-5 h-5 text-primary-600 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+
             {/* What gets corrected */}
             <div>
               <h3 className="text-sm font-semibold text-gray-900 mb-3">What Gets Corrected</h3>
@@ -1294,7 +1309,7 @@ export default function SettingsPage() {
                   <div className="flex items-center gap-2 mb-1">
                     <span className="inline-flex px-2 py-0.5 text-xs font-semibold rounded-full bg-amber-100 text-amber-700">Orthography</span>
                   </div>
-                  <p className="text-xs text-gray-600">Diacritics, capitalization, and official orthography rules (GOVITU standard).</p>
+                  <p className="text-xs text-gray-600">Diacritics, capitalization, and official Curaçao orthography rules.</p>
                 </div>
                 <div className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center gap-2 mb-1">

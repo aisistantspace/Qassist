@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Curated Aruba variant -> Curaçao standard (Buki di oro / GOVITU). Used when locale is pap-CW."
+    "description": "Curated Aruba variant -> Curaçao standard (Buki di oro / official orthography). Used when locale is pap-CW."
   },
   "map": {
     "Papiamento": "Papiamentu",

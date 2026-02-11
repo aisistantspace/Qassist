@@ -458,7 +458,7 @@ export async function POST(request: NextRequest) {
       assistantResponse += bookingPrompts[effectiveLanguage] || bookingPrompts.EN
     }
 
-    // Papiamentu correction layer (Curaçao): validate/correct PA responses with Buki di oro + GOVITU
+    // Papiamentu correction layer (Curaçao): validate/correct PA responses with Buki di oro + official orthography
     if (effectiveLanguage === 'PA') {
       try {
         const result = correctPapiamentu(assistantResponse, { locale: 'pap-CW' })
