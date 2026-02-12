@@ -1,20 +1,264 @@
 {
   "metadata": {
-    "source": "Buki di oro (buki_di_oro_grammar.json)",
-    "description": "Minimal orthography rules for Curaçao Papiamentu validation"
+    "source": "Buki di oro — Ortografia i Lista di palabra Papiamentu, FPI, Kòrsou 2009",
+    "isbn": "978-99904-2-200-9",
+    "description": "Complete orthography rules for Curaçao Papiamentu, encoded from all 13 chapters"
   },
-  "alphabet": {
-    "basic_letters": ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
+
+  "I_alphabet": {
+    "description": "Chapter I — Ortografia en general",
+    "basic_letters": ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"],
+    "letter_names": {
+      "b": "be", "c": "se", "d": "de", "f": "èf", "g": "ge", "h": "ha",
+      "j": "ye", "k": "ka", "l": "èl", "m": "èm", "n": "èn", "p": "pe",
+      "q": "kü", "r": "èr", "s": "ès", "t": "te", "v": "ve", "w": "w",
+      "x": "eks", "y": "igrèk", "z": "zèt"
+    },
     "modified_vowels": ["è", "ò", "ù", "ü"],
     "modified_consonants": ["ñ"],
-    "digraphs": ["ch", "dj", "sh", "zj"]
+    "digraphs": ["ch", "dj", "sh", "zj"],
+    "digraph_names": {
+      "ch": "se-ha", "dj": "de-ye", "sh": "ès-ha", "zj": "zèt-ye"
+    }
   },
-  "consonant_usage": {
-    "restricted": ["c", "j", "q", "x"],
-    "c": "Only in (ch) and mathematics, chemistry, proper names, foreign words",
-    "j": "Only in (dj) and proper names, foreign words",
-    "q": "Only in combinations and proper names, foreign words",
-    "x": "Only in combinations and proper names, foreign words"
+
+  "II_letter_usage": {
+    "description": "Chapter II — Uso di diferente lèter en partikular",
+    "restricted_consonants": {
+      "rule": "c, j, q, x ONLY used in: digraphs (ch, dj, zj), math/chemistry, proper names, foreign words",
+      "c": "Only in ch digraph, math, chemistry, proper names (Cornelio), geographic names (Connecticut), foreign words (centerfielder)",
+      "j": "Only in dj digraph, proper names (Jacobo), foreign words (joyeria)",
+      "q": "Only in proper names (Aquiles), geographic (Quebec), foreign words (quo vadis)",
+      "x": "Only in proper names (Xiomara), foreign words (x-ray)",
+      "nicknames_adapt": ["Kai from Carlos", "Koni from Cornelia", "Yeta from Julieta", "Yuya from Julia", "Kino from Aquino", "Kiel from Iziquiel", "Shoma from Xiomara"]
+    },
+    "vowels": {
+      "a": {"examples": ["spar", "blar", "blas", "bas", "ral"]},
+      "e": {"examples": ["tres", "smer", "lele", "sker", "ter", "eshua", "tiger", "koper", "mangel"]},
+      "è": {"examples": ["tèr", "skèr", "lèlè", "kèlki", "kalmèki"]},
+      "i": {"examples": ["tin", "kis", "nir", "wil", "firkant"]},
+      "o": {"examples": ["bon", "kor", "toro", "koto", "pastor"]},
+      "ò": {"examples": ["ròm", "kòpi", "sòpi", "tòrnu", "bákatòr"]},
+      "u": {"examples": ["tur", "bus", "muf", "buki", "warmus"]},
+      "ù": {"examples": ["bùs", "kùr", "mùf", "trùk", "kontrolùr"]},
+      "ü": {"examples": ["hür", "stür", "minüt", "plamür", "partitür"]}
+    },
+    "double_vowel_rule": "When two vowels are heard, write both: poseé, kreensia, reeligí, reeduká, kooperá, koordiná, oochi",
+    "diphthongs": ["ai","au","ei","eu","oi","òi","ou","ui","ùi","ia","ie","iè","io","iu","ua","ue","uè","uo"],
+    "triphthongs": ["iau","ieu","iou","uai","uei"],
+    "diphthong_after_g_rule": "After velar g, write ui/ue as wi/we: lingwista (not linguïsta), ungwento (not unguënto), antigwedat, bèrgwensa, pingwino",
+    "rising_diphthong_rule": "No word or syllable starts with a rising diphthong (ia,ie,iè,io,ua,ue,uo). Use y/w instead: bayena (not baiena), yabi (not iabi), wòri (not uòri)",
+    "no_y_between_i_vowel": "No consonant y between vowel i and another vowel: Antia (not Antiya), biudo (not biyudo), brièchi (not briyèchi). Exception: biyaya",
+    "no_w_between_u_vowel": "No consonant w between vowel u and another vowel: nua, yuana, bruera, duo. Exceptions: guènguwe, púluwe",
+    "double_consonants": {
+      "rule": "Double consonants appear in compounds and -nan plurals",
+      "examples": ["diessinku", "dosshen", "supprodukto", "supprefekto", "innegabel", "leimmentu", "mannan", "pènnan"]
+    }
   },
-  "accent_marks": ["à", "è", "ì", "ò", "ù", "ü"]
+
+  "III_accentuation": {
+    "description": "Chapter III — Asentuashon (accent marks)",
+    "word_types": {
+      "skèrpi": "Polysyllabic words stressed on last syllable (e.g. sapaté, restorant, artifisial)",
+      "grave": "Words stressed on penultimate syllable (e.g. baki, sòrsaka, artefakto)",
+      "esdrúhulo": "Words stressed on antepenultimate syllable (e.g. íntimo, penúltimo, katedrátiko)",
+      "sobresdrúhulo": "Words stressed before antepenultimate (e.g. álablanka, áwaseru, ántayera)"
+    },
+    "acute_accent_rules": [
+      "All skèrpi words ending in a vowel get acute: piská, karné, sintí, kachó, kurú",
+      "All grave words ending in a consonant get acute: fásil, difísil, fértil, hóben, miéntras",
+      "All esdrúhulo words get acute: último, sílaba, mérito, página, úniko",
+      "All sobresdrúhulo words get acute: álablanka, áwaseru, ántayera"
+    ],
+    "suffix_accent_preservation": "Words with -mente or -nan suffixes keep original accent: íntimamente, piskánan, chikínan, fásilmente, páginanan",
+    "exceptions": [
+      "If tonic syllable already has grave accent (è,ò,ù), no acute added: sènguènè, Skèrpènè, èlebog",
+      "No acute on skèrpi words ending in descending diphthong or triphthong: kabai, Kòrsou, kukui, bakiou",
+      "No acute on skèrpi words ending in a consonant: paraf, barak, animal, komishon, pais",
+      "No acute on grave words ending in -el, -en, -er: baiskel, mangel, deken, koper, binager",
+      "No acute on grave words ending in a vowel: rabia, kunuku, feila",
+      "tabata and tabatin written without accent (exception to esdrúhulo rule)",
+      "Not necessary to put accent on capital letters"
+    ]
+  },
+
+  "IV_syllable_division": {
+    "description": "Chapter IV — Divishon na sílaba",
+    "rule": "Divide by pronunciation. Each syllable has at least one vowel. Never split diphthongs, triphthongs, or digraphs (ch, dj, sh, zj)",
+    "examples": ["ba-ul", "kuo-ta", "te-a-tral", "du-a-na", "ba-kiou", "ap-ne-ga-shon", "kru-el", "sa-pa-tiá", "at-vèr-bio", "kua-ter", "pa-pia", "des-u-nion"],
+    "line_break_rule": "Don't leave a single vowel alone at end of line: avoid a-la, a-breviá, è-zè"
+  },
+
+  "V_capitalization": {
+    "description": "Chapter V — Lèter kapital",
+    "capitalize": [
+      "First letter at start of text",
+      "First letter after . ? ! and sometimes after : or ...",
+      "Proper names of people, animals, objects",
+      "Names of deity and divine persons",
+      "Geographic names",
+      "San/Santa before names",
+      "Titles of dignity: Sumo Pontífise, Su Mahestat",
+      "Principal words in titles"
+    ],
+    "do_NOT_capitalize": [
+      "Days of the week: djadumingu, djaluna, djamars, djárason, djaweps, djabièrnè, djasabra",
+      "Months: yanüari, febrüari, mart, aprel, mei, yüni, yüli, ougùstùs, sèptèmber, òktober, novèmber, desèmber",
+      "Words derived from geographic names: chines, ingles, franses, hulandes, merikano",
+      "Languages: spañó, portugues, papiamentu, italiano"
+    ]
+  },
+
+  "VI_punctuation": {
+    "description": "Chapter VI — Signo di puntuashon",
+    "marks": {
+      "punto": ".",
+      "kòma": ",",
+      "punto_i_kòma": ";",
+      "dos_punto": ":",
+      "komia_simpel": "''",
+      "komia_dòbel": "\"\"",
+      "signo_interogashon": "?",
+      "signo_sklamashon": "!",
+      "guion": "-",
+      "puntonan_suspensivo": "...",
+      "paréntesis": "()",
+      "slèsh": "/"
+    }
+  },
+
+  "VII_numerals": {
+    "description": "Chapter VII — Numeral",
+    "basic": {"1":"un(u)","2":"dos","3":"tres","4":"kuater","5":"sinku","6":"seis","7":"shete","8":"ocho","9":"nuebe","10":"dies"},
+    "compound_examples": {
+      "11":"diesun","15":"diessinku","17":"diesshete","20":"binti",
+      "31":"trintiun","42":"kuarentidos",
+      "100":"shen","187":"shentiochentishete","200":"dosshen",
+      "349":"tresshentikuarentinuebe","616":"seisshentidiesseis",
+      "999":"nuebeshentinobentinuebe"
+    },
+    "large_numbers_rule": "mil, mion, bion are written separately from other numerals: sinku mil seisshentidiesshete",
+    "currency_example": "fl. 2.326.719,58 = dos mion tresshentibintiseis mil sheteshentidiesnuebe florin ku sinkuentiocho sèn"
+  },
+
+  "VIII_geographic_names": {
+    "description": "Chapter VIII — Nòmber geográfiko",
+    "rules": [
+      "Geographic names capitalized: countries, areas, cities, mountains, rivers, deserts, celestial bodies",
+      "In non-scientific text: luna, solo, mundu (lowercase)",
+      "Derivatives of geographic names lowercase: chines, ingles, franses, hulandes, surafrikano",
+      "Phonological spelling allowed among PA speakers: Merka, Spaña, Niu Yòrk, Kòrsou, Ruba, Boneiru",
+      "For international correspondence use international spelling: Curaçao (not Kòrsou)"
+    ]
+  },
+
+  "IX_contractions": {
+    "description": "Chapter IX — Kontrakshon",
+    "general_rule": "Avoid contractions when possible. Use apostrophe where letters are elided.",
+    "single_letter_elision": {
+      "ta asina": "t'asina", "ta ami": "t'ami", "ta e": "t'e",
+      "no ta asina": "n' t'asina", "mi no sa": "mi n' sa",
+      "pa esei": "p'esei", "pa e": "p'é",
+      "duna e": "dun'é", "haña e": "hañ'é",
+      "laga e": "lag'e bai / lag'é numa",
+      "ta ei": "t'ei", "ta aden": "t'aden"
+    },
+    "compound_elision_no_space": {
+      "saku di papel": "sak'i papel", "kashi di glas": "kash'i glas",
+      "kos di hari": "ko'i hari", "kas di tabla": "ka'i tabla",
+      "bleki di lechi": "blek'i lechi"
+    },
+    "compound_elision_with_space": {
+      "brel di solo": "brel 'i solo", "konfó di heru": "konfó 'i heru",
+      "boton di wesu": "boton 'i wesu", "keit di dradu": "keit 'i dradu",
+      "parasòl di zumbi": "parasòl 'i zumbi"
+    },
+    "double_letter_elision": {
+      "beter di ròm": "betr'i ròm", "bòter di biña": "botr'i biña",
+      "bènder di tera": "bendr'i tera", "kamber di baño": "kambr'i baño"
+    },
+    "tabata_forms": {
+      "tabata": ["ta'ata", "ta'ta", "ta'a"],
+      "tabatin": ["ta'atin", "ta'tin"]
+    },
+    "pronoun_rule": "Personal pronouns as object written separately: duna mi, duna bo, duna e / dun'é, duna nos, duna boso, duna nan"
+  },
+
+  "X_days_months": {
+    "description": "Chapter X — Dia i luna",
+    "days": {
+      "sunday": "djadumingu",
+      "monday": "djaluna",
+      "tuesday": "djamars",
+      "wednesday": "djárason",
+      "thursday": "djaweps",
+      "friday": "djabièrnè",
+      "saturday": "djasabra"
+    },
+    "months": {
+      "january": "yanüari",
+      "february": "febrüari",
+      "march": "mart",
+      "april": "aprel",
+      "may": "mei",
+      "june": "yüni",
+      "july": "yüli",
+      "august": "ougùstùs",
+      "september": "sèptèmber",
+      "october": "òktober",
+      "november": "novèmber",
+      "december": "desèmber"
+    },
+    "note": "Days and months are NOT capitalized in Papiamentu"
+  },
+
+  "XI_foreign_words": {
+    "description": "Chapter XI — Palabra strañero",
+    "rules": [
+      "If a foreign word has NOT adapted to Papiamentu pronunciation, write it in its original orthography: leuk, gewoon, safe, gouverneur, joya",
+      "All other words follow Papiamentu orthography rules: atverbio, buldòk, bulfait, bòikòt, winshil, brek"
+    ]
+  },
+
+  "XII_terminology": {
+    "description": "Chapter XII — Aklarashon di algun término",
+    "word_classes": {
+      "sus": "sustantivo (noun): stul, mesa, alegria",
+      "v": "verbo (verb): kore, bebe, sinta, landa",
+      "ath": "athetivo (adjective): grandi, blanku, pretu, bunita",
+      "atv": "atverbio (adverb): íntimamente, fásilmente",
+      "int": "interhekshon (interjection): abemaria, abrenunsia"
+    },
+    "key_terms": {
+      "dígrafo": "two letters for one sound: ch in chapi",
+      "diptongo": "combination of vowel with i or u",
+      "triptongo": "combination of diphthong with i or u: iau, ieu, iou, uai, uei",
+      "homógrafo": "same spelling different meaning: mata (v.) kill vs mata (sus.) plant",
+      "plural": "formed with -nan: kasnan, hendenan",
+      "sufiho": "suffix element: landa-mentu"
+    }
+  },
+
+  "spelling_transforms": {
+    "description": "Key orthographic transforms for the correction engine",
+    "c_to_k": {
+      "rule": "Replace c with k in Papiamentu words (c only in ch digraph, math, proper names, foreign words)",
+      "examples": {"casa": "kasa", "color": "koló", "curason": "kurason", "cuchara": "kuchara"},
+      "exception_patterns": ["ch_digraph", "proper_names", "foreign_words", "math_chemistry"]
+    },
+    "cion_to_shon": {
+      "rule": "Spanish -ción/-sión endings become -shon in Papiamentu",
+      "examples": {"informacion": "informashon", "obligacion": "obligashon", "pension": "penshon", "komision": "komishon"}
+    },
+    "j_to_dj_or_y": {
+      "rule": "Spanish j becomes y or dj: julio→yüli, jueves→djaweps",
+      "note": "j only used in dj digraph in native Papiamentu"
+    },
+    "common_spanish_transforms": {
+      "ll_to_y": "calle→kaya, lluvia→yobida",
+      "ue_to_we_after_g": "guerra→guera, antigüedad→antigwedat",
+      "v_to_b_patterns": "Some v→b but v is kept in most words: verbo stays verbo",
+      "h_silent_to_h_sound": "In Papiamentu h is always pronounced: hasi, hende, hòmber"
+    }
+  }
 }

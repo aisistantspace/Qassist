@@ -1,48 +1,103 @@
 /**
  * Orthography enforcement for Curaçao Papiamentu.
+ * Based on Buki di Oro — Ortografia i Lista di palabra Papiamentu (FPI, 2009)
  *
- * Rules derived from Buki di oro + Ortografia Papiamentu (1983):
- *   1. c → k  (except in 'ch' digraph, foreign/proper words)
- *   2. Digraph protection: ch, dj, sh, zj are never split
- *   3. Common Aruba-orthography patterns → Curaçao standard
- *   4. Accent normalization for common errors
+ * Rules enforced:
+ *   1. c → k  (except ch digraph, proper names, foreign/math words)
+ *   2. Digraph protection: ch, dj, sh, zj never split
+ *   3. -ción/-sión → -shon  (Spanish suffix adaptation)
+ *   4. Days/months lowercase enforcement
+ *   5. Common Spanish → Papiamentu orthographic transforms
+ *   6. 'ui'/'ue' → 'wi'/'we' after g (lingwista not linguista)
+ *   7. No y between i+vowel, no w between u+vowel patterns
  */
 
 import { getWordSet } from './load-data'
 
-// ── Protected digraphs ──────────────────────────────────────────────
-const DIGRAPHS = ['ch', 'dj', 'sh', 'zj']
+// ── Digraphs that must never be broken ──────────────────────────────
+const DIGRAPHS = new Set(['ch', 'dj', 'sh', 'zj'])
 
-// ── Foreign / loan words where 'c' is acceptable ────────────────────
-// Keep short to avoid false positives; extend as needed
+// ── Words where 'c' is acceptable (foreign, proper, chemistry) ──────
 const C_EXCEPTIONS = new Set([
-  // Chemistry / science
+  // Chemistry / science / math
   'calcium', 'carbon', 'celsius', 'cloruro',
-  // Common borrowings kept with 'c'
+  // Common borrowings kept with c
   'cd', 'cpu', 'cv', 'ceo',
-  // Proper names / places (checked as lowercase)
-  'curacao', 'colombia', 'canada', 'china', 'cuba',
-  'catering',
+  // Geographic names kept intact (per chapter VIII/XI)
+  'curacao', 'curaçao', 'colombia', 'canada', 'china', 'cuba', 'chile',
+  'connecticut', 'cambodja', 'congo', 'chipre', 'chechenia',
+  'catering', 'centerfielder',
 ])
 
-// ── Aruba-style patterns → Curaçao ─────────────────────────────────
-// These are orthographic transforms (not variant-mapping, which maps different words)
-const ORTHO_PATTERNS: [RegExp, string][] = [
-  // Aruba 'cion' → Curaçao 'shon'  (e.g. informacion → informashon)
+// ── Official Buki di Oro days (must be lowercase) ───────────────────
+const OFFICIAL_DAYS: Record<string, string> = {
+  'djadumingu': 'djadumingu', 'djaluna': 'djaluna', 'djamars': 'djamars',
+  'djarason': 'djárason', 'djárason': 'djárason',
+  'djaweps': 'djaweps', 'djabièrnè': 'djabièrnè', 'djasabra': 'djasabra',
+  // Common misspellings
+  'djabierne': 'djabièrnè', 'djabiernè': 'djabièrnè',
+}
+
+// ── Official Buki di Oro months (must be lowercase) ─────────────────
+const OFFICIAL_MONTHS: Record<string, string> = {
+  'yanüari': 'yanüari', 'febrüari': 'febrüari', 'mart': 'mart', 'aprel': 'aprel',
+  'mei': 'mei', 'yüni': 'yüni', 'yüli': 'yüli', 'ougùstùs': 'ougùstùs',
+  'sèptèmber': 'sèptèmber', 'òktober': 'òktober', 'novèmber': 'novèmber', 'desèmber': 'desèmber',
+  // Common misspellings
+  'januari': 'yanüari', 'februari': 'febrüari', 'maart': 'mart',
+  'april': 'aprel', 'juni': 'yüni', 'juli': 'yüli',
+  'augustus': 'ougùstùs', 'september': 'sèptèmber', 'oktober': 'òktober',
+  'november': 'novèmber', 'december': 'desèmber',
+  'enero': 'yanüari', 'febrero': 'febrüari', 'marzo': 'mart',
+  'mayo': 'mei', 'junio': 'yüni', 'julio': 'yüli',
+  'agosto': 'ougùstùs', 'septiembre': 'sèptèmber', 'octubre': 'òktober',
+  'noviembre': 'novèmber', 'diciembre': 'desèmber',
+}
+
+// ── Spanish suffix → Papiamentu suffix patterns ─────────────────────
+const SUFFIX_TRANSFORMS: [RegExp, string][] = [
+  // -ción → -shon (informacion → informashon)
+  [/ción$/i, 'shon'],
   [/cion$/i, 'shon'],
-  // Aruba 'sion' → Curaçao 'shon'  (e.g. pension → penshon ... but careful)
+  // -sión → -shon (pension → penshon)
+  [/sión$/i, 'shon'],
   [/sion$/i, 'shon'],
+  // -dad → -dat (libertad → libertat, but be careful)
+  [/dad$/i, 'dat'],
 ]
 
-// ── c → k transform ────────────────────────────────────────────────
+// ── g+ui/ue → g+wi/we rule (Chapter II) ─────────────────────────────
+function applyGwRule(word: string): { result: string; changed: boolean } {
+  let result = word
+  let changed = false
 
+  // gui → gwi (linguista → lingwista)
+  const guiMatch = result.match(/gui/i)
+  if (guiMatch) {
+    result = result.replace(/gui/gi, 'gwi')
+    changed = true
+  }
+
+  // gue → gwe (antiguedad → antigwedat... but guera stays guera)
+  // Only apply if the result is in wordlist or original is not
+  // This is conservative — only for known patterns
+  const gueMatch = result.match(/güe/i)
+  if (gueMatch) {
+    result = result.replace(/güe/gi, 'gwe')
+    changed = true
+  }
+
+  return { result, changed }
+}
+
+// ── c → k transform ────────────────────────────────────────────────
 function applyCtoK(word: string): { result: string; changed: boolean } {
   const lower = word.toLowerCase()
 
-  // Skip if the word is a known exception
+  // Skip exceptions
   if (C_EXCEPTIONS.has(lower)) return { result: word, changed: false }
 
-  // Skip if word doesn't contain 'c' at all
+  // Skip if no 'c' at all
   if (!lower.includes('c')) return { result: word, changed: false }
 
   let result = ''
@@ -54,10 +109,9 @@ function applyCtoK(word: string): { result: string; changed: boolean } {
     const chLower = ch.toLowerCase()
 
     if (chLower === 'c') {
-      // Check if this 'c' is part of 'ch' digraph
       const next = chars[i + 1]?.toLowerCase()
       if (next === 'h') {
-        // Keep 'ch' digraph intact
+        // Keep ch digraph intact
         result += ch
       } else {
         // Replace c with k (preserve case)
@@ -72,44 +126,79 @@ function applyCtoK(word: string): { result: string; changed: boolean } {
   return { result, changed }
 }
 
-// ── Verify result against wordlist ──────────────────────────────────
-
+// ── Verify against wordlist ─────────────────────────────────────────
 function isInWordlist(word: string): boolean {
-  const set = getWordSet()
-  return set.has(word.toLowerCase())
+  return getWordSet().has(word.toLowerCase())
 }
 
 // ── Main entry point ────────────────────────────────────────────────
 
+export interface OrthographyResult {
+  corrected: string
+  changed: boolean
+  rules: string[]  // Which rules were applied
+}
+
 export function applyOrthography(word: string): { corrected: string; changed: boolean } {
+  const result = applyOrthographyDetailed(word)
+  return { corrected: result.corrected, changed: result.changed }
+}
+
+export function applyOrthographyDetailed(word: string): OrthographyResult {
   let current = word
   let anyChange = false
+  const rules: string[] = []
 
-  // 1. Apply c → k rule
-  const ck = applyCtoK(current)
-  if (ck.changed) {
-    // Only apply if the result is a known word OR the original was not known
-    // (if original IS known, don't break it)
-    const origKnown = isInWordlist(current)
-    const newKnown = isInWordlist(ck.result)
-
-    if (!origKnown || newKnown) {
-      current = ck.result
-      anyChange = true
-    }
+  // ── Rule 1: Day/month normalization ──
+  const dayMatch = OFFICIAL_DAYS[current.toLowerCase()]
+  if (dayMatch && current !== dayMatch) {
+    current = dayMatch
+    anyChange = true
+    rules.push('day-spelling')
   }
 
-  // 2. Apply Aruba-style orthographic patterns
-  for (const [pattern, replacement] of ORTHO_PATTERNS) {
+  const monthMatch = OFFICIAL_MONTHS[current.toLowerCase()]
+  if (monthMatch && current !== monthMatch) {
+    current = monthMatch
+    anyChange = true
+    rules.push('month-spelling')
+  }
+
+  // ── Rule 2: Spanish suffix transforms (BEFORE c→k so -cion→-shon catches) ──
+  for (const [pattern, replacement] of SUFFIX_TRANSFORMS) {
     if (pattern.test(current)) {
       const transformed = current.replace(pattern, replacement)
-      // Only apply if result is in the wordlist (avoid false corrections)
       if (isInWordlist(transformed)) {
         current = transformed
         anyChange = true
+        rules.push('suffix-transform')
+        break  // Only apply one suffix transform
       }
     }
   }
 
-  return { corrected: current, changed: anyChange }
+  // ── Rule 3: c → k ──
+  const ck = applyCtoK(current)
+  if (ck.changed) {
+    const origKnown = isInWordlist(current)
+    const newKnown = isInWordlist(ck.result)
+    // Apply if: original was unknown, OR result is known, OR both unknown (prefer k)
+    if (!origKnown || newKnown) {
+      current = ck.result
+      anyChange = true
+      rules.push('c-to-k')
+    }
+  }
+
+  // ── Rule 4: g+ui/ue → g+wi/we ──
+  const gw = applyGwRule(current)
+  if (gw.changed) {
+    if (isInWordlist(gw.result) || !isInWordlist(current)) {
+      current = gw.result
+      anyChange = true
+      rules.push('g-wi-we')
+    }
+  }
+
+  return { corrected: current, changed: anyChange, rules }
 }

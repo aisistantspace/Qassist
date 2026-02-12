@@ -87,6 +87,12 @@ export function correctPapiamentu(
       continue
     }
 
+    // Skip contractions (words with apostrophe) — these follow Buki di Oro Chapter IX
+    if (word.includes("'")) {
+      output.push({ type: 'word', value: word })
+      continue
+    }
+
     // ── Step 3a: Variant normalization (Aruba → Curaçao) ──
     const variant = normalizeVariant(word, locale)
     if (variant.changed) {
