@@ -180,9 +180,6 @@ function LoginForm() {
               </h1>
             </div>
           </div>
-          <p className="text-blue-200/40 text-sm font-medium tracking-wide ml-14">
-            Intelligent Customer Engagement Platform
-          </p>
         </div>
 
         {/* Center: Hero message + features */}

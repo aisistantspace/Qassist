@@ -114,6 +114,56 @@ const MONTH_FIXES: [RegExp, string][] = [
   [/\bdiciembre\b/gi, 'desèmber'],
 ]
 
+// ── Spanish imperative / multi-word phrase fixes ─────────────────────
+// AI models frequently generate these Spanish constructions in PA output.
+// Must run BEFORE word-level substitution so multi-word patterns are caught intact.
+
+const SPANISH_PHRASE_FIXES: [RegExp, string][] = [
+  // "házmelo saber" / "házmelo sa" → "laga mi sa" (let me know)
+  [/\bh[aá]zmelo\s+saber\b/gi, 'laga mi sa'],
+  [/\bh[aá]zmelo\s+sa\b/gi, 'laga mi sa'],
+  // "hágamelo saber" / "hágamelo sa" → "laga mi sa" (formal let me know)
+  [/\bh[aá]gamelo\s+saber\b/gi, 'laga mi sa'],
+  [/\bh[aá]gamelo\s+sa\b/gi, 'laga mi sa'],
+  // "déjame saber" / "dejame saber" → "laga mi sa"
+  [/\bd[eé]jame\s+saber\b/gi, 'laga mi sa'],
+  // "no dude(n) en" → "no duda di" (don't hesitate to)
+  [/\bno\s+dude[ns]?\s+en\b/gi, 'no duda di'],
+  // "estoy aquí para" → "mi ta aki pa" (I'm here to)
+  [/\bestoy\s+aqu[ií]\s+para\b/gi, 'mi ta aki pa'],
+  // "estamos aquí para" → "nos ta aki pa" (we're here to)
+  [/\bestamos\s+aqu[ií]\s+para\b/gi, 'nos ta aki pa'],
+  // "con gusto" → "ku gusto" (with pleasure)
+  [/\bcon\s+gusto\b/gi, 'ku gusto'],
+  // "si tiene(s)" → "si bo tin" (if you have)
+  [/\bsi\s+tienes?\b/gi, 'si bo tin'],
+]
+
+// ── Standalone-nan plural merging ────────────────────────────────────
+// AI models sometimes write PA plurals as two words: "servisio nan" instead of "servisionan".
+// This map merges the most common cases back into correct PA plurals.
+
+const NAN_PLURAL_FIXES: Record<string, string> = {
+  'servisio': 'servisionan',
+  'produkto': 'produktonan',
+  'seguro': 'seguronan',
+  'kliente': 'klientenan',
+  'dokumento': 'dokumentonan',
+  'pregunta': 'preguntanan',
+  'persona': 'personanan',
+  'informashon': 'informashonnan',
+  'kondishon': 'kondishonnan',
+  'opshon': 'opshonnan',
+  'obligashon': 'obligashonnan',
+  'situashon': 'situashonnan',
+  'organisashon': 'organisashonnan',
+  'protekshon': 'protekshonnan',
+  'aplikashon': 'aplikashonnan',
+  'riesgo': 'riesgonan',
+  'famia': 'famianan',
+  'trabou': 'trabounan',
+}
+
 // ── Contraction normalization (Chapter IX) ──────────────────────────
 // Accept common contractions as valid — don't "correct" them
 
@@ -134,6 +184,18 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
 
   // 1. Apply greeting/phrase pattern fixes (Spanish → Papiamentu)
   for (const [pattern, replacement] of GREETING_FIXES) {
+    const match = result.match(pattern)
+    if (match) {
+      const original = match[0]
+      result = result.replace(pattern, replacement)
+      if (original.toLowerCase() !== replacement.toLowerCase()) {
+        corrections.push({ from: original, to: replacement })
+      }
+    }
+  }
+
+  // 1b. Apply Spanish imperative/phrase fixes (must run before word-level substitution)
+  for (const [pattern, replacement] of SPANISH_PHRASE_FIXES) {
     const match = result.match(pattern)
     if (match) {
       const original = match[0]
@@ -192,7 +254,26 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     })
   }
 
-  // 5. Scan for phrases that need case correction
+  // 5. Merge standalone "nan" plurals back into single PA words
+  //    e.g. "servisio nan" → "servisionan"
+  for (const [noun, plural] of Object.entries(NAN_PLURAL_FIXES)) {
+    // Match noun + space(s) + nan (case insensitive, word boundary)
+    const nanPattern = new RegExp(`\\b${noun}\\s+nan\\b`, 'gi')
+    const nanMatch = result.match(nanPattern)
+    if (nanMatch) {
+      for (const original of nanMatch) {
+        // Preserve leading case
+        let cased = plural
+        if (original[0] === original[0].toUpperCase() && original[0] !== original[0].toLowerCase()) {
+          cased = plural[0].toUpperCase() + plural.slice(1)
+        }
+        result = result.replace(original, cased)
+        corrections.push({ from: original, to: cased })
+      }
+    }
+  }
+
+  // 6. Scan for phrases that need case correction
   const map = buildPhraseMap()
   const words = result.split(/\s+/)
 
