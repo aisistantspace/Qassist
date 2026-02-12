@@ -13,6 +13,7 @@ let arubaToCuracao: Record<string, string> | null = null
 let corePhrases: Record<string, unknown> | null = null
 let translations: Record<string, { nl: string; class: string; [key: string]: unknown }> | null = null
 let canonicalPhrases: string[] | null = null
+let spanishToPa: Record<string, string> | null = null
 
 function dataDir(): string {
   return path.join(process.cwd(), 'lib', 'papiamentu', 'data')
@@ -65,6 +66,29 @@ export function getTranslations(): Record<string, { nl: string; class: string; [
   const data = JSON.parse(raw) as { translations?: Record<string, { nl: string; class: string; [key: string]: unknown }> }
   translations = data.translations || {}
   return translations
+}
+
+/**
+ * Load Spanish-to-Papiamentu word substitution map.
+ * Used by the phrase pre-pass to replace common Spanish words with PA equivalents.
+ */
+export function getSpanishToPaMap(): Record<string, string> {
+  if (spanishToPa) return spanishToPa
+  try {
+    const filePath = path.join(dataDir(), 'spanish-to-pa.json')
+    const raw = fs.readFileSync(filePath, 'utf8')
+    const data = JSON.parse(raw) as Record<string, string>
+    // Filter out non-string values (like _comment)
+    spanishToPa = {}
+    for (const [k, v] of Object.entries(data)) {
+      if (typeof v === 'string' && !k.startsWith('_')) {
+        spanishToPa[k.toLowerCase()] = v
+      }
+    }
+  } catch {
+    spanishToPa = {}
+  }
+  return spanishToPa
 }
 
 /**

@@ -190,6 +190,24 @@ export function applyOrthographyDetailed(word: string): OrthographyResult {
     }
   }
 
+  // ── Rule 3b: Suffix transforms AGAIN after c→k ──
+  // Handles chained cases like "calidad" → (c→k) "kalidad" → (suffix) "kalidat"
+  // The first suffix pass couldn't fire because "calidat" wasn't in the wordlist,
+  // but after c→k, "kalidad" + -dad→-dat = "kalidat" IS in the wordlist.
+  if (rules.includes('c-to-k')) {
+    for (const [pattern, replacement] of SUFFIX_TRANSFORMS) {
+      if (pattern.test(current)) {
+        const transformed = current.replace(pattern, replacement)
+        if (isInWordlist(transformed)) {
+          current = transformed
+          anyChange = true
+          rules.push('suffix-transform-post-ck')
+          break
+        }
+      }
+    }
+  }
+
   // ── Rule 4: g+ui/ue → g+wi/we ──
   const gw = applyGwRule(current)
   if (gw.changed) {

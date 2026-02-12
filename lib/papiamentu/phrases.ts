@@ -12,7 +12,7 @@
  *   - Contraction patterns: normalize apostrophe usage
  */
 
-import { getCanonicalPhrases } from './load-data'
+import { getCanonicalPhrases, getSpanishToPaMap } from './load-data'
 
 export interface PhraseCorrection {
   from: string
@@ -169,7 +169,30 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     }
   }
 
-  // 4. Scan for phrases that need case correction
+  // 4. Spanish → Papiamentu word substitution
+  //    Replace common Spanish words the AI generates with their PA equivalents
+  const spanishMap = getSpanishToPaMap()
+  if (Object.keys(spanishMap).length > 0) {
+    // Split on word boundaries, replace each Spanish word with its PA equivalent
+    result = result.replace(/[a-záéíóúñüèòùàâêîôûäëïöÿ]+/gi, (match) => {
+      const lower = match.toLowerCase()
+      const replacement = spanishMap[lower]
+      if (replacement && lower !== replacement.toLowerCase()) {
+        // Preserve original casing
+        let cased = replacement
+        if (match === match.toUpperCase() && match !== match.toLowerCase()) {
+          cased = replacement.toUpperCase()
+        } else if (match[0] === match[0].toUpperCase() && match[0] !== match[0].toLowerCase()) {
+          cased = replacement[0].toUpperCase() + replacement.slice(1)
+        }
+        corrections.push({ from: match, to: cased })
+        return cased
+      }
+      return match
+    })
+  }
+
+  // 5. Scan for phrases that need case correction
   const map = buildPhraseMap()
   const words = result.split(/\s+/)
 

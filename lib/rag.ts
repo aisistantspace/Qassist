@@ -15,43 +15,163 @@ export interface KnowledgeBaseEntry {
   updated_at?: string
 }
 
-// Detect language from user text (EN, NL, ES, PA). Order: Spanish -> Dutch -> Papiamento -> EN.
+/**
+ * Detect language from user text using a SCORE-BASED system.
+ * Each language earns points for matching patterns.  Highest score wins.
+ * PA is scored with strong discriminators so it is not confused with ES/NL.
+ */
 export function detectLanguageFromText(text: string): 'EN' | 'NL' | 'ES' | 'PA' {
   const lowerText = text.toLowerCase().trim()
   if (!lowerText) return 'EN'
 
-  const spanishPatterns = [
-    /hola/i, /buenos?\s*d[ií]as?/i, /buenas?\s*(tardes?|noches?)/i,
-    /gracias/i, /por\s*favor/i, /cómo/i, /cuál/i, /qué/i,
-    /quiero/i, /necesito/i, /puedo/i, /tengo/i, /estoy/i,
-    /mi\s*nombre/i, /me\s*llamo/i, /soy/i,
-    /información/i, /ayuda/i, /pregunta/i,
-    /cuánto/i, /cuándo/i, /dónde/i,
-    /visa/i, /permiso/i, /residencia/i, /inmigración/i,
-    /mudarse/i, /vivir/i, /trabajar/i,
-    /ñ/, /á/, /é/, /í/, /ó/, /ú/, /¿/, /¡/,
-  ]
-  const dutchPatterns = [
-    /hallo/i, /hoe/i, /ik\s/i, /graag/i, /kunnen/i, /kunt\s/i, /kunnen\s/i,
-    /informatie/i, /visum/i, /vergunning/i, /verblijf/i, /werk/i,
-    /wat/i, /waar/i, /wanneer/i, /waarom/i, /welke/i,
-    /bedankt/i, /alsjeblieft/i, /help/i, /vraag/i,
-    /mijn\s/i, /naam/i, /email/i, /telefoon/i,
-    /een\s/i, /het\s/i, /de\s/i, /van\s/i, /voor\s/i, /met\s/i,
-    /ja/i, /nee/i, /goed/i, /als\s/i,
-  ]
-  const papiamentoPatterns = [
-    /bon\s*dia/i, /kon\s*ta/i, /mi\s*ta/i, /bo\s*ta/i,
-    /por\s*fabor/i, /danki/i, /pregunta/i, /yuda/i,
-    /kiko/i, /kon/i, /undia/i, /caminda/i,
-    /permit/i, /residencia/i, /bisa/i, /immigracion/i,
-    /mi\s*nan/i, /bo\s*nan/i, /nos\s*ta/i,
+  // ── Papiamentu patterns (scored) ─────────────────────────────────
+  // Weight 3 = very strong PA indicator (no overlap with ES/NL)
+  // Weight 2 = strong indicator
+  // Weight 1 = shared with ES but also common in PA
+  const paPatterns: [RegExp, number][] = [
+    // --- Weight 3: unique PA markers ---
+    [/\bta\b/i, 3],           // verb marker "ta" (very frequent in PA)
+    [/\bku\b/i, 3],           // "with" (Spanish uses "con")
+    [/\bkiko\b/i, 3],         // "what" (Spanish "qué")
+    [/\bbai\b/i, 3],          // "go" (Spanish "ir")
+    [/\bduna\b/i, 3],         // "give" (Spanish "dar")
+    [/\bmester\b/i, 3],       // "must" (Spanish "deber")
+    [/\btur\b/i, 3],          // "all" (Spanish "todo")
+    [/\bmashá\b/i, 3],        // "very/much"
+    [/\bkaminda\b/i, 3],      // "where" (Spanish "donde")
+    [/\blaga\b/i, 3],         // "let/leave"
+    [/\bhasi\b/i, 3],         // "do/make" (Spanish "hacer")
+    [/\bdanki\b/i, 3],        // "thank you"
+    [/\bbisa\b/i, 3],         // "tell/say"
+    [/\bkòrsou\b/i, 3],       // Curaçao in PA
+    [/\bserka\b/i, 3],        // "near/at"
+    [/\bawor\b/i, 3],         // "now"
+    [/\btambe\b/i, 3],        // "also"
+    [/\bdjis\b/i, 3],         // "just"
+    [/\bpromé\b/i, 3],        // "first"
+    [/\bdifo\b/i, 3],         // "tough/difficult"
+    // k-words where Spanish uses c (strong PA signal)
+    [/\bkasa\b/i, 3],         // "house" (ES: casa)
+    [/\bkome\b/i, 3],         // "eat" (ES: comer)
+    [/\bkoló\b/i, 3],         // "color" (ES: color)
+    [/\bkurason\b/i, 3],      // "heart" (ES: corazón)
+    [/\bkòmou\b/i, 3],        // "how" (ES: cómo)
+    [/\bkachó\b/i, 3],        // "dog"
+    [/\btraha\b/i, 3],        // "work" (ES: trabajar)
+    [/\bpèrdè\b/i, 3],        // "lose"
+    // --- Weight 2: strong PA phrases and patterns ---
+    [/bon\s*dia/i, 2],         // "good day"
+    [/bon\s*tardi/i, 2],       // "good afternoon"
+    [/bon\s*nochi/i, 2],       // "good night"
+    [/bon\s*bini/i, 2],        // "welcome"
+    [/kon\s*ta/i, 2],          // "how are you"
+    [/por\s*fabor/i, 2],       // "please" (note: fabor, not favor)
+    [/\bmi\s+ta\b/i, 2],      // "I am" (PA verb structure)
+    [/\bbo\s+ta\b/i, 2],      // "you are"
+    [/\bnos\s+ta\b/i, 2],     // "we are"
+    [/\bnan\s+ta\b/i, 2],     // "they are"
+    [/\bmi\s+ke\b/i, 2],      // "I want"
+    [/\bbo\s+ke\b/i, 2],      // "you want"
+    [/shon\b/i, 2],            // PA suffix (-shon not -ción)
+    // --- Weight 1: present in PA but may overlap ---
+    [/\bpa\b/i, 1],            // preposition (but also ES "para")
+    [/\bdi\b/i, 1],            // "of" (also ES "de")
+    [/\bun\b/i, 1],            // "a/an" (shared)
+    [/\bbo\b/i, 1],            // "you"
+    [/\bsi\b/i, 1],            // "if/yes"
+    [/\bnos\b/i, 1],           // "our/we"
+    [/\byuda\b/i, 1],          // "help" (ES: ayuda)
   ]
 
-  if (spanishPatterns.some(p => p.test(lowerText))) return 'ES'
-  if (dutchPatterns.some(p => p.test(lowerText))) return 'NL'
-  if (papiamentoPatterns.some(p => p.test(lowerText))) return 'PA'
-  return 'EN'
+  // ── Spanish patterns (scored) ────────────────────────────────────
+  // NOTE: bare accent patterns removed — they fire on PA text too
+  const esPatterns: [RegExp, number][] = [
+    // --- Weight 3: uniquely Spanish ---
+    [/\bhola\b/i, 3],
+    [/\bcómo\b/i, 3],          // "how" with Spanish accent
+    [/\bqué\b/i, 3],           // "what" (PA uses "kiko")
+    [/\bestoy\b/i, 3],         // "I am" (PA uses "mi ta")
+    [/\bme\s+llamo\b/i, 3],    // "my name is"
+    [/\bquiero\b/i, 3],        // "I want" (PA uses "mi ke")
+    [/\bnecesito\b/i, 3],      // "I need"
+    [/\bpuedo\b/i, 3],         // "I can"
+    [/\btengo\b/i, 3],         // "I have"
+    [/\binmigración\b/i, 3],
+    [/\bmudarse\b/i, 3],
+    [/\bdónde\b/i, 3],
+    [/\bcuánto\b/i, 3],
+    [/\bcuándo\b/i, 3],
+    [/¿/i, 3],                 // inverted question mark (uniquely Spanish)
+    [/¡/i, 3],                 // inverted exclamation (uniquely Spanish)
+    // --- Weight 2 ---
+    [/buenos?\s*d[ií]as?/i, 2],
+    [/buenas?\s*(tardes?|noches?)/i, 2],
+    [/\bgracias\b/i, 2],       // "thanks" (PA: danki)
+    [/por\s*favor\b/i, 2],     // note: "favor" not "fabor"
+    [/\binformación\b/i, 2],
+    [/\bayuda\b/i, 2],
+    [/\bvivir\b/i, 2],
+    [/\btrabajar\b/i, 2],
+    // --- Weight 1 ---
+    [/\bpregunta\b/i, 1],      // shared with PA
+    [/\bvisa\b/i, 1],
+    [/\bpermiso\b/i, 1],
+    [/\bresidencia\b/i, 1],
+    [/\bsoy\b/i, 1],
+  ]
+
+  // ── Dutch patterns (scored) ──────────────────────────────────────
+  const nlPatterns: [RegExp, number][] = [
+    [/\bhallo\b/i, 3],
+    [/\bik\s/i, 3],
+    [/\bgraag\b/i, 3],
+    [/\bkunnen\b/i, 3],
+    [/\bbedankt\b/i, 3],
+    [/\balsjeblieft\b/i, 3],
+    [/\binformatie\b/i, 3],
+    [/\bvisum\b/i, 3],
+    [/\bvergunning\b/i, 3],
+    [/\bverblijf\b/i, 3],
+    [/\bhoe\b/i, 2],
+    [/\bwat\b/i, 2],
+    [/\bwaar\b/i, 2],
+    [/\bwanneer\b/i, 2],
+    [/\bwaarom\b/i, 2],
+    [/\bwelke\b/i, 2],
+    [/\bmijn\s/i, 2],
+    [/\bnaam\b/i, 2],
+    [/\bvraag\b/i, 2],
+    [/\bwerk\b/i, 2],
+    [/\bhet\s/i, 1],
+    [/\been\s/i, 1],
+    [/\bde\s/i, 1],
+    [/\bvan\s/i, 1],
+    [/\bvoor\s/i, 1],
+    [/\bgoed\b/i, 1],
+    [/\bnee\b/i, 1],
+  ]
+
+  // Score each language
+  function score(patterns: [RegExp, number][]): number {
+    let total = 0
+    for (const [pat, weight] of patterns) {
+      if (pat.test(lowerText)) total += weight
+    }
+    return total
+  }
+
+  const paScore = score(paPatterns)
+  const esScore = score(esPatterns)
+  const nlScore = score(nlPatterns)
+
+  // If any language scored, return the highest. On tie: PA > ES > NL
+  // (PA and ES share many words, so PA wins ties because PA is a subset context)
+  const maxScore = Math.max(paScore, esScore, nlScore)
+
+  if (maxScore === 0) return 'EN'
+  if (paScore >= esScore && paScore >= nlScore) return 'PA'
+  if (esScore >= nlScore) return 'ES'
+  return 'NL'
 }
 
 // Restore missing helper functions for API
