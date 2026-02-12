@@ -151,6 +151,17 @@ export default function KnowledgeBasePage() {
   // Website scrape
   const [scrapeUrl, setScrapeUrl] = useState('')
 
+  // Website crawl
+  const [crawlUrl, setCrawlUrl] = useState('')
+  const [crawlMaxPages, setCrawlMaxPages] = useState(25)
+  const [crawling, setCrawling] = useState(false)
+  const [crawlResults, setCrawlResults] = useState<{
+    pagesScraped: number
+    totalChunks: number
+    results: { url: string; title: string; chunks: number; error?: string }[]
+    message: string
+  } | null>(null)
+
   useEffect(() => {
     fetchData()
     fetchAgentSettings()
@@ -345,6 +356,38 @@ export default function KnowledgeBasePage() {
       showMessage('error', error.message || 'Failed to scrape website')
     } finally {
       setUploading(false)
+    }
+  }
+
+  // Website Crawl Handler
+  const handleCrawlWebsite = async () => {
+    if (!crawlUrl) {
+      showMessage('error', 'Please enter a URL')
+      return
+    }
+
+    setCrawling(true)
+    setCrawlResults(null)
+    try {
+      const res = await fetch('/api/scrape/crawl', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: crawlUrl, maxPages: crawlMaxPages }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Crawl failed')
+      }
+
+      setCrawlResults(data)
+      showMessage('success', data.message || 'Website crawled successfully!')
+      fetchData()
+    } catch (error: any) {
+      showMessage('error', error.message || 'Failed to crawl website')
+    } finally {
+      setCrawling(false)
     }
   }
 
@@ -877,44 +920,142 @@ export default function KnowledgeBasePage() {
       {/* Scrape Website Tab */}
       {activeTab === 'scrape' && (
         <div className="space-y-6">
-          {/* Scrape Form */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Scrape Website</h2>
-            
-            <div className="space-y-4">
+          {/* Crawl Website — the main feature */}
+          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-primary-100">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="p-2 bg-primary-50 rounded-lg">
+                <GlobeAltIcon className="w-6 h-6 text-primary-600" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Crawl Entire Website</h2>
+                <p className="text-sm text-gray-500">Automatically discover and import all pages from a website</p>
+              </div>
+            </div>
+
+            <div className="space-y-4 mt-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Website URL
                 </label>
                 <input
                   type="url"
+                  value={crawlUrl}
+                  onChange={(e) => setCrawlUrl(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-gray-50 text-gray-900 placeholder-gray-400"
+                  placeholder="https://www.example.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Max Pages: {crawlMaxPages}
+                </label>
+                <input
+                  type="range"
+                  min="5"
+                  max="50"
+                  step="5"
+                  value={crawlMaxPages}
+                  onChange={(e) => setCrawlMaxPages(parseInt(e.target.value))}
+                  className="w-full accent-primary-600"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>5 pages</span>
+                  <span>50 pages</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleCrawlWebsite}
+                disabled={crawling || !crawlUrl}
+                className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2 transition-colors"
+              >
+                {crawling ? (
+                  <>
+                    <ClockIcon className="w-5 h-5 animate-spin" />
+                    Crawling website... This may take a few minutes
+                  </>
+                ) : (
+                  <>
+                    <GlobeAltIcon className="w-5 h-5" />
+                    Crawl Website
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Crawl Results */}
+            {crawlResults && (
+              <div className="mt-6 border-t border-gray-200 pt-4">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                    {crawlResults.pagesScraped} pages crawled
+                  </div>
+                  <div className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                    {crawlResults.totalChunks} knowledge entries created
+                  </div>
+                </div>
+                <div className="max-h-64 overflow-y-auto space-y-2">
+                  {crawlResults.results.map((r, i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm">
+                      {r.error ? (
+                        <XCircleIcon className="w-4 h-4 text-red-400 shrink-0" />
+                      ) : (
+                        <CheckCircleIcon className="w-4 h-4 text-green-500 shrink-0" />
+                      )}
+                      <span className="text-gray-700 truncate flex-1" title={r.url}>
+                        {r.title || r.url}
+                      </span>
+                      {r.chunks > 0 && (
+                        <span className="text-xs text-gray-400 shrink-0">{r.chunks} chunks</span>
+                      )}
+                      {r.error && (
+                        <span className="text-xs text-red-400 shrink-0">{r.error}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Single Page Scrape — secondary option */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-lg font-semibold mb-4 text-gray-900">Scrape Single Page</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Page URL
+                </label>
+                <input
+                  type="url"
                   value={scrapeUrl}
                   onChange={(e) => setScrapeUrl(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-gray-50 text-gray-900 placeholder-gray-400"
-                  placeholder="https://example.com/page"
+                  placeholder="https://example.com/specific-page"
                 />
-                <p className="text-sm text-gray-500 mt-2">
-                  We'll fetch the page content and extract visible text
-                </p>
               </div>
 
               <button
                 onClick={handleScrapeWebsite}
                 disabled={uploading || !scrapeUrl}
-                className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
+                className="w-full bg-gray-600 text-white py-2.5 rounded-lg hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2 text-sm"
               >
-                <GlobeAltIcon className="w-5 h-5" />
-                {uploading ? 'Scraping...' : 'Scrape Website'}
+                <GlobeAltIcon className="w-4 h-4" />
+                {uploading ? 'Scraping...' : 'Scrape Single Page'}
               </button>
             </div>
           </div>
 
-          {/* Scraped Sites List (from documents) */}
+          {/* Scraped Sites List */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Scraped Websites</h2>
-            
+            <h2 className="text-lg font-semibold mb-4 text-gray-900">
+              Scraped Websites ({documents.filter(d => d.file_type === 'url').length})
+            </h2>
+
             {documents.filter(d => d.file_type === 'url').length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No websites scraped yet. Add one above!</p>
+              <p className="text-gray-500 text-center py-8">No websites scraped yet. Use the crawler above!</p>
             ) : (
               <div className="space-y-3">
                 {documents.filter(d => d.file_type === 'url').map((doc) => (
@@ -923,7 +1064,7 @@ export default function KnowledgeBasePage() {
                     className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors"
                   >
                     <div className="flex justify-between items-start">
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-gray-900 truncate">{doc.filename}</h3>
                         <div className="flex gap-4 mt-2 text-sm text-gray-600">
                           <span>{doc.chunk_count} chunks</span>

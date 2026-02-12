@@ -105,6 +105,7 @@ export default function ModernChatInterface({
   const [leadId, setLeadId] = useState<string | null>(null)
   const [conversationId, setConversationId] = useState<string | null>(null)
   const [detectedLanguage, setDetectedLanguage] = useState<'EN' | 'NL' | 'ES' | 'PA'>('EN')
+  const [widgetSuggestions, setWidgetSuggestions] = useState<string[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const isDark = theme === 'dark'
@@ -114,6 +115,7 @@ export default function ModernChatInterface({
 
   useEffect(() => {
     fetchBranding()
+    fetchWidgetConfig()
   }, [tenantSlug, tenantId])
 
   const fetchBranding = async () => {
@@ -138,6 +140,20 @@ export default function ModernChatInterface({
       }
     } catch (error) {
       console.error('Error fetching branding:', error)
+    }
+  }
+
+  const fetchWidgetConfig = async () => {
+    try {
+      const res = await fetch('/api/settings/widget?t=' + Date.now())
+      if (res.ok) {
+        const data = await res.json()
+        if (data.suggested_messages && Array.isArray(data.suggested_messages) && data.suggested_messages.length > 0) {
+          setWidgetSuggestions(data.suggested_messages)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching widget config:', error)
     }
   }
 
@@ -391,9 +407,9 @@ export default function ModernChatInterface({
       </div>
 
       {/* Suggested Messages */}
-      {suggestedMessages.length > 0 && messages.length <= 5 && (
+      {(suggestedMessages.length > 0 || widgetSuggestions.length > 0) && messages.length <= 5 && (
         <div className={`px-2 sm:px-4 py-2 flex flex-wrap gap-2 border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-          {suggestedMessages.map((suggestion, i) => (
+          {(suggestedMessages.length > 0 ? suggestedMessages : widgetSuggestions).map((suggestion, i) => (
             <button
               key={i}
               onClick={() => sendMessage(suggestion)}

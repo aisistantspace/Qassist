@@ -51,6 +51,26 @@ export async function GET() {
       ? avgData.reduce((sum: number, c: any) => sum + (c.turn_count || 0), 0) / avgData.length
       : 0
 
+    // Language distribution
+    const { data: langData } = await supabaseAdmin
+      .from('conversations')
+      .select('language')
+      .eq('tenant_id', DEFAULT_TENANT_ID)
+
+    const languageDistribution: Record<string, number> = {}
+    if (langData) {
+      for (const row of langData) {
+        const lang = row.language || 'EN'
+        languageDistribution[lang] = (languageDistribution[lang] || 0) + 1
+      }
+    }
+
+    // Knowledge base count
+    const { count: kbCount } = await supabaseAdmin
+      .from('knowledge_base')
+      .select('*', { count: 'exact', head: true })
+      .eq('tenant_id', DEFAULT_TENANT_ID)
+
     return NextResponse.json({
       leads_today: leadsToday || 0,
       active_conversations: activeConversations || 0,
@@ -58,6 +78,8 @@ export async function GET() {
       mailchimp_synced: mailchimpSynced || 0,
       hubspot_synced: hubspotSynced || 0,
       avg_conversation_length: avgConversationLength,
+      language_distribution: languageDistribution,
+      knowledge_base_entries: kbCount || 0,
     })
   } catch (error: any) {
     console.error('Error fetching dashboard stats:', error)
