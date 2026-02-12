@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       // Fetch the webpage
       const response = await fetch(url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; AstuteWebBot/1.0; +https://astutewebagency.com)',
+          'User-Agent': 'Mozilla/5.0 (compatible; AstuteWebBot/1.0; +https://astuteweb.agency)',
         },
       })
 

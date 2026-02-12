@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
 
         const response = await fetch(normalizedUrl, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; AstuteWebBot/1.0; +https://astutewebagency.com)',
+            'User-Agent': 'Mozilla/5.0 (compatible; AstuteWebBot/1.0; +https://astuteweb.agency)',
           },
           signal: AbortSignal.timeout(10000),
         })

@@ -359,7 +359,7 @@ function LoginForm() {
           {/* Footer */}
           <p className="mt-4 text-center text-xs text-blue-200/20">
             Powered by{' '}
-            <a href="https://astutewebagency.com" target="_blank" rel="noopener noreferrer" className="text-blue-200/30 hover:text-blue-200/50 transition-colors underline decoration-blue-200/10 underline-offset-2">
+            <a href="https://astuteweb.agency" target="_blank" rel="noopener noreferrer" className="text-blue-200/30 hover:text-blue-200/50 transition-colors underline decoration-blue-200/10 underline-offset-2">
               Astute Web Agency
             </a>
           </p>

@@ -471,7 +471,7 @@ export default function ModernChatInterface({
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" className="w-4 h-4 text-gray-400">
                 <path d="M16 3.80316V12.1996C16 14.2987 14.2987 16 12.1996 16H3.79899C1.70127 16 0 14.2987 0 12.201V3.80177C0 1.70266 1.70266 0 3.80177 0H12.1968C14.2973 0 16 1.70266 16 3.80316Z" fill="currentColor"></path>
               </svg>
-              <a target="_blank" href="https://astutewebagency.com" className="text-[11px] text-gray-400 font-medium hover:text-gray-600 transition-colors">
+              <a target="_blank" href="https://astuteweb.agency" className="text-[11px] text-gray-400 font-medium hover:text-gray-600 transition-colors">
                 Powered by Astute Web Agency
               </a>
             </>

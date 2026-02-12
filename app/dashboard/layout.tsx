@@ -140,7 +140,7 @@ export default function DashboardLayout({
           Logout
         </button>
         <div className="text-[10px] text-gray-400 font-medium mb-2">
-          Developed by <a href="https://astutewebagency.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Astute Web Agency</a>
+          Developed by <a href="https://astuteweb.agency" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Astute Web Agency</a>
         </div>
         <div className="text-xs text-gray-500">Version 3.0.0 (White Label)</div>
         <Link href="/chat" className="text-xs text-primary-600 hover:text-primary-700 mt-1 inline-block">

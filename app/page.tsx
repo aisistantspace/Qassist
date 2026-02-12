@@ -70,7 +70,7 @@ export default function Home() {
       {/* Footer */}
       <div className="relative z-10 mt-20 text-blue-200/20 text-sm font-medium">
         Developed by{' '}
-        <a href="https://astutewebagency.com" target="_blank" className="text-blue-200/30 hover:text-blue-200/50 underline decoration-blue-200/10 underline-offset-2 transition-colors">
+        <a href="https://astuteweb.agency" target="_blank" className="text-blue-200/30 hover:text-blue-200/50 underline decoration-blue-200/10 underline-offset-2 transition-colors">
           Astute Web Agency
         </a>
       </div>
