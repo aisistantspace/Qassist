@@ -22,6 +22,8 @@ export async function GET() {
       max_tokens: 500,
       instructions: 'You are a dedicated customer support agent.',
       default_form_mode: 'conversational',
+      papiamentu_locale: 'pap-CW',
+      papiamentu_learning: false,
     }
 
     return NextResponse.json(data || defaultSettings)
@@ -45,7 +47,7 @@ export async function PATCH(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
-    const { instructions, openai_model, temperature, max_tokens, default_form_mode, llm_provider, llm_base_url, llm_api_key } = body
+    const { instructions, openai_model, temperature, max_tokens, default_form_mode, llm_provider, llm_base_url, llm_api_key, papiamentu_locale, papiamentu_learning } = body
 
     const { data: existing } = await supabaseAdmin
       .from('agent_settings')
@@ -64,6 +66,8 @@ export async function PATCH(request: NextRequest) {
     if (llm_provider !== undefined) updateData.llm_provider = llm_provider
     if (llm_base_url !== undefined) updateData.llm_base_url = llm_base_url || null
     if (llm_api_key !== undefined) updateData.llm_api_key = llm_api_key || null
+    if (papiamentu_locale !== undefined) updateData.papiamentu_locale = papiamentu_locale
+    if (papiamentu_learning !== undefined) updateData.papiamentu_learning = papiamentu_learning
 
     let result
     if (existing) {
@@ -91,6 +95,8 @@ export async function PATCH(request: NextRequest) {
           llm_provider: llm_provider || 'openai',
           llm_base_url: llm_base_url || null,
           llm_api_key: llm_api_key || null,
+          papiamentu_locale: papiamentu_locale || 'pap-CW',
+          papiamentu_learning: papiamentu_learning ?? false,
         })
         .select()
         .single()

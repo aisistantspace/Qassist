@@ -458,15 +458,17 @@ export async function POST(request: NextRequest) {
       assistantResponse += bookingPrompts[effectiveLanguage] || bookingPrompts.EN
     }
 
-    // Papiamentu correction layer (Curaçao): validate/correct PA responses with Buki di oro + official orthography
+    // Papiamentu correction layer: validate/correct PA responses with Buki di oro + official orthography
     if (effectiveLanguage === 'PA') {
       try {
-        const result = correctPapiamentu(assistantResponse, { locale: 'pap-CW' })
+        const paLocale = (settings as any).papiamentu_locale || 'pap-CW'
+        const paLearning = (settings as any).papiamentu_learning ?? false
+        const result = correctPapiamentu(assistantResponse, { locale: paLocale })
         assistantResponse = result.corrected
         if (process.env.NODE_ENV === 'development' && result.changes?.length) {
           console.log('[Papiamentu] corrections:', result.changes)
         }
-        if (process.env.PAPIAMENTU_LEARNING_ENABLED === 'true' && result.changes?.length) {
+        if ((paLearning || process.env.PAPIAMENTU_LEARNING_ENABLED === 'true') && result.changes?.length) {
           const contextSnippet = assistantResponse.slice(0, 200)
           for (const ch of result.changes) {
             void Promise.resolve(
@@ -477,7 +479,7 @@ export async function POST(request: NextRequest) {
                 change_type: ch.type,
                 context: contextSnippet,
               })
-            ).catch((err) => console.error('[Papiamentu] log correction failed:', err))
+            ).catch((err: unknown) => console.error('[Papiamentu] log correction failed:', err))
           }
         }
       } catch (e) {

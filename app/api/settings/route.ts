@@ -20,6 +20,8 @@ export async function GET() {
           openai_model: 'gpt-4o-mini',
           temperature: 0.7,
           max_tokens: 500,
+          papiamentu_locale: 'pap-CW',
+          papiamentu_learning: false,
         })
       }
       throw error
@@ -49,7 +51,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { instructions, openai_model, temperature, max_tokens, llm_provider, llm_base_url, llm_api_key } = body
+    const { instructions, openai_model, temperature, max_tokens, llm_provider, llm_base_url, llm_api_key, papiamentu_locale, papiamentu_learning } = body
 
     // Validation
     if (!instructions || instructions.trim().length < 10) {
@@ -108,6 +110,8 @@ export async function POST(request: NextRequest) {
           llm_provider: llm_provider || 'openai',
           llm_base_url: llm_base_url || null,
           llm_api_key: llm_api_key || null,
+          papiamentu_locale: papiamentu_locale || 'pap-CW',
+          papiamentu_learning: papiamentu_learning ?? false,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existing.id)
@@ -131,6 +135,8 @@ export async function POST(request: NextRequest) {
           llm_provider: llm_provider || 'openai',
           llm_base_url: llm_base_url || null,
           llm_api_key: llm_api_key || null,
+          papiamentu_locale: papiamentu_locale || 'pap-CW',
+          papiamentu_learning: papiamentu_learning ?? false,
         })
         .select()
         .single()

@@ -197,6 +197,8 @@ export default function SettingsPage() {
       if (agentRes.ok) {
         const agentData = await agentRes.json()
         setDefaultFormMode(agentData.default_form_mode || 'conversational')
+        if (agentData.papiamentu_locale) setPapiamentuLocale(agentData.papiamentu_locale)
+        if (agentData.papiamentu_learning !== undefined) setPapiamentuLearning(agentData.papiamentu_learning)
       }
 
       if (leadScoringRes.ok) {
@@ -1279,6 +1281,30 @@ export default function SettingsPage() {
                 </div>
               )}
             </div>
+
+            {/* Save Papiamentu Settings */}
+            <button
+              onClick={async () => {
+                setSaving(true)
+                try {
+                  const res = await fetch('/api/settings/agent', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ papiamentu_locale: papiamentuLocale, papiamentu_learning: papiamentuLearning }),
+                  })
+                  if (!res.ok) throw new Error('Failed to save')
+                  showMessage('success', 'Papiamentu settings saved!')
+                } catch {
+                  showMessage('error', 'Failed to save Papiamentu settings')
+                } finally {
+                  setSaving(false)
+                }
+              }}
+              disabled={saving}
+              className="w-full sm:w-auto px-6 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 disabled:opacity-50 transition-colors"
+            >
+              {saving ? 'Saving...' : 'Save Papiamentu Settings'}
+            </button>
 
             {/* View Correction Log */}
             <a

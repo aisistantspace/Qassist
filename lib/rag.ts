@@ -1,6 +1,7 @@
 import { getSupabaseAdmin } from './supabase'
 import { generateEmbedding, getAgentSettings } from './openai'
 import { getBrandingConfig } from './branding'
+import { getPapiamentuPromptGuide } from './papiamentu/prompt-guide'
 
 export interface KnowledgeBaseEntry {
   id: string
@@ -296,7 +297,7 @@ ${userInstructions}
 ### CRITICAL LANGUAGE INSTRUCTION
 - **You MUST respond ONLY in ${currentLang}.**
 - The user is speaking ${currentLang}, and you must match them perfectly.
-
+${language === 'PA' ? getPapiamentuPromptGuide() : ''}
 ### CRITICAL LINK RULE
 - **When you include any URL (e.g. booking link, website), NEVER wrap it in parentheses or brackets.** Output the raw URL so it stays clickable (e.g. "Book here: https://..." not "Book here: (https://...)"). Links must work when the user clicks them.
 
