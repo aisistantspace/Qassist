@@ -10,6 +10,7 @@ let wordSet: Set<string> | null = null
 let orthography: Record<string, unknown> | null = null
 let arubaToCuracao: Record<string, string> | null = null
 let corePhrases: Record<string, unknown> | null = null
+let translations: Record<string, { nl: string; class: string; [key: string]: unknown }> | null = null
 
 function dataDir(): string {
   return path.join(process.cwd(), 'lib', 'papiamentu', 'data')
@@ -47,4 +48,13 @@ export function getCorePhrases(): Record<string, unknown> {
   const raw = fs.readFileSync(filePath, 'utf8')
   corePhrases = JSON.parse(raw) as Record<string, unknown>
   return corePhrases
+}
+
+export function getTranslations(): Record<string, { nl: string; class: string; [key: string]: unknown }> {
+  if (translations) return translations
+  const filePath = path.join(dataDir(), 'papiamentu-dutch.json')
+  const raw = fs.readFileSync(filePath, 'utf8')
+  const data = JSON.parse(raw) as { translations?: Record<string, { nl: string; class: string; [key: string]: unknown }> }
+  translations = data.translations || {}
+  return translations
 }

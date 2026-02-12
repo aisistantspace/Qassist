@@ -1,0 +1,266 @@
+{
+  "metadata": {
+    "source": "Dikshonario Papiamentu-Hulandes, Van Putte (2005)",
+    "description": "Papiamentu to Dutch translation pairs extracted from published dictionary preview (A–abou)",
+    "note": "This is from a 23-page preview only. Full dictionary would add thousands more entries."
+  },
+  "translations": {
+    "abadesa": {
+      "nl": "abdis",
+      "class": "sus"
+    },
+    "abana": {
+      "nl": "verpatsen; goedkoop inkopen en duur verkopen",
+      "class": "sus",
+      "note": "used in expression: hasi abana ku un kos"
+    },
+    "abandoná": {
+      "nl": "verlaten; in de steek gelaten",
+      "class": "ver",
+      "region": "A"
+    },
+    "abandono": {
+      "nl": "verlating; verwaarlozing",
+      "class": "sus"
+    },
+    "abaratá": {
+      "nl": "in prijs verlagen",
+      "class": "ver"
+    },
+    "abarká": {
+      "nl": "omvatten; inhouden",
+      "class": "ver"
+    },
+    "abastesé": {
+      "nl": "leveren; bevoorraden",
+      "class": "ver"
+    },
+    "abastesementu": {
+      "nl": "levering",
+      "class": "sus"
+    },
+    "abat": {
+      "nl": "abt",
+      "class": "sus",
+      "variants": [
+        "abate"
+      ]
+    },
+    "abatí": {
+      "nl": "terneergeslagen",
+      "class": "ath"
+    },
+    "abatuar": {
+      "nl": "abattoir",
+      "class": "sus"
+    },
+    "abeha": {
+      "nl": "bij",
+      "class": "sus",
+      "note": "Apis mellifera"
+    },
+    "abèis": {
+      "nl": "abuis",
+      "class": "sus"
+    },
+    "ábemaria": {
+      "nl": "weesgegroet; God sta ons bij!",
+      "class": "sus"
+    },
+    "abentura": {
+      "nl": "avontuur",
+      "class": "sus"
+    },
+    "aber": {
+      "nl": "te maken hebben met",
+      "class": "ver",
+      "note": "used in: tin algu di aber ku"
+    },
+    "aberashon": {
+      "nl": "aberratie; ziekelijke afwijking",
+      "class": "sus"
+    },
+    "aberiguá": {
+      "nl": "uitzoeken; nagaan",
+      "class": "ver"
+    },
+    "aberiguashon": {
+      "nl": "uitzoeken",
+      "class": "sus"
+    },
+    "abertura": {
+      "nl": "opening; ingang",
+      "class": "sus"
+    },
+    "abesedario": {
+      "nl": "abc",
+      "class": "sus"
+    },
+    "abestrus": {
+      "nl": "struisvogel",
+      "class": "sus"
+    },
+    "abiertamente": {
+      "nl": "openlijk",
+      "class": "atv"
+    },
+    "ábil": {
+      "nl": "vaardig; bekwaam; handig",
+      "class": "ath"
+    },
+    "abilidat": {
+      "nl": "handigheid; vaardigheid; bekwaamheid; talent",
+      "class": "sus"
+    },
+    "abismo": {
+      "nl": "afgrond",
+      "class": "sus"
+    },
+    "abitá": {
+      "nl": "bewonen; bewoond",
+      "class": "ver"
+    },
+    "abitabel": {
+      "nl": "bewoonbaar",
+      "class": "ath"
+    },
+    "abitante": {
+      "nl": "inwoner",
+      "class": "sus"
+    },
+    "abitashon": {
+      "nl": "woning",
+      "class": "sus"
+    },
+    "abla": {
+      "nl": "spreken; spraak; spraakvermogen; taal",
+      "class": "ver/sus"
+    },
+    "ablá": {
+      "nl": "manier van spreken",
+      "class": "sus"
+    },
+    "abladuría": {
+      "nl": "geklets; praatjes",
+      "class": "sus",
+      "note": "Sefardisch"
+    },
+    "ablante": {
+      "nl": "spreker",
+      "class": "sus"
+    },
+    "ablativo": {
+      "nl": "ablativus",
+      "class": "sus",
+      "note": "grammatica"
+    },
+    "ablif": {
+      "nl": "wat zegt U?; wat zeg je?",
+      "class": "inh"
+    },
+    "abo": {
+      "nl": "jij",
+      "class": "pro",
+      "note": "grammaticaal onderwerp, met nadruk"
+    },
+    "abogá": {
+      "nl": "bepleiten; pleiten voor",
+      "class": "ver"
+    },
+    "abogado": {
+      "nl": "advocaat",
+      "class": "sus"
+    },
+    "abogasía": {
+      "nl": "advocatuur",
+      "class": "sus"
+    },
+    "abolengo": {
+      "nl": "herkomst; oorsprong",
+      "class": "sus"
+    },
+    "abolí": {
+      "nl": "afschaffen",
+      "class": "ver"
+    },
+    "abolishon": {
+      "nl": "afschaffing",
+      "class": "sus",
+      "note": "met name van de slavernij"
+    },
+    "abolishonismo": {
+      "nl": "beweging voor afschaffing van de slavernij",
+      "class": "sus"
+    },
+    "abominá": {
+      "nl": "verafschuwen",
+      "class": "ver"
+    },
+    "abominabel": {
+      "nl": "afschuwelijk",
+      "class": "ath"
+    },
+    "aboná": {
+      "nl": "abonneren",
+      "class": "ver"
+    },
+    "abonado": {
+      "nl": "abonnee; geabonneerde",
+      "class": "sus"
+    },
+    "abono": {
+      "nl": "abonnement",
+      "class": "sus"
+    },
+    "abordá": {
+      "nl": "aan boord gaan",
+      "class": "ver"
+    },
+    "abordo": {
+      "nl": "aan boord",
+      "class": "atv"
+    },
+    "aboresé": {
+      "nl": "verafschuwen; verfoeien",
+      "class": "ver"
+    },
+    "abortá": {
+      "nl": "aborteren; een miskraam krijgen",
+      "class": "ver"
+    },
+    "aborto": {
+      "nl": "abortus; miskraam",
+      "class": "sus"
+    },
+    "aboso": {
+      "nl": "jullie",
+      "class": "pro",
+      "region": "AB",
+      "note": "grammaticaal onderwerp"
+    },
+    "abou": {
+      "nl": "beneden; laag; leeg; plat",
+      "class": "atv/ath",
+      "variants": [
+        "djabou"
+      ]
+    },
+    "abusu": {
+      "nl": "misbruik",
+      "class": "sus",
+      "variants": [
+        "abuso",
+        "abuzu"
+      ]
+    },
+    "afó": {
+      "nl": "buiten; naar buiten; in het buitenland",
+      "class": "atv"
+    },
+    "afrikanchi": {
+      "nl": "afrikaantje",
+      "class": "sus",
+      "note": "eenjarige tuinplant"
+    }
+  }
+}
