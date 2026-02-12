@@ -209,6 +209,13 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     }
   }
 
+  // 1c. Remove duplicate consecutive phrases the AI sometimes stutters
+  //     e.g. "Por fabor, Por fabor" → "Por fabor,"
+  result = result.replace(/\b([\wáéíóúñüèòùàâêîôûäëïöÿ]+(?:\s+[\wáéíóúñüèòùàâêîôûäëïöÿ]+){0,3}),?\s+\1\b/gi, (full, phrase) => {
+    corrections.push({ from: full, to: phrase })
+    return phrase
+  })
+
   // 2. Apply day spelling fixes
   for (const [pattern, replacement] of DAY_FIXES) {
     const match = result.match(pattern)
@@ -276,7 +283,16 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     }
   }
 
-  // 6. Scan for phrases that need case correction
+  // 6. Fix incorrect -anan plurals on consonant-ending words
+  //    PA rule: words ending in a consonant take -nan, not -anan
+  //    e.g. "opshonanan" → "opshonnan", "informashonanan" → "informashonnan"
+  result = result.replace(/\b([a-záéíóúñüèòùàâêîôûäëïöÿ]+[bcdfghjklmnpqrstvwxz])anan\b/gi, (full, stem) => {
+    const fixed = stem + 'nan'
+    corrections.push({ from: full, to: fixed })
+    return fixed
+  })
+
+  // 7. Scan for phrases that need case correction
   const map = buildPhraseMap()
   const words = result.split(/\s+/)
 
@@ -295,6 +311,20 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
         }
       }
     }
+  }
+
+  // 8. Punctuation cleanup
+  //    Fix doubled/conflicting punctuation the AI sometimes generates
+  const beforePunct = result
+  result = result
+    .replace(/\.\?/g, '?')       // ".?" → "?"
+    .replace(/\.!/g, '!')         // ".!" → "!"
+    .replace(/\?\./g, '?')        // "?." → "?"
+    .replace(/!\.?/g, '!')        // "!." → "!"
+    .replace(/([?!])\1+/g, '$1')  // "??" → "?", "!!" → "!"
+    .replace(/\.{2,}/g, '.')      // ".." → "."
+  if (result !== beforePunct) {
+    corrections.push({ from: '(punctuation)', to: '(cleaned)' })
   }
 
   return {
