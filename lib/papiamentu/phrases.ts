@@ -209,7 +209,20 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     }
   }
 
-  // 1c. Remove duplicate consecutive phrases the AI sometimes stutters
+  // 1c. Fix chatbot self-referencing pronouns
+  //     When the bot (mi/nos) is the subject and the verb ends with -mi suffix,
+  //     it's saying "I help myself" instead of "I help you". Fix to -bo.
+  //     e.g. "mi por yudami" → "mi por yudabo", "nos ta yudami" → "nos ta yudabo"
+  result = result.replace(
+    /\b((?:mi|nos)\s+(?:por|ta|lo|a)\s+)([a-záéíóúñüèòùàâêîôûäëïöÿ]+)(mi)\b/gi,
+    (full, subject, verbStem, _suffix) => {
+      const fixed = subject + verbStem + 'bo'
+      corrections.push({ from: full.trim(), to: fixed.trim() })
+      return fixed
+    }
+  )
+
+  // 1d. Remove duplicate consecutive phrases the AI sometimes stutters
   //     e.g. "Por fabor, Por fabor" → "Por fabor,"
   result = result.replace(/\b([\wáéíóúñüèòùàâêîôûäëïöÿ]+(?:\s+[\wáéíóúñüèòùàâêîôûäëïöÿ]+){0,3}),?\s+\1\b/gi, (full, phrase) => {
     corrections.push({ from: full, to: phrase })

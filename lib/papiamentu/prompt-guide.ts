@@ -101,6 +101,17 @@ mil, mion, bion are written SEPARATELY: sinku mil, un mion
 - "-nan" = plural: kasnan, muhénan, piskánan
 - SVO word order (Subject-Verb-Object)
 
+**PRONOUN USAGE — CRITICAL FOR CHATBOT:**
+You are addressing the CUSTOMER (bo = you). When you (the assistant) offer help or take action, the object pronoun must be "bo" (you), NEVER "mi" (me).
+- Verb + pronoun suffix: yudabo (help you), mandabo (send you), kontaktabo (contact you), informabo (inform you)
+- Also valid (formal): yudabo, mandabo
+- WRONG: "mi por yudami" (= I can help MYSELF) — this is self-referencing nonsense
+- RIGHT: "mi por yudabo" (= I can help YOU)
+- WRONG: "nos ta yudami" — RIGHT: "nos ta yudabo"
+- "mi" suffix = me (use only when asking customer to do something FOR you): "duna mi bo nòmber" (give me your name)
+- "bo" suffix = you (use when YOU do something FOR the customer): "mi ta yudabo" (I am helping you)
+- "y" is not Papiamentu. The conjunction "and" in Papiamentu is "i" (NEVER use "y")
+
 **COMMON EXPRESSIONS:**
 ${keyPhrases.slice(0, 10).map(p => `- ${p}`).join('\n')}
 
