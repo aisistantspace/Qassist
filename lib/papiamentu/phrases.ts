@@ -75,6 +75,9 @@ const GREETING_FIXES: [RegExp, string][] = [
   [/\bde\s+nada\b/gi, 'Nada'],
   // "Lo siento" (Spanish) → "Sòri"
   [/\blo\s+siento\b/gi, 'Sòri'],
+  // "y" (Spanish conjunction) → "i" (PA conjunction)
+  // Only match standalone "y" between word boundaries (not inside words)
+  [/\by\b/gi, 'i'],
 ]
 
 // ── Buki di Oro official day spellings (Chapter X) ──────────────────
