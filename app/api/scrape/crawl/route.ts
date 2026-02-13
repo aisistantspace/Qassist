@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { generateEmbedding } from '@/lib/openai'
+import { getTenantFromRequest } from '@/lib/tenant'
 import * as cheerio from 'cheerio'
 
 // Simple language detection for scraped content
@@ -102,6 +103,7 @@ function delay(ms: number) {
 export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    const tenantId = (await getTenantFromRequest(request)).tenantId
     const body = await request.json()
     const { url, maxPages = 25, maxDepth = 3 } = body
 
@@ -179,6 +181,7 @@ export async function POST(request: NextRequest) {
             file_type: 'url',
             file_size: content.length,
             status: 'processing',
+            tenant_id: tenantId,
           })
           .select()
           .single()
@@ -208,6 +211,7 @@ export async function POST(request: NextRequest) {
                 embedding,
                 source_document_id: document.id,
                 chunk_index: i,
+                tenant_id: tenantId,
               })
 
             if (!kbError) chunkCount++

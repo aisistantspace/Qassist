@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { generateEmbedding } from '@/lib/openai'
+import { getTenantFromRequest } from '@/lib/tenant'
 import * as cheerio from 'cheerio'
 
 // Simple language detection
@@ -45,6 +46,7 @@ function chunkText(text: string, maxChunkSize: number = 1000): string[] {
 export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    const tenantId = (await getTenantFromRequest(request)).tenantId
     const body = await request.json()
     const { url } = body
 
@@ -74,6 +76,7 @@ export async function POST(request: NextRequest) {
         file_type: 'url',
         file_size: 0,
         status: 'processing',
+        tenant_id: tenantId,
       })
       .select()
       .single()
@@ -150,6 +153,7 @@ export async function POST(request: NextRequest) {
               embedding,
               source_document_id: document.id,
               chunk_index: i,
+              tenant_id: tenantId,
             })
 
           if (!kbError) chunkCount++
