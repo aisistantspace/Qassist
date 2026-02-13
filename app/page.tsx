@@ -99,7 +99,7 @@ export default function Home() {
         <div className="max-w-3xl">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6">
             AI that handles your
-            <span className="block text-blue-400 mt-1">customer operations.</span>
+            <span className="block text-blue-400 mt-1">customer conversations.</span>
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-12">
