@@ -5,9 +5,9 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Chat Assistant',
-  description: 'Get instant answers about immigration to Curaçao in English, Dutch, Spanish, or Papiamento',
-  keywords: ['Curaçao', 'immigration', 'visa', 'permit', 'AI assistant'],
+  title: 'Astute AIsistant — Your 24/7 AI Chat Assistant',
+  description: 'AI chat assistant that handles customer conversations, answers inquiries, creates tickets, and captures leads — around the clock in 4 languages.',
+  keywords: ['AI chat assistant', 'customer service', 'chatbot', 'lead capture', 'multilingual', 'service desk'],
 }
 
 export const viewport: Viewport = {
