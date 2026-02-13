@@ -222,7 +222,19 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     }
   )
 
-  // 1d. Remove duplicate consecutive phrases the AI sometimes stutters
+  // 1d. Fix doubled pronoun: verb+bo followed by standalone bo
+  //     e.g. "kontaktabo bo" → "kontakta bo", "yudabo bo" → "yuda bo"
+  //     The AI fuses verb+pronoun AND writes the pronoun again separately.
+  result = result.replace(
+    /\b([a-záéíóúñüèòùàâêîôûäëïöÿ]+)(bo)\s+(bo)\b/gi,
+    (full, verbStem, _suffix, _extra) => {
+      const fixed = verbStem + ' bo'
+      corrections.push({ from: full.trim(), to: fixed.trim() })
+      return fixed
+    }
+  )
+
+  // 1e. Remove duplicate consecutive phrases the AI sometimes stutters
   //     e.g. "Por fabor, Por fabor" → "Por fabor,"
   result = result.replace(/\b([\wáéíóúñüèòùàâêîôûäëïöÿ]+(?:\s+[\wáéíóúñüèòùàâêîôûäëïöÿ]+){0,3}),?\s+\1\b/gi, (full, phrase) => {
     corrections.push({ from: full, to: phrase })
