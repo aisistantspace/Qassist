@@ -17,7 +17,7 @@ const capabilities = [
     ),
     title: 'Answer inquiries instantly',
     description: 'AI trained on your knowledge base handles customer questions 24/7. No waiting, no missed messages.',
-    iconColor: 'text-blue-600',
+    iconColor: 'text-blue-400',
   },
   {
     icon: (
@@ -31,7 +31,7 @@ const capabilities = [
     ),
     title: 'Route to the right forms',
     description: 'Guide customers to sign-ups, claims, support tickets, or sales — automatically based on their needs.',
-    iconColor: 'text-teal-500',
+    iconColor: 'text-teal-400',
   },
   {
     icon: (
@@ -44,7 +44,7 @@ const capabilities = [
     ),
     title: 'Capture and qualify leads',
     description: 'Collect contact details naturally through conversation. Score and prioritize automatically.',
-    iconColor: 'text-blue-600',
+    iconColor: 'text-blue-400',
   },
   {
     icon: (
@@ -56,18 +56,18 @@ const capabilities = [
     ),
     title: 'Support in 4 languages',
     description: 'Built-in English, Dutch, Spanish, and Papiamentu with AI-powered translation and correction.',
-    iconColor: 'text-teal-500',
+    iconColor: 'text-teal-400',
   },
 ]
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col bg-[#1B2333] relative overflow-hidden">
+    <main className="min-h-screen flex flex-col bg-[#E2E8F0] relative overflow-hidden">
       {/* ---- Soft gradient blobs ---- */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] right-[10%] w-[700px] h-[700px] rounded-full bg-blue-500/[0.08] blur-[120px]" />
-        <div className="absolute bottom-[5%] -left-[5%] w-[600px] h-[600px] rounded-full bg-teal-500/[0.08] blur-[120px]" />
-        <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-blue-400/[0.05] blur-[100px]" />
+        <div className="absolute -top-[10%] right-[10%] w-[700px] h-[700px] rounded-full bg-blue-400/[0.12] blur-[120px]" />
+        <div className="absolute bottom-[5%] -left-[5%] w-[600px] h-[600px] rounded-full bg-teal-400/[0.12] blur-[120px]" />
+        <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-blue-300/[0.07] blur-[100px]" />
       </div>
 
       {/* ---- Header ---- */}
@@ -76,13 +76,13 @@ export default function Home() {
           <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-teal-500 shadow-md shadow-blue-500/15">
             <SparkleIcon className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-white tracking-tight">
-            Astute <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400">AI</span>sistant
+          <span className="text-xl font-bold text-slate-900 tracking-tight">
+            Astute <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">AI</span>sistant
           </span>
         </div>
         <Link
           href="/login"
-          className="text-sm font-medium text-slate-300 hover:text-teal-400 border border-slate-500/40 hover:border-teal-400 backdrop-blur-sm bg-white/5 px-5 py-2.5 rounded-lg transition-all duration-200"
+          className="text-sm font-medium text-slate-600 hover:text-teal-600 border border-slate-400/50 hover:border-teal-400 px-5 py-2.5 rounded-lg transition-all duration-200"
         >
           Sign in
         </Link>
@@ -91,18 +91,18 @@ export default function Home() {
       {/* ---- Hero ---- */}
       <section className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 sm:px-12 pt-16 pb-20">
         <div className="max-w-4xl">
-          <h1 className="text-4xl sm:text-5xl lg:text-5xl font-bold text-white tracking-tight leading-tight mb-3">
+          <h1 className="text-4xl sm:text-5xl lg:text-5xl font-bold text-slate-900 tracking-tight leading-tight mb-3">
             AI that handles your
-            <span className="block text-blue-400 mt-1">customer chat conversations.</span>
+            <span className="block text-blue-600 mt-1">customer chat conversations.</span>
           </h1>
-          <p className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-10 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400">
+          <p className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight mb-10 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">
             Na papiamentu tambe!
           </p>
 
-          <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed mb-3">
+          <p className="text-lg sm:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-3">
             An AI chat assistant that answers inquiries, creates tickets, routes to forms, and captures leads — around the clock.
           </p>
-          <p className="text-base text-slate-400 italic mb-12">
+          <p className="text-base text-slate-500 italic mb-12">
             AI ku ta maneha bo kòmbersashonnan ku kliente — 24/7.
           </p>
 
@@ -124,16 +124,20 @@ export default function Home() {
       {/* ---- Capabilities ---- */}
       <section className="relative z-10 px-6 sm:px-12 lg:px-16 pb-20">
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {capabilities.map((cap) => (
+          {capabilities.map((cap, i) => (
             <div
               key={cap.title}
-              className="p-6 rounded-2xl backdrop-blur-xl bg-slate-800/40 border border-slate-600/30 shadow-xl shadow-black/10 hover:bg-slate-700/50 hover:shadow-2xl hover:scale-[1.02] hover:border-slate-500/40 transition-all duration-300"
+              className="glass-card relative overflow-hidden p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-blue-900/20 to-teal-900/15 border border-blue-300/20 shadow-xl shadow-blue-900/10 hover:from-blue-900/30 hover:to-teal-900/25 hover:shadow-2xl hover:scale-[1.02] hover:border-blue-300/30 transition-all duration-300"
+              style={{ animationDelay: `${i * 2}s` } as React.CSSProperties}
             >
-              <div className={`flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-teal-500/20 border border-blue-400/20 mb-4 ${cap.iconColor}`}>
+              {/* Animated sheen overlay */}
+              <div className="sheen-overlay" />
+
+              <div className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-teal-500/20 border border-blue-400/20 mb-4 ${cap.iconColor}`}>
                 {cap.icon}
               </div>
-              <h3 className="text-base font-semibold text-white mb-2">{cap.title}</h3>
-              <p className="text-sm text-slate-300 leading-relaxed">{cap.description}</p>
+              <h3 className="relative z-10 text-base font-semibold text-white mb-2">{cap.title}</h3>
+              <p className="relative z-10 text-sm text-slate-200 leading-relaxed">{cap.description}</p>
             </div>
           ))}
         </div>
@@ -142,9 +146,10 @@ export default function Home() {
       {/* ---- Built for section ---- */}
       <section className="relative z-10 px-6 sm:px-12 lg:px-16 pb-20">
         <div className="max-w-3xl mx-auto">
-          <div className="backdrop-blur-xl bg-slate-800/30 border border-slate-600/20 rounded-2xl shadow-lg shadow-black/10 px-8 py-10 text-center">
-            <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">Built for</p>
-            <p className="text-lg text-slate-200 leading-relaxed">
+          <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-blue-900/15 to-teal-900/10 border border-blue-300/15 rounded-2xl shadow-lg shadow-blue-900/10 px-8 py-10 text-center">
+            <div className="sheen-overlay" style={{ animationDelay: '5s' } as React.CSSProperties} />
+            <p className="relative z-10 text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">Built for</p>
+            <p className="relative z-10 text-lg text-slate-200 leading-relaxed">
               Insurance companies, service desks, local businesses — any organization that needs to handle customer inquiries at scale while keeping it personal.
             </p>
           </div>
@@ -152,19 +157,53 @@ export default function Home() {
       </section>
 
       {/* ---- Footer ---- */}
-      <footer className="relative z-10 border-t border-white/[0.06] px-6 sm:px-12 lg:px-16 py-6">
+      <footer className="relative z-10 border-t border-slate-300/40 px-6 sm:px-12 lg:px-16 py-6">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <span className="text-xs text-slate-500 font-medium">
             Developed by{' '}
-            <a href="https://astuteweb.agency" target="_blank" className="text-slate-400 hover:text-teal-400 underline decoration-slate-600 underline-offset-2 transition-colors">
+            <a href="https://astuteweb.agency" target="_blank" className="text-slate-600 hover:text-teal-600 underline decoration-slate-400 underline-offset-2 transition-colors">
               Astute Web Agency
             </a>
           </span>
-          <Link href="/login" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+          <Link href="/login" className="text-xs text-slate-500 hover:text-slate-700 transition-colors">
             Dashboard
           </Link>
         </div>
       </footer>
+
+      {/* ---- Sheen animation styles ---- */}
+      <style jsx>{`
+        @keyframes sheen {
+          0% {
+            transform: translateX(-100%) rotate(15deg);
+          }
+          100% {
+            transform: translateX(300%) rotate(15deg);
+          }
+        }
+        .sheen-overlay {
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 50%;
+          height: 200%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.06) 40%,
+            rgba(255, 255, 255, 0.12) 50%,
+            rgba(255, 255, 255, 0.06) 60%,
+            transparent 100%
+          );
+          animation: sheen 8s ease-in-out infinite;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .glass-card:nth-child(1) .sheen-overlay { animation-delay: 0s; }
+        .glass-card:nth-child(2) .sheen-overlay { animation-delay: 2s; }
+        .glass-card:nth-child(3) .sheen-overlay { animation-delay: 4s; }
+        .glass-card:nth-child(4) .sheen-overlay { animation-delay: 6s; }
+      `}</style>
     </main>
   )
 }
