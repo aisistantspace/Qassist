@@ -135,11 +135,11 @@ export default function Home() {
               {/* Animated sheen overlay */}
               <div className="sheen-overlay" />
 
-              <div className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-teal-500/20 border border-blue-400/20 mb-4 ${cap.iconColor}`}>
+              <div className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-xl backdrop-blur-md bg-white/60 border border-white/70 shadow-sm mb-4 ${cap.iconColor}`}>
                 {cap.icon}
               </div>
-              <h3 className="relative z-10 text-base font-semibold text-white mb-2">{cap.title}</h3>
-              <p className="relative z-10 text-sm text-slate-200 leading-relaxed">{cap.description}</p>
+              <h3 className="relative z-10 text-base font-semibold text-slate-900 mb-2">{cap.title}</h3>
+              <p className="relative z-10 text-sm text-slate-600 leading-relaxed">{cap.description}</p>
             </div>
           ))}
         </div>
@@ -150,8 +150,8 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-blue-900/15 to-teal-900/10 border border-blue-300/15 rounded-2xl shadow-lg shadow-blue-900/10 px-8 py-10 text-center">
             <div className="sheen-overlay" style={{ animationDelay: '5s' } as React.CSSProperties} />
-            <p className="relative z-10 text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">Built for</p>
-            <p className="relative z-10 text-lg text-slate-200 leading-relaxed">
+            <p className="relative z-10 text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Built for</p>
+            <p className="relative z-10 text-lg text-slate-700 leading-relaxed">
               Insurance companies, service desks, local businesses — any organization that needs to handle customer inquiries at scale while keeping it personal.
             </p>
           </div>
