@@ -32,7 +32,7 @@ const capabilities = [
       </svg>
     ),
     title: 'Route to the right forms',
-    description: 'Guide customers to sign-ups, claims, support tickets, or sales — automatically based on their needs.',
+    description: 'Guide customers to sign-ups, claims, support tickets, or sales. Automatically based on their needs.',
     iconColor: 'text-teal-400',
   },
   {
@@ -102,10 +102,10 @@ export default function Home() {
           </p>
 
           <p className="text-lg sm:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-3">
-            An AI chat assistant that answers inquiries, creates tickets, routes to forms, and captures leads — around the clock.
+            An AI chat assistant that answers inquiries, creates tickets, routes to forms, and captures leads. Around the clock.
           </p>
           <p className="text-base text-slate-500 italic mb-12">
-            AI ku ta maneha bo kòmbersashonnan ku kliente — 24/7.
+            AI ku ta maneha bo kòmbersashonnan ku kliente. 24/7.
           </p>
 
           <a
@@ -152,7 +152,7 @@ export default function Home() {
             <div className="sheen-overlay" style={{ animationDelay: '5s' } as React.CSSProperties} />
             <p className="relative z-10 text-sm font-medium text-slate-500 uppercase tracking-wider mb-4">Built for</p>
             <p className="relative z-10 text-lg text-slate-700 leading-relaxed">
-              Insurance companies, service desks, local businesses — any organization that needs to handle customer inquiries at scale while keeping it personal.
+              Insurance companies, service desks, local businesses. Any organization that needs to handle customer inquiries at scale while keeping it personal.
             </p>
           </div>
         </div>

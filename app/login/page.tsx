@@ -192,7 +192,7 @@ function LoginForm() {
             </span>
           </h2>
           <p className="text-slate-400 text-lg mb-10 leading-relaxed">
-            Handle inquiries, route to forms, capture leads, create tickets — all automated, 24/7.
+            Handle inquiries, route to forms, capture leads, create tickets. All automated, 24/7.
           </p>
 
           {/* Feature grid */}
