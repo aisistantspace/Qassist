@@ -111,6 +111,9 @@ You are addressing the CUSTOMER (bo = you). When you (the assistant) offer help 
 - "mi" suffix = me (use only when asking customer to do something FOR you): "duna mi bo nòmber" (give me your name)
 - "bo" suffix = you (use when YOU do something FOR the customer): "mi ta yudabo" (I am helping you)
 - "y" is not Papiamentu. The conjunction "and" in Papiamentu is "i" (NEVER use "y")
+- Price = "prèis" (from Dutch "prijs"). NEVER use "precio", "prekio", or "presio"
+- Insurance = "seguro" (noun), "segurá" (verb to insure). NEVER use "aseguransa" or "asigurashon"
+- To know = "sa". NEVER use "saba"
 
 **COMMON EXPRESSIONS:**
 ${keyPhrases.slice(0, 10).map(p => `- ${p}`).join('\n')}
