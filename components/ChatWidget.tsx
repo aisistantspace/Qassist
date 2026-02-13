@@ -4,10 +4,18 @@ import { useState, useEffect, useRef } from 'react'
 import type { Lead, Message, ChatResponse } from '@/lib/types'
 import InlineForm from './InlineForm'
 
+interface RecentConversation {
+  id: string
+  messages: any[]
+  updatedAt: string
+  status: string
+}
+
 interface ChatWidgetProps {
   lead: Lead
   embedded?: boolean
   initialLanguage?: 'EN' | 'NL' | 'ES' | 'PA'
+  recentConversation?: RecentConversation | null
 }
 
 interface BrandingConfig {
@@ -45,11 +53,11 @@ function MessageContent({ content }: { content: string }) {
   )
 }
 
-export default function ChatWidget({ lead, embedded = false, initialLanguage = 'EN' }: ChatWidgetProps) {
+export default function ChatWidget({ lead, embedded = false, initialLanguage = 'EN', recentConversation }: ChatWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [conversationId, setConversationId] = useState<string | null>(null)
+  const [conversationId, setConversationId] = useState<string | null>(recentConversation?.id || null)
   const [language, setLanguage] = useState<'EN' | 'NL' | 'ES' | 'PA'>(initialLanguage)
   const [showBooking, setShowBooking] = useState(false)
   const [turnCount, setTurnCount] = useState(0)
@@ -86,15 +94,35 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
     // Only send greeting once branding is loaded
     if (!branding) return
 
-    // Send initial greeting
-    const greeting = getGreeting(language)
-    setMessages([
-      {
-        role: 'assistant',
-        content: greeting,
-        timestamp: new Date().toISOString(),
-      },
-    ])
+    // If resuming a previous conversation, load those messages
+    if (recentConversation?.messages?.length) {
+      const resumed: Message[] = recentConversation.messages.map((m: any) => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+        timestamp: m.timestamp || new Date().toISOString(),
+        formData: m.formData,
+      }))
+      const firstName = lead.name ? lead.name.split(' ')[0] : ''
+      setMessages([
+        {
+          role: 'assistant',
+          content: `Welcome back${firstName ? `, ${firstName}` : ''}! I have our previous conversation loaded. How can I help you today?`,
+          timestamp: new Date().toISOString(),
+        },
+        ...resumed,
+      ])
+      setConversationId(recentConversation.id)
+    } else {
+      // Send initial greeting
+      const greeting = getGreeting(language)
+      setMessages([
+        {
+          role: 'assistant',
+          content: greeting,
+          timestamp: new Date().toISOString(),
+        },
+      ])
+    }
 
     // Track chat started
     fetch('/api/analytics', {
@@ -103,10 +131,11 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
       body: JSON.stringify({
         event_type: 'chat_started',
         lead_id: lead.id,
-        metadata: { language },
+        metadata: { language, resumed: !!recentConversation?.id },
       }),
     })
-  }, [language, lead.id, branding])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lead.id, branding])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })

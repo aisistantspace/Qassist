@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { getTenantFromRequest, getTenantIdBySlug, DEFAULT_TENANT_ID } from '@/lib/tenant'
 import { addContactToMailchimp } from '@/lib/mailchimp'
 import { checkRateLimit, getClientIP, sanitizeInput } from '@/lib/security'
+import { findReturningCustomer, getRecentConversation } from '@/lib/customer-matching'
 import type { Lead } from '@/lib/types'
 
 // Check if Mailchimp integration is enabled
@@ -51,16 +52,36 @@ export async function POST(request: NextRequest) {
     const finalEmail = safeEmail || `anon-${Date.now()}@temp.com`;
     const finalConsent = consent ?? true; // Default to true for chat sessions
 
-    if (safeEmail && !safeEmail.startsWith('anon-')) {
-      const { data: existingLead } = await supabaseAdmin
-        .from('leads')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .eq('email', safeEmail)
-        .maybeSingle()
+    // Multi-field customer matching: email, phone, then name + partial field
+    if (!isInitialCreation) {
+      const match = await findReturningCustomer(tenantId, {
+        name: safeName || undefined,
+        email: safeEmail || undefined,
+        phone: safePhone || undefined,
+      })
 
-      if (existingLead) {
-        return NextResponse.json({ success: true, lead: existingLead, existed: true })
+      if (match) {
+        // Update lead fields if they were missing (e.g. phone was added)
+        const updates: Record<string, any> = {}
+        if (safePhone && !match.lead.phone) updates.phone = safePhone
+        if (safeName && match.lead.name === 'Anonymous User') updates.name = safeName
+        if (Object.keys(updates).length > 0) {
+          await supabaseAdmin.from('leads').update(updates).eq('id', match.lead.id)
+          Object.assign(match.lead, updates)
+        }
+
+        // Load most recent conversation for resumption
+        const recentConversation = await getRecentConversation(match.lead.id, tenantId)
+
+        return NextResponse.json({
+          success: true,
+          lead: match.lead,
+          existed: true,
+          matchType: match.matchType,
+          recentConversation: recentConversation
+            ? { id: recentConversation.id, messages: recentConversation.messages, updatedAt: recentConversation.updatedAt, status: recentConversation.status }
+            : null,
+        })
       }
     }
 

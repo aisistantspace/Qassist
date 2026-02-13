@@ -10,6 +10,7 @@ import { notifyHumanContactRequest, sendFormSubmissionEmail, sendFormNotificatio
 import { createFormSubmissionNotification } from '@/lib/notifications'
 import { correctPapiamentu } from '@/lib/papiamentu'
 import { sanitizeForPrompt, checkRateLimit, getClientIP } from '@/lib/security'
+import { getRecentConversation, summarizeConversation, isResumable } from '@/lib/customer-matching'
 import type { ChatRequest, ChatResponse, Message } from '@/lib/types'
 
 // Check if integration is enabled
@@ -86,23 +87,41 @@ export async function POST(request: NextRequest) {
       ? detectLanguageFromText(messageText)
       : (existingConversationLanguage ?? (language as 'EN' | 'NL' | 'ES' | 'PA'))
 
+    // Auto-resume: if no conversationId provided, check for a recent active conversation
+    let priorContextSummary: string | null = null
     if (!currentConversationId) {
-      const { data: newConversation, error: convError } = await supabaseAdmin
-        .from('conversations')
-        .insert({
-          tenant_id: tenantId,
-          lead_id: leadId,
-          messages: [],
-          turn_count: 0,
-          status: 'active',
-          language: effectiveLanguage,
-          channel,
-        })
-        .select()
-        .single()
+      const recent = await getRecentConversation(leadId, tenantId)
 
-      if (convError) throw convError
-      currentConversationId = newConversation.id
+      if (recent && isResumable(recent.updatedAt, recent.status, 24)) {
+        // Resume the active conversation directly
+        currentConversationId = recent.id
+        existingMessages = recent.messages || []
+        turnCount = existingMessages.filter((m: Message) => m.role === 'user').length
+        existingConversationLanguage = recent.language as 'EN' | 'NL' | 'ES' | 'PA'
+      } else {
+        // If there's an older/completed conversation, inject context summary
+        if (recent && recent.messages.length > 0) {
+          priorContextSummary = summarizeConversation(recent.messages)
+        }
+
+        // Create a fresh conversation
+        const { data: newConversation, error: convError } = await supabaseAdmin
+          .from('conversations')
+          .insert({
+            tenant_id: tenantId,
+            lead_id: leadId,
+            messages: [],
+            turn_count: 0,
+            status: 'active',
+            language: effectiveLanguage,
+            channel,
+          })
+          .select()
+          .single()
+
+        if (convError) throw convError
+        currentConversationId = newConversation.id
+      }
     }
 
     const relevantEntries = messageText
@@ -117,8 +136,14 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     }
 
+    // If we have prior conversation context (returning customer, new conversation), inject it
+    let enrichedSystemPrompt = systemPrompt
+    if (priorContextSummary) {
+      enrichedSystemPrompt += `\n\n--- RETURNING CUSTOMER CONTEXT ---\nThis is a returning customer. ${priorContextSummary}\nUse this context to provide continuity, but do not repeat previous answers. Greet them as a returning visitor.`
+    }
+
     const openAIMessages = [
-      { role: 'system' as const, content: systemPrompt },
+      { role: 'system' as const, content: enrichedSystemPrompt },
       ...existingMessages.map(m => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,

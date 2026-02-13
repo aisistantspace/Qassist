@@ -106,16 +106,18 @@ export default function Home() {
             AI ku ta maneha bo kòmbersashonnan ku kliente — 24/7.
           </p>
 
-          <Link
-            href="/login"
+          <a
+            href="https://meetings.hubspot.com/quantone"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white font-semibold text-lg bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 transition-all duration-200 shadow-lg shadow-blue-500/20 hover:shadow-xl hover:shadow-blue-500/30"
           >
-            Request a Demo
+            Book a Demo
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
-          </Link>
+          </a>
         </div>
       </section>
 

@@ -198,6 +198,29 @@ export default function ModernChatInterface({
       const data = await res.json()
       setLeadId(data.lead.id)
       onLeadCaptured?.(data.lead.id)
+
+      // If returning customer with recent conversation, resume it
+      if (data.existed && data.recentConversation?.id) {
+        setConversationId(data.recentConversation.id)
+        if (data.recentConversation.messages?.length > 0) {
+          const resumedMessages: Message[] = data.recentConversation.messages.map((m: any) => ({
+            role: m.role as 'user' | 'assistant',
+            content: m.content,
+            timestamp: m.timestamp || new Date().toISOString(),
+            formData: m.formData,
+          }))
+          setMessages(prev => {
+            // Keep welcome message, then add resumed conversation
+            const welcome = prev.length > 0 ? [prev[0]] : []
+            return [
+              ...welcome,
+              { role: 'assistant' as const, content: `Welcome back! I have our previous conversation loaded.`, timestamp: new Date().toISOString() },
+              ...resumedMessages,
+            ]
+          })
+        }
+      }
+
       return data.lead.id
     } catch (error) {
       console.error('Error creating lead:', error)

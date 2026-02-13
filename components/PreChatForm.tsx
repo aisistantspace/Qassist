@@ -3,8 +3,15 @@
 import { useState } from 'react'
 import type { Lead } from '@/lib/types'
 
+interface RecentConversation {
+  id: string
+  messages: any[]
+  updatedAt: string
+  status: string
+}
+
 interface PreChatFormProps {
-  onSubmit: (lead: Lead) => void
+  onSubmit: (lead: Lead, recentConversation?: RecentConversation | null) => void
   embedded?: boolean
 }
 
@@ -74,7 +81,7 @@ export default function PreChatForm({ onSubmit, embedded = false }: PreChatFormP
         }),
       })
 
-      onSubmit({ ...lead, id: data.lead.id })
+      onSubmit({ ...lead, id: data.lead.id }, data.recentConversation || null)
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.')
     } finally {
