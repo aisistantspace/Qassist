@@ -102,8 +102,11 @@ export default function Home() {
             <span className="block text-blue-400 mt-1">customer conversations.</span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-12">
+          <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-3">
             Answer inquiries, create tickets, route to forms, and capture leads — all from one intelligent assistant that works around the clock.
+          </p>
+          <p className="text-sm text-slate-600 italic mb-12">
+            AI ku ta maneha bo konversashonnan ku kliente — 24/7.
           </p>
 
           <Link
