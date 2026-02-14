@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: 'Astute AIsistant - Your 24/7 AI Chat Assistant',
   description: 'AI chat assistant that handles customer conversations, answers inquiries, creates tickets, and captures leads. Around the clock in 4 languages.',
   keywords: ['AI chat assistant', 'customer service', 'chatbot', 'lead capture', 'multilingual', 'service desk'],
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export const viewport: Viewport = {
