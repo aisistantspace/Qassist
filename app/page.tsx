@@ -67,11 +67,18 @@ const capabilities = [
 export default function Home() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
   const [lightboxAlt, setLightboxAlt] = useState('')
+  const [mobileSlide, setMobileSlide] = useState(0)
 
   const openLightbox = (src: string, alt: string) => {
     setLightboxSrc(src)
     setLightboxAlt(alt)
   }
+
+  const slides = [
+    { src: '/preview-dashboard.png', alt: 'Dashboard overview', label: 'Dashboard', w: 1920, h: 1080 },
+    { src: '/preview-conversations.png', alt: 'Conversation management', label: 'Conversations', w: 1920, h: 1080 },
+    { src: '/preview-chat.png', alt: 'Live chat in Papiamentu', label: 'Chat Widget', w: 800, h: 1200 },
+  ]
 
   return (
     <main className="min-h-screen flex flex-col bg-[#E2E8F0] relative overflow-hidden">
@@ -141,8 +148,94 @@ export default function Home() {
             A peek inside
           </p>
 
-          {/* Main showcase layout */}
-          <div className="relative">
+          {/* ===== Mobile Carousel (< md) ===== */}
+          <div className="md:hidden">
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl shadow-slate-900/20 border border-white/40 ring-1 ring-slate-900/5">
+              {/* Browser chrome bar */}
+              <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-400/80" />
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="bg-white rounded-md px-3 py-1 text-[11px] text-slate-400 font-medium border border-slate-200 text-center">
+                    {slides[mobileSlide].label}
+                  </div>
+                </div>
+                <div className="w-14" />
+              </div>
+
+              {/* Slide image - tap to enlarge */}
+              <div
+                className="relative cursor-pointer"
+                onClick={() => openLightbox(slides[mobileSlide].src, slides[mobileSlide].alt)}
+              >
+                <Image
+                  src={slides[mobileSlide].src}
+                  alt={slides[mobileSlide].alt}
+                  width={slides[mobileSlide].w}
+                  height={slides[mobileSlide].h}
+                  className="w-full h-auto block"
+                  priority={mobileSlide === 0}
+                />
+                {/* Tap hint overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 active:opacity-100 transition-opacity bg-black/10">
+                  <div className="bg-white/90 rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 shadow-lg">
+                    Tap to enlarge
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation controls */}
+            <div className="flex items-center justify-center gap-4 mt-5">
+              {/* Previous */}
+              <button
+                onClick={() => setMobileSlide((prev) => (prev - 1 + slides.length) % slides.length)}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/70 border border-slate-200 shadow-sm hover:bg-white transition-colors"
+                aria-label="Previous screenshot"
+              >
+                <svg className="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+
+              {/* Dots */}
+              <div className="flex items-center gap-2">
+                {slides.map((slide, i) => (
+                  <button
+                    key={slide.src}
+                    onClick={() => setMobileSlide(i)}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${
+                      i === mobileSlide ? 'w-7 bg-blue-500' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+                    }`}
+                    aria-label={`View ${slide.label}`}
+                  />
+                ))}
+              </div>
+
+              {/* Next */}
+              <button
+                onClick={() => setMobileSlide((prev) => (prev + 1) % slides.length)}
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/70 border border-slate-200 shadow-sm hover:bg-white transition-colors"
+                aria-label="Next screenshot"
+              >
+                <svg className="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Slide label */}
+            <p className="text-center text-sm text-slate-500 mt-3 font-medium">
+              {slides[mobileSlide].label}
+              <span className="text-slate-400 ml-1">({mobileSlide + 1}/{slides.length})</span>
+            </p>
+          </div>
+
+          {/* ===== Desktop Overlapping Layout (md+) ===== */}
+          <div className="hidden md:block relative">
             {/* Dashboard - main large screenshot */}
             <div
               className="showcase-card relative mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/20 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
@@ -174,7 +267,7 @@ export default function Home() {
 
             {/* Conversations - overlapping from bottom-left */}
             <div
-              className="showcase-card showcase-delay-1 hidden md:block absolute -bottom-12 -left-4 lg:-left-8 w-[55%] max-w-[550px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
+              className="showcase-card showcase-delay-1 absolute -bottom-12 -left-4 lg:-left-8 w-[55%] max-w-[550px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
               onClick={() => openLightbox('/preview-conversations.png', 'Conversation management')}
             >
               <div className="bg-slate-100 border-b border-slate-200 px-3 py-2 flex items-center gap-2">
@@ -200,7 +293,7 @@ export default function Home() {
 
             {/* Chat widget - floating on the right */}
             <div
-              className="showcase-card showcase-delay-2 hidden md:block absolute -bottom-16 -right-2 lg:-right-6 w-[32%] max-w-[320px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
+              className="showcase-card showcase-delay-2 absolute -bottom-16 -right-2 lg:-right-6 w-[32%] max-w-[320px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
               onClick={() => openLightbox('/preview-chat.png', 'Live chat in Papiamentu')}
             >
               <Image
@@ -214,7 +307,7 @@ export default function Home() {
           </div>
 
           {/* Spacer for overlapping elements */}
-          <div className="h-20 md:h-32" />
+          <div className="h-8 md:h-32" />
         </div>
       </section>
 
