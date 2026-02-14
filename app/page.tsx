@@ -75,9 +75,9 @@ export default function Home() {
   }
 
   const slides = [
+    { src: '/preview-chat.png', alt: 'Live chat in Papiamentu', label: 'Chat Widget', w: 800, h: 1200 },
     { src: '/preview-dashboard.png', alt: 'Dashboard overview', label: 'Dashboard', w: 1920, h: 1080 },
     { src: '/preview-conversations.png', alt: 'Conversation management', label: 'Conversations', w: 1920, h: 1080 },
-    { src: '/preview-chat.png', alt: 'Live chat in Papiamentu', label: 'Chat Widget', w: 800, h: 1200 },
   ]
 
   return (
@@ -236,10 +236,10 @@ export default function Home() {
 
           {/* ===== Desktop Overlapping Layout (md+) ===== */}
           <div className="hidden md:block relative">
-            {/* Dashboard - main large screenshot */}
+            {/* Chat - primary large screenshot */}
             <div
               className="showcase-card relative mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/20 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
-              onClick={() => openLightbox('/preview-dashboard.png', 'Dashboard overview')}
+              onClick={() => openLightbox('/preview-chat.png', 'Live chat in Papiamentu')}
             >
               {/* Browser chrome bar */}
               <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-2">
@@ -250,10 +250,37 @@ export default function Home() {
                 </div>
                 <div className="flex-1 flex justify-center">
                   <div className="bg-white rounded-md px-4 py-1 text-[11px] text-slate-400 font-medium border border-slate-200 min-w-[200px] text-center">
-                    app.astuteaisistant.com/dashboard
+                    Live Chat
                   </div>
                 </div>
                 <div className="w-14" />
+              </div>
+              <Image
+                src="/preview-chat.png"
+                alt="Live chat in Papiamentu with AI-powered responses"
+                width={800}
+                height={1200}
+                className="w-full h-auto block max-h-[600px] object-cover object-top"
+                priority
+              />
+            </div>
+
+            {/* Dashboard - overlapping from bottom-left */}
+            <div
+              className="showcase-card showcase-delay-1 absolute -bottom-12 -left-4 lg:-left-8 w-[55%] max-w-[550px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
+              onClick={() => openLightbox('/preview-dashboard.png', 'Dashboard overview')}
+            >
+              <div className="bg-slate-100 border-b border-slate-200 px-3 py-2 flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-400/80" />
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="bg-white rounded-md px-3 py-0.5 text-[10px] text-slate-400 font-medium border border-slate-200">
+                    app.astuteaisistant.com/dashboard
+                  </div>
+                </div>
               </div>
               <Image
                 src="/preview-dashboard.png"
@@ -261,13 +288,12 @@ export default function Home() {
                 width={1920}
                 height={1080}
                 className="w-full h-auto block"
-                priority
               />
             </div>
 
-            {/* Conversations - overlapping from bottom-left */}
+            {/* Conversations - overlapping from bottom-right */}
             <div
-              className="showcase-card showcase-delay-1 absolute -bottom-12 -left-4 lg:-left-8 w-[55%] max-w-[550px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
+              className="showcase-card showcase-delay-2 absolute -bottom-16 -right-2 lg:-right-6 w-[42%] max-w-[420px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
               onClick={() => openLightbox('/preview-conversations.png', 'Conversation management')}
             >
               <div className="bg-slate-100 border-b border-slate-200 px-3 py-2 flex items-center gap-2">
@@ -287,20 +313,6 @@ export default function Home() {
                 alt="Conversation management with lead tracking and language detection"
                 width={1920}
                 height={1080}
-                className="w-full h-auto block"
-              />
-            </div>
-
-            {/* Chat widget - floating on the right */}
-            <div
-              className="showcase-card showcase-delay-2 absolute -bottom-16 -right-2 lg:-right-6 w-[32%] max-w-[320px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
-              onClick={() => openLightbox('/preview-chat.png', 'Live chat in Papiamentu')}
-            >
-              <Image
-                src="/preview-chat.png"
-                alt="Live chat in Papiamentu with AI-powered responses"
-                width={800}
-                height={1200}
                 className="w-full h-auto block"
               />
             </div>
