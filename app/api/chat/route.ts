@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
           enrichedSystemPrompt += `\n\n--- CUSTOMER IDENTIFIED ---\nThe customer has been identified as an existing customer: ${custName} (${custEmail}).${idResult.wasAnonymous ? ' The conversation has been linked to their existing account.' : ''}\nAcknowledge them by name. You now have access to their information. If they need help with claims, support, or any urgent matter, reassure them that you will connect them with the right department.`
 
           // Log the identification event
-          supabaseAdmin.from('event_logs').insert({
+          Promise.resolve(supabaseAdmin.from('event_logs').insert({
             tenant_id: tenantId,
             lead_id: idResult.mergedLeadId,
             event_type: 'customer_identified',
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
               conversationId: currentConversationId,
               timestamp: new Date().toISOString(),
             },
-          }).then(() => {}).catch(err => console.error('[CUSTOMER_ID] Failed to log event:', err))
+          })).catch(err => console.error('[CUSTOMER_ID] Failed to log event:', err))
 
           console.log(`[CUSTOMER_ID] Identified existing customer: ${custName} (${custEmail}), match: ${idResult.matchType}`)
         }
