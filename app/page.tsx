@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -64,6 +65,14 @@ const capabilities = [
 ]
 
 export default function Home() {
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
+  const [lightboxAlt, setLightboxAlt] = useState('')
+
+  const openLightbox = (src: string, alt: string) => {
+    setLightboxSrc(src)
+    setLightboxAlt(alt)
+  }
+
   return (
     <main className="min-h-screen flex flex-col bg-[#E2E8F0] relative overflow-hidden">
       {/* ---- Soft gradient blobs ---- */}
@@ -135,7 +144,10 @@ export default function Home() {
           {/* Main showcase layout */}
           <div className="relative">
             {/* Dashboard - main large screenshot */}
-            <div className="showcase-card relative mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/20 border border-white/40 ring-1 ring-slate-900/5">
+            <div
+              className="showcase-card relative mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/20 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
+              onClick={() => openLightbox('/preview-dashboard.png', 'Dashboard overview')}
+            >
               {/* Browser chrome bar */}
               <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-2">
                 <div className="flex gap-1.5">
@@ -161,7 +173,10 @@ export default function Home() {
             </div>
 
             {/* Conversations - overlapping from bottom-left */}
-            <div className="showcase-card showcase-delay-1 hidden md:block absolute -bottom-12 -left-4 lg:-left-8 w-[55%] max-w-[550px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5">
+            <div
+              className="showcase-card showcase-delay-1 hidden md:block absolute -bottom-12 -left-4 lg:-left-8 w-[55%] max-w-[550px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
+              onClick={() => openLightbox('/preview-conversations.png', 'Conversation management')}
+            >
               <div className="bg-slate-100 border-b border-slate-200 px-3 py-2 flex items-center gap-2">
                 <div className="flex gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
@@ -184,7 +199,10 @@ export default function Home() {
             </div>
 
             {/* Chat widget - floating on the right */}
-            <div className="showcase-card showcase-delay-2 hidden md:block absolute -bottom-16 -right-2 lg:-right-6 w-[32%] max-w-[320px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5">
+            <div
+              className="showcase-card showcase-delay-2 hidden md:block absolute -bottom-16 -right-2 lg:-right-6 w-[32%] max-w-[320px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5 cursor-pointer hover:shadow-3xl transition-shadow duration-200"
+              onClick={() => openLightbox('/preview-chat.png', 'Live chat in Papiamentu')}
+            >
               <Image
                 src="/preview-chat.png"
                 alt="Live chat in Papiamentu with AI-powered responses"
@@ -302,7 +320,55 @@ export default function Home() {
         .showcase-delay-2 {
           animation-delay: 0.6s;
         }
+
+        @keyframes lightboxFadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        @keyframes lightboxZoomIn {
+          0% { opacity: 0; transform: scale(0.85); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        .lightbox-overlay {
+          animation: lightboxFadeIn 0.2s ease-out both;
+        }
+        .lightbox-image {
+          animation: lightboxZoomIn 0.25s ease-out both;
+        }
       `}</style>
+
+      {/* ---- Lightbox ---- */}
+      {lightboxSrc && (
+        <div
+          className="lightbox-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-8 cursor-zoom-out"
+          onClick={() => setLightboxSrc(null)}
+        >
+          {/* Close button */}
+          <button
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            onClick={() => setLightboxSrc(null)}
+            aria-label="Close"
+          >
+            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+          {/* Caption */}
+          <div className="absolute bottom-4 left-0 right-0 text-center">
+            <span className="text-white/70 text-sm font-medium">{lightboxAlt}</span>
+          </div>
+          {/* Image */}
+          <Image
+            src={lightboxSrc}
+            alt={lightboxAlt}
+            width={1920}
+            height={1200}
+            className="lightbox-image max-w-full max-h-[90vh] w-auto h-auto rounded-lg shadow-2xl object-contain cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </main>
   )
 }
