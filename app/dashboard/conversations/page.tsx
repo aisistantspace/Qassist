@@ -11,6 +11,9 @@ interface Conversation {
   status: string
   language: string
   intent: string | null
+  department: string | null
+  priority: string | null
+  customer_verified: boolean
   created_at: string
   lead?: {
     name: string
@@ -22,6 +25,14 @@ const intentBadge: Record<string, { bg: string; text: string; label: string }> =
   sales: { bg: 'bg-green-100', text: 'text-green-700', label: 'Sales' },
   service: { bg: 'bg-orange-100', text: 'text-orange-700', label: 'Service' },
   inquiry: { bg: 'bg-gray-100', text: 'text-gray-700', label: 'Inquiry' },
+}
+
+const deptBadge: Record<string, { bg: string; text: string; label: string }> = {
+  claims: { bg: 'bg-red-100', text: 'text-red-700', label: 'Claims' },
+  support: { bg: 'bg-purple-100', text: 'text-purple-700', label: 'Support' },
+  sales: { bg: 'bg-green-100', text: 'text-green-700', label: 'Sales' },
+  billing: { bg: 'bg-indigo-100', text: 'text-indigo-700', label: 'Billing' },
+  general: { bg: 'bg-gray-100', text: 'text-gray-600', label: 'General' },
 }
 
 export default function ConversationsPage() {
@@ -171,50 +182,62 @@ export default function ConversationsPage() {
             </div>
             {/* Desktop table */}
             <div className="hidden md:block overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-          <table className="w-full min-w-[600px]">
+          <table className="w-full min-w-[700px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Lead
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Turns
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Language
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Department
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Intent
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredConversations.map((conv) => (
+              {filteredConversations.map((conv) => {
+                const db = conv.department ? deptBadge[conv.department] : null
+                return (
                 <tr key={conv.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-900">
-                      {conv.lead?.name || 'Unknown'}
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-1.5">
+                      <div className="font-medium text-gray-900">
+                        {conv.lead?.name || 'Unknown'}
+                      </div>
+                      {conv.customer_verified && (
+                        <span title="Verified customer" className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-600">
+                          <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                        </span>
+                      )}
                     </div>
                     <div className="text-sm text-gray-500">
                       {conv.lead?.email || 'No email'}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className="px-4 py-4 text-sm text-gray-900">
                     {conv.turn_count} turns
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                  <td className="px-4 py-4 text-sm text-gray-900">
                     {conv.language}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-4">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                       conv.status === 'active' ? 'bg-green-100 text-green-800' :
                       conv.status === 'escalated' ? 'bg-orange-100 text-orange-800' :
@@ -223,19 +246,28 @@ export default function ConversationsPage() {
                       {conv.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-4">
+                    {db ? (
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${db.bg} ${db.text}`}>
+                        {db.label}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-400">-</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-4">
                     {conv.intent && intentBadge[conv.intent] ? (
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${intentBadge[conv.intent].bg} ${intentBadge[conv.intent].text}`}>
                         {intentBadge[conv.intent].label}
                       </span>
                     ) : (
-                      <span className="text-xs text-gray-400">—</span>
+                      <span className="text-xs text-gray-400">-</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+                  <td className="px-4 py-4 text-sm text-gray-500">
                     {format(new Date(conv.created_at), 'MMM d, yyyy HH:mm')}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-4">
                     <Link
                       href={`/dashboard/conversations/${conv.id}`}
                       className="text-primary-600 hover:text-primary-800 text-sm font-medium"
@@ -244,7 +276,8 @@ export default function ConversationsPage() {
                     </Link>
                   </td>
                 </tr>
-              ))}
+                )
+              })}
             </tbody>
           </table>
             </div>

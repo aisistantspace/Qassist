@@ -11,6 +11,9 @@ interface Ticket {
   status: string
   language: string
   intent: string | null
+  department: string | null
+  priority: string | null
+  customer_verified: boolean
   created_at: string
   updated_at: string
   lead?: {
@@ -22,6 +25,21 @@ interface Ticket {
 const typeBadge: Record<string, { bg: string; text: string; label: string }> = {
   service: { bg: 'bg-orange-100', text: 'text-orange-700', label: 'Service' },
   inquiry: { bg: 'bg-sky-100', text: 'text-sky-700', label: 'Inquiry' },
+}
+
+const deptBadge: Record<string, { bg: string; text: string; label: string }> = {
+  claims: { bg: 'bg-red-100', text: 'text-red-700', label: 'Claims' },
+  support: { bg: 'bg-purple-100', text: 'text-purple-700', label: 'Support' },
+  sales: { bg: 'bg-green-100', text: 'text-green-700', label: 'Sales' },
+  billing: { bg: 'bg-indigo-100', text: 'text-indigo-700', label: 'Billing' },
+  general: { bg: 'bg-gray-100', text: 'text-gray-600', label: 'General' },
+}
+
+const priorityBadge: Record<string, { bg: string; text: string; label: string }> = {
+  urgent: { bg: 'bg-red-100', text: 'text-red-700', label: 'Urgent' },
+  high: { bg: 'bg-orange-100', text: 'text-orange-700', label: 'High' },
+  medium: { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'Medium' },
+  low: { bg: 'bg-gray-100', text: 'text-gray-600', label: 'Low' },
 }
 
 // Map conversation status to service-desk language
@@ -47,11 +65,12 @@ export default function TicketsPage() {
   const [loading, setLoading] = useState(true)
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [deptFilter, setDeptFilter] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     fetchTickets()
-  }, [typeFilter, statusFilter])
+  }, [typeFilter, statusFilter, deptFilter])
 
   async function fetchTickets() {
     setLoading(true)
@@ -86,6 +105,11 @@ export default function TicketsPage() {
       // Apply status filter client-side
       if (statusFilter !== 'all') {
         all = all.filter(t => t.status === statusFilter)
+      }
+
+      // Apply department filter client-side
+      if (deptFilter !== 'all') {
+        all = all.filter(t => t.department === deptFilter)
       }
 
       setTickets(all)
@@ -147,7 +171,7 @@ export default function TicketsPage() {
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
             <select
@@ -158,6 +182,21 @@ export default function TicketsPage() {
               <option value="all">All Types</option>
               <option value="service">Service Requests</option>
               <option value="inquiry">Inquiries</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+            <select
+              value={deptFilter}
+              onChange={(e) => setDeptFilter(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-gray-900"
+            >
+              <option value="all">All Departments</option>
+              <option value="claims">Claims</option>
+              <option value="support">Support</option>
+              <option value="sales">Sales</option>
+              <option value="billing">Billing</option>
+              <option value="general">General</option>
             </select>
           </div>
           <div>
@@ -209,10 +248,19 @@ export default function TicketsPage() {
               {filtered.map((ticket) => {
                 const ts = ticketStatus(ticket.status)
                 const tb = ticket.intent ? typeBadge[ticket.intent] : null
+                const db = ticket.department ? deptBadge[ticket.department] : null
+                const pb = ticket.priority ? priorityBadge[ticket.priority] : null
                 return (
-                  <div key={ticket.id} className="p-4 space-y-2">
+                  <div key={ticket.id} className={`p-4 space-y-2 ${ticket.priority === 'urgent' ? 'bg-red-50/40' : ''}`}>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono text-gray-400">#{shortId(ticket.id)}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-mono text-gray-400">#{shortId(ticket.id)}</span>
+                        {ticket.customer_verified && (
+                          <span title="Verified customer" className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-600">
+                            <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                          </span>
+                        )}
+                      </div>
                       <span className="text-xs text-gray-400">
                         {format(new Date(ticket.created_at), 'MMM d, HH:mm')}
                       </span>
@@ -225,10 +273,20 @@ export default function TicketsPage() {
                       <span>{ticket.language}</span>
                     </div>
                     <div className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${ts.bg} ${ts.text}`}>
                           {ts.label}
                         </span>
+                        {db && (
+                          <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${db.bg} ${db.text}`}>
+                            {db.label}
+                          </span>
+                        )}
+                        {pb && pb.label !== 'Medium' && (
+                          <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${pb.bg} ${pb.text}`}>
+                            {pb.label}
+                          </span>
+                        )}
                         {tb && (
                           <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${tb.bg} ${tb.text}`}>
                             {tb.label}
@@ -249,52 +307,79 @@ export default function TicketsPage() {
 
             {/* Desktop table */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="w-full min-w-[700px]">
+              <table className="w-full min-w-[900px]">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Messages</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Language</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Lang</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filtered.map((ticket) => {
                     const ts = ticketStatus(ticket.status)
                     const tb = ticket.intent ? typeBadge[ticket.intent] : null
+                    const db = ticket.department ? deptBadge[ticket.department] : null
+                    const pb = ticket.priority ? priorityBadge[ticket.priority] : null
                     return (
-                      <tr key={ticket.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4">
-                          <span className="text-xs font-mono text-gray-500">#{shortId(ticket.id)}</span>
+                      <tr key={ticket.id} className={`hover:bg-gray-50 ${ticket.priority === 'urgent' ? 'bg-red-50/40' : ticket.priority === 'high' ? 'bg-orange-50/30' : ''}`}>
+                        <td className="px-4 py-4">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-mono text-gray-500">#{shortId(ticket.id)}</span>
+                            {ticket.customer_verified && (
+                              <span title="Verified customer" className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 text-blue-600">
+                                <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                              </span>
+                            )}
+                          </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4">
                           <div className="font-medium text-gray-900">{ticket.lead?.name || 'Unknown'}</div>
                           <div className="text-sm text-gray-500">{ticket.lead?.email || 'No email'}</div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4">
+                          {db ? (
+                            <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${db.bg} ${db.text}`}>
+                              {db.label}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-gray-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-4">
+                          {pb ? (
+                            <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${pb.bg} ${pb.text}`}>
+                              {pb.label}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-gray-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-4">
+                          <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${ts.bg} ${ts.text}`}>
+                            {ts.label}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4">
                           {tb ? (
                             <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${tb.bg} ${tb.text}`}>
                               {tb.label}
                             </span>
                           ) : (
-                            <span className="text-xs text-gray-400">—</span>
+                            <span className="text-xs text-gray-400">-</span>
                           )}
                         </td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full ${ts.bg} ${ts.text}`}>
-                            {ts.label}
-                          </span>
+                        <td className="px-4 py-4 text-sm text-gray-900">{ticket.language}</td>
+                        <td className="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
+                          {format(new Date(ticket.created_at), 'MMM d, HH:mm')}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">{ticket.turn_count}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900">{ticket.language}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                          {format(new Date(ticket.created_at), 'MMM d, yyyy HH:mm')}
-                        </td>
-                        <td className="px-6 py-4">
+                        <td className="px-4 py-4">
                           <Link
                             href={`/dashboard/conversations/${ticket.id}`}
                             className="text-primary-600 hover:text-primary-800 text-sm font-medium"

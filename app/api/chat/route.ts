@@ -10,7 +10,8 @@ import { notifyHumanContactRequest, sendFormSubmissionEmail, sendFormNotificatio
 import { createFormSubmissionNotification } from '@/lib/notifications'
 import { correctPapiamentu } from '@/lib/papiamentu'
 import { sanitizeForPrompt, checkRateLimit, getClientIP } from '@/lib/security'
-import { getRecentConversation, summarizeConversation, isResumable } from '@/lib/customer-matching'
+import { getRecentConversation, summarizeConversation, isResumable, identifyCustomerMidChat, classifyDepartment, classifyPriority, buildEscalationContext } from '@/lib/customer-matching'
+import type { Department, Priority } from '@/lib/customer-matching'
 import type { ChatRequest, ChatResponse, Message } from '@/lib/types'
 
 // Check if integration is enabled
@@ -140,6 +141,41 @@ export async function POST(request: NextRequest) {
     let enrichedSystemPrompt = systemPrompt
     if (priorContextSummary) {
       enrichedSystemPrompt += `\n\n--- RETURNING CUSTOMER CONTEXT ---\nThis is a returning customer. ${priorContextSummary}\nUse this context to provide continuity, but do not repeat previous answers. Greet them as a returning visitor.`
+    }
+
+    // --- Mid-chat customer identification ---
+    // When a user provides an email/phone during conversation, check if they're an existing customer
+    let customerIdentified = false
+    let identifiedLeadId = leadId
+    if (messageText && currentConversationId) {
+      try {
+        const idResult = await identifyCustomerMidChat(tenantId, leadId, currentConversationId, messageText)
+        if (idResult) {
+          customerIdentified = true
+          identifiedLeadId = idResult.mergedLeadId
+          const custName = idResult.identifiedLead.name || 'Customer'
+          const custEmail = idResult.identifiedLead.email || ''
+          enrichedSystemPrompt += `\n\n--- CUSTOMER IDENTIFIED ---\nThe customer has been identified as an existing customer: ${custName} (${custEmail}).${idResult.wasAnonymous ? ' The conversation has been linked to their existing account.' : ''}\nAcknowledge them by name. You now have access to their information. If they need help with claims, support, or any urgent matter, reassure them that you will connect them with the right department.`
+
+          // Log the identification event
+          supabaseAdmin.from('event_logs').insert({
+            tenant_id: tenantId,
+            lead_id: idResult.mergedLeadId,
+            event_type: 'customer_identified',
+            metadata: {
+              matchType: idResult.matchType,
+              wasAnonymous: idResult.wasAnonymous,
+              previousLeadId: leadId,
+              conversationId: currentConversationId,
+              timestamp: new Date().toISOString(),
+            },
+          }).then(() => {}).catch(err => console.error('[CUSTOMER_ID] Failed to log event:', err))
+
+          console.log(`[CUSTOMER_ID] Identified existing customer: ${custName} (${custEmail}), match: ${idResult.matchType}`)
+        }
+      } catch (err) {
+        console.error('[CUSTOMER_ID] Mid-chat identification failed:', err)
+      }
     }
 
     const openAIMessages = [
@@ -522,6 +558,13 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     }
 
+    // Classify department and priority based on conversation content
+    const allMessages = [...existingMessages, userMessage, assistantMessage]
+      .filter(m => m.role === 'user' || m.role === 'assistant')
+      .map(m => ({ role: m.role, content: m.content }))
+    const department: Department = classifyDepartment(allMessages)
+    const priority: Priority = classifyPriority(allMessages)
+
     // Update conversation in database (persist effective language so RAG and next turn use it)
     const updatedMessages = [...existingMessages, userMessage, assistantMessage]
     await supabaseAdmin
@@ -529,8 +572,11 @@ export async function POST(request: NextRequest) {
       .update({
         messages: updatedMessages,
         turn_count: turnCount,
-        status: shouldShowBooking ? 'escalated' : 'active',
+        status: (shouldShowBooking || isHumanContactRequest) ? 'escalated' : 'active',
         language: effectiveLanguage,
+        department,
+        priority,
+        customer_verified: customerIdentified || undefined,
       })
       .eq('id', currentConversationId)
 
@@ -541,7 +587,7 @@ export async function POST(request: NextRequest) {
             .from('leads')
             .update(metadata)
             .eq('tenant_id', tenantId)
-            .eq('id', leadId)
+            .eq('id', identifiedLeadId)
         }
       })
       .catch(err => console.error('Metadata extraction failed:', err))
@@ -583,14 +629,15 @@ export async function POST(request: NextRequest) {
 
     // Handle human contact requests (always, not just when booking is shown)
     if (isHumanContactRequest) {
-      console.log('[HUMAN_CONTACT] Processing human contact request for lead:', leadId)
+      const effectiveLeadId = identifiedLeadId
+      console.log('[HUMAN_CONTACT] Processing human contact request for lead:', effectiveLeadId, 'dept:', department, 'priority:', priority)
       try {
         // Get lead details for notification
         const { data: lead, error: leadError } = await supabaseAdmin
           .from('leads')
           .select('name, email, phone, lead_score')
           .eq('tenant_id', tenantId)
-          .eq('id', leadId)
+          .eq('id', effectiveLeadId)
           .single()
 
         if (leadError) {
@@ -599,43 +646,43 @@ export async function POST(request: NextRequest) {
         }
 
         if (lead) {
-          // Mark lead as hot (ensure score >= 70)
+          // Mark lead as hot (ensure score >= 70, or 90 for urgent)
           const oldScore = lead.lead_score || 0
-          const newScore = Math.max(70, oldScore)
-          
-          console.log('[HUMAN_CONTACT] Updating lead score:', {
-            leadId,
-            oldScore,
-            newScore,
-          })
+          const minScore = priority === 'urgent' ? 90 : priority === 'high' ? 80 : 70
+          const newScore = Math.max(minScore, oldScore)
           
           const { error: updateError } = await supabaseAdmin
             .from('leads')
             .update({ lead_score: newScore })
             .eq('tenant_id', tenantId)
-            .eq('id', leadId)
+            .eq('id', effectiveLeadId)
 
           if (updateError) {
             console.error('[HUMAN_CONTACT] Error updating lead score:', updateError)
-            throw updateError
           }
 
-          console.log('[HUMAN_CONTACT] Lead score updated successfully')
+          // Build structured escalation context for human agent
+          const escalation = buildEscalationContext(
+            lead,
+            allMessages,
+            department,
+            priority,
+            customerIdentified,
+          )
 
-          // Build conversation context
+          // Build conversation context string for email
           const recentMessages = existingMessages.slice(-5).map(m => 
             `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
           ).join('\n')
-          const conversationContext = `Recent conversation:\n${recentMessages}\n\nUser message: ${message}\nAssistant response: ${assistantResponse}`
+          const conversationContext = `Department: ${department.toUpperCase()}\nPriority: ${priority.toUpperCase()}\nCustomer verified: ${customerIdentified ? 'Yes' : 'No'}\n\nRecent conversation:\n${recentMessages}\n\nUser message: ${message}\nAssistant response: ${assistantResponse}`
 
-          // Send email notification to admin
-          console.log('[HUMAN_CONTACT] Sending email notification to admin')
+          // Send email notification to admin with department context
           const emailResult = await notifyHumanContactRequest(
             lead.name || 'Unknown',
             lead.email || '',
             lead.phone || null,
             conversationContext,
-            leadId
+            effectiveLeadId
           )
           
           if (emailResult.success) {
@@ -644,46 +691,65 @@ export async function POST(request: NextRequest) {
             console.warn('[HUMAN_CONTACT] Email notification failed:', emailResult.error)
           }
 
-          // Log the event
+          // Create in-app escalation notification with full context
           try {
-            const { error: logError } = await supabaseAdmin
-              .from('event_logs')
-              .insert({
-                tenant_id: tenantId,
-                lead_id: leadId,
-                event_type: 'human_contact_requested',
-                metadata: {
-                  message,
-                  timestamp: new Date().toISOString(),
-                  detected_at: new Date().toISOString(),
-                },
-              })
-            
-            if (logError) {
-              console.error('[HUMAN_CONTACT] Error logging event:', logError)
-            } else {
-              console.log('[HUMAN_CONTACT] Event logged successfully')
-            }
+            await supabaseAdmin.from('notifications').insert({
+              tenant_id: tenantId,
+              type: 'escalation',
+              title: `${priority === 'urgent' ? 'URGENT: ' : priority === 'high' ? 'HIGH: ' : ''}${department.charAt(0).toUpperCase() + department.slice(1)} - Human contact requested`,
+              message: `${lead.name || 'A customer'}${customerIdentified ? ' (verified)' : ''} needs human assistance. Department: ${department}. Priority: ${priority}.`,
+              metadata: {
+                ...escalation,
+                conversationId: currentConversationId,
+                leadId: effectiveLeadId,
+              },
+              is_read: false,
+            })
+          } catch (err) {
+            console.error('[HUMAN_CONTACT] Failed to create notification:', err)
+          }
+
+          // Log the event with department and priority
+          try {
+            await supabaseAdmin.from('event_logs').insert({
+              tenant_id: tenantId,
+              lead_id: effectiveLeadId,
+              event_type: 'human_contact_requested',
+              metadata: {
+                message,
+                department,
+                priority,
+                customerVerified: customerIdentified,
+                conversationId: currentConversationId,
+                timestamp: new Date().toISOString(),
+              },
+            })
           } catch (err) {
             console.error('[HUMAN_CONTACT] Failed to log event:', err)
           }
           
-          console.log('[HUMAN_CONTACT] Human contact request processed successfully for lead:', leadId)
+          console.log('[HUMAN_CONTACT] Escalation processed:', { leadId: effectiveLeadId, department, priority, customerVerified: customerIdentified })
         } else {
-          console.warn('[HUMAN_CONTACT] Lead not found:', leadId)
+          console.warn('[HUMAN_CONTACT] Lead not found:', effectiveLeadId)
         }
       } catch (error) {
         console.error('[HUMAN_CONTACT] Error handling human contact request:', error)
       }
     }
 
-    const response: ChatResponse = {
+    const response: ChatResponse & { customerIdentified?: boolean; department?: string; priority?: string; leadId?: string } = {
       message: assistantResponse,
       conversationId: currentConversationId!,
       shouldShowBooking: Boolean(shouldShowBooking),
       turnCount,
       languageUsed: effectiveLanguage,
       formData: formDataToReturn,
+      ...(customerIdentified && {
+        customerIdentified: true,
+        leadId: identifiedLeadId,
+      }),
+      ...(department !== 'general' && { department }),
+      ...(priority !== 'medium' && { priority }),
     }
 
     return NextResponse.json(response)

@@ -115,6 +115,40 @@ const LLM_PROVIDERS = [
   },
 ]
 
+/* ---- Confirm Modal Component ---- */
+function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }: {
+  isOpen: boolean
+  title: string
+  message: string
+  onConfirm: () => void
+  onCancel: () => void
+}) {
+  if (!isOpen) return null
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
+      <div className="relative bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+        <p className="text-sm text-gray-600 mb-6">{message}</p>
+        <div className="flex gap-3 justify-end">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function KnowledgeBasePage() {
   const [activeTab, setActiveTab] = useState<'manual' | 'files' | 'scrape' | 'agent' | 'chunks'>('agent')
   const [entries, setEntries] = useState<KnowledgeBaseEntry[]>([])
@@ -124,6 +158,18 @@ export default function KnowledgeBasePage() {
   const [uploading, setUploading] = useState(false)
   const [savingSettings, setSavingSettings] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean
+    title: string
+    message: string
+    onConfirm: () => void
+  }>({ isOpen: false, title: '', message: '', onConfirm: () => {} })
+
+  // Bulk selection state
+  const [selectedEntries, setSelectedEntries] = useState<Set<string>>(new Set())
+  const [selectedDocuments, setSelectedDocuments] = useState<Set<string>>(new Set())
 
   // Agent Settings state
   const [agentSettings, setAgentSettings] = useState<AgentSettings>({
@@ -263,20 +309,53 @@ export default function KnowledgeBasePage() {
   }
 
   const handleDeleteEntry = async (id: string) => {
-    if (!confirm('Delete this entry?')) return
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Entry',
+      message: 'Are you sure you want to delete this entry? This action cannot be undone.',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }))
+        try {
+          const res = await fetch(`/api/admin/knowledge-base?id=${id}`, {
+            method: 'DELETE',
+          })
+          if (!res.ok) throw new Error('Failed to delete')
+          showMessage('success', 'Entry deleted')
+          selectedEntries.delete(id)
+          setSelectedEntries(new Set(selectedEntries))
+          fetchData()
+        } catch (error) {
+          showMessage('error', 'Failed to delete entry')
+        }
+      },
+    })
+  }
 
-    try {
-      const res = await fetch(`/api/admin/knowledge-base?id=${id}`, {
-        method: 'DELETE',
-      })
-
-      if (!res.ok) throw new Error('Failed to delete')
-
-      showMessage('success', 'Entry deleted')
-      fetchData()
-    } catch (error) {
-      showMessage('error', 'Failed to delete entry')
-    }
+  const handleBulkDeleteEntries = () => {
+    const count = selectedEntries.size
+    if (count === 0) return
+    setConfirmModal({
+      isOpen: true,
+      title: `Delete ${count} ${count === 1 ? 'Entry' : 'Entries'}`,
+      message: `Are you sure you want to delete ${count} selected ${count === 1 ? 'entry' : 'entries'}? This action cannot be undone.`,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }))
+        try {
+          const ids = Array.from(selectedEntries)
+          await Promise.all(
+            ids.map(id =>
+              fetch(`/api/admin/knowledge-base?id=${id}`, { method: 'DELETE' })
+            )
+          )
+          showMessage('success', `${count} ${count === 1 ? 'entry' : 'entries'} deleted`)
+          setSelectedEntries(new Set())
+          fetchData()
+        } catch (error) {
+          showMessage('error', 'Failed to delete some entries')
+          fetchData()
+        }
+      },
+    })
   }
 
   // File Upload Handlers
@@ -312,19 +391,81 @@ export default function KnowledgeBasePage() {
   }
 
   const handleDeleteDocument = async (id: string) => {
-    if (!confirm('Delete this document and all its chunks?')) return
+    setConfirmModal({
+      isOpen: true,
+      title: 'Delete Document',
+      message: 'Are you sure you want to delete this document and all its chunks? This action cannot be undone.',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }))
+        try {
+          const res = await fetch(`/api/documents/${id}`, {
+            method: 'DELETE',
+          })
+          if (!res.ok) throw new Error('Failed to delete')
+          showMessage('success', 'Document deleted')
+          selectedDocuments.delete(id)
+          setSelectedDocuments(new Set(selectedDocuments))
+          fetchData()
+        } catch (error) {
+          showMessage('error', 'Failed to delete document')
+        }
+      },
+    })
+  }
 
-    try {
-      const res = await fetch(`/api/documents/${id}`, {
-        method: 'DELETE',
-      })
+  const handleBulkDeleteDocuments = () => {
+    const count = selectedDocuments.size
+    if (count === 0) return
+    setConfirmModal({
+      isOpen: true,
+      title: `Delete ${count} ${count === 1 ? 'Document' : 'Documents'}`,
+      message: `Are you sure you want to delete ${count} selected ${count === 1 ? 'document' : 'documents'} and all their chunks? This action cannot be undone.`,
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }))
+        try {
+          const ids = Array.from(selectedDocuments)
+          await Promise.all(
+            ids.map(id =>
+              fetch(`/api/documents/${id}`, { method: 'DELETE' })
+            )
+          )
+          showMessage('success', `${count} ${count === 1 ? 'document' : 'documents'} deleted`)
+          setSelectedDocuments(new Set())
+          fetchData()
+        } catch (error) {
+          showMessage('error', 'Failed to delete some documents')
+          fetchData()
+        }
+      },
+    })
+  }
 
-      if (!res.ok) throw new Error('Failed to delete')
+  // Toggle helpers for bulk selection
+  const toggleEntry = (id: string) => {
+    const next = new Set(selectedEntries)
+    if (next.has(id)) next.delete(id); else next.add(id)
+    setSelectedEntries(next)
+  }
 
-      showMessage('success', 'Document deleted')
-      fetchData()
-    } catch (error) {
-      showMessage('error', 'Failed to delete document')
+  const toggleDocument = (id: string) => {
+    const next = new Set(selectedDocuments)
+    if (next.has(id)) next.delete(id); else next.add(id)
+    setSelectedDocuments(next)
+  }
+
+  const toggleAllEntries = (ids: string[]) => {
+    if (ids.every(id => selectedEntries.has(id))) {
+      setSelectedEntries(new Set())
+    } else {
+      setSelectedEntries(new Set(ids))
+    }
+  }
+
+  const toggleAllDocuments = (ids: string[]) => {
+    if (ids.every(id => selectedDocuments.has(id))) {
+      setSelectedDocuments(new Set())
+    } else {
+      setSelectedDocuments(new Set(ids))
     }
   }
 
@@ -785,7 +926,40 @@ export default function KnowledgeBasePage() {
 
           {/* Entries List */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Manual Entries ({entries.length})</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Manual Entries ({entries.length})</h2>
+              {entries.length > 0 && (
+                <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={entries.length > 0 && entries.every(e => selectedEntries.has(e.id))}
+                    onChange={() => toggleAllEntries(entries.map(e => e.id))}
+                    className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  />
+                  Select all
+                </label>
+              )}
+            </div>
+
+            {/* Bulk action bar */}
+            {selectedEntries.size > 0 && (
+              <div className="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                <span className="text-sm font-medium text-red-800">{selectedEntries.size} selected</span>
+                <button
+                  onClick={handleBulkDeleteEntries}
+                  className="ml-auto flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                >
+                  <TrashIcon className="w-4 h-4" />
+                  Delete selected
+                </button>
+                <button
+                  onClick={() => setSelectedEntries(new Set())}
+                  className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
             
             {entries.length === 0 ? (
               <p className="text-gray-500 text-center py-8">No manual entries yet. Add one above!</p>
@@ -794,23 +968,31 @@ export default function KnowledgeBasePage() {
                 {entries.map((entry) => (
                   <div
                     key={entry.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors"
+                    className={`border rounded-lg p-4 transition-colors ${selectedEntries.has(entry.id) ? 'border-primary-400 bg-primary-50/50' : 'border-gray-200 hover:border-primary-300'}`}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{entry.title}</h3>
-                        <div className="flex gap-2 mt-1">
-                          <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
-                            {entry.category}
-                          </span>
-                          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
-                            {entry.language}
-                          </span>
-                          {entry.tags.map((tag) => (
-                            <span key={tag} className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded">
-                              {tag}
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedEntries.has(entry.id)}
+                          onChange={() => toggleEntry(entry.id)}
+                          className="w-4 h-4 mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{entry.title}</h3>
+                          <div className="flex gap-2 mt-1">
+                            <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded">
+                              {entry.category}
                             </span>
-                          ))}
+                            <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                              {entry.language}
+                            </span>
+                            {entry.tags.map((tag) => (
+                              <span key={tag} className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
                       <button
@@ -820,8 +1002,8 @@ export default function KnowledgeBasePage() {
                         <TrashIcon className="w-5 h-5" />
                       </button>
                     </div>
-                    <p className="text-sm text-gray-600 line-clamp-2">{entry.content}</p>
-                    <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-sm text-gray-600 line-clamp-2 ml-7">{entry.content}</p>
+                    <p className="text-xs text-gray-400 mt-2 ml-7">
                       Added {new Date(entry.created_at).toLocaleDateString()}
                     </p>
                   </div>
@@ -879,40 +1061,88 @@ export default function KnowledgeBasePage() {
 
           {/* Documents List */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Uploaded Files ({documents.filter(d => d.file_type !== 'url').length})</h2>
-            
-            {documents.filter(d => d.file_type !== 'url').length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No files uploaded yet. Upload some above!</p>
-            ) : (
-              <div className="space-y-3">
-                {documents.filter(d => d.file_type !== 'url').map((doc) => (
-                  <div
-                    key={doc.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">{doc.filename}</h3>
-                        <div className="flex gap-4 mt-2 text-sm text-gray-600">
-                          <span>{doc.file_type?.split('/')[1]?.toUpperCase() || 'FILE'}</span>
-                          <span>{(doc.file_size / 1024).toFixed(0)} KB</span>
-                          <span>{doc.chunk_count} chunks</span>
-                        </div>
-                        <div className="mt-2">
-                          {getStatusBadge(doc.status)}
-                        </div>
-                      </div>
+            {(() => {
+              const fileDocs = documents.filter(d => d.file_type !== 'url')
+              return (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-semibold">Uploaded Files ({fileDocs.length})</h2>
+                    {fileDocs.length > 0 && (
+                      <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={fileDocs.length > 0 && fileDocs.every(d => selectedDocuments.has(d.id))}
+                          onChange={() => toggleAllDocuments(fileDocs.map(d => d.id))}
+                          className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        Select all
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Bulk action bar */}
+                  {selectedDocuments.size > 0 && activeTab === 'files' && (
+                    <div className="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                      <span className="text-sm font-medium text-red-800">{selectedDocuments.size} selected</span>
                       <button
-                        onClick={() => handleDeleteDocument(doc.id)}
-                        className="text-red-600 hover:text-red-800 p-2"
+                        onClick={handleBulkDeleteDocuments}
+                        className="ml-auto flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
                       >
-                        <TrashIcon className="w-5 h-5" />
+                        <TrashIcon className="w-4 h-4" />
+                        Delete selected
+                      </button>
+                      <button
+                        onClick={() => setSelectedDocuments(new Set())}
+                        className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+                      >
+                        Clear
                       </button>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  )}
+
+                  {fileDocs.length === 0 ? (
+                    <p className="text-gray-500 text-center py-8">No files uploaded yet. Upload some above!</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {fileDocs.map((doc) => (
+                        <div
+                          key={doc.id}
+                          className={`border rounded-lg p-4 transition-colors ${selectedDocuments.has(doc.id) ? 'border-primary-400 bg-primary-50/50' : 'border-gray-200 hover:border-primary-300'}`}
+                        >
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-start gap-3 flex-1">
+                              <input
+                                type="checkbox"
+                                checked={selectedDocuments.has(doc.id)}
+                                onChange={() => toggleDocument(doc.id)}
+                                className="w-4 h-4 mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                              />
+                              <div>
+                                <h3 className="font-semibold text-gray-900">{doc.filename}</h3>
+                                <div className="flex gap-4 mt-2 text-sm text-gray-600">
+                                  <span>{doc.file_type?.split('/')[1]?.toUpperCase() || 'FILE'}</span>
+                                  <span>{(doc.file_size / 1024).toFixed(0)} KB</span>
+                                  <span>{doc.chunk_count} chunks</span>
+                                </div>
+                                <div className="mt-2">
+                                  {getStatusBadge(doc.status)}
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => handleDeleteDocument(doc.id)}
+                              className="text-red-600 hover:text-red-800 p-2"
+                            >
+                              <TrashIcon className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )
+            })()}
           </div>
         </div>
       )}
@@ -1050,41 +1280,89 @@ export default function KnowledgeBasePage() {
 
           {/* Scraped Sites List */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-lg font-semibold mb-4 text-gray-900">
-              Scraped Websites ({documents.filter(d => d.file_type === 'url').length})
-            </h2>
+            {(() => {
+              const urlDocs = documents.filter(d => d.file_type === 'url')
+              return (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Scraped Websites ({urlDocs.length})
+                    </h2>
+                    {urlDocs.length > 0 && (
+                      <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={urlDocs.length > 0 && urlDocs.every(d => selectedDocuments.has(d.id))}
+                          onChange={() => toggleAllDocuments(urlDocs.map(d => d.id))}
+                          className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        Select all
+                      </label>
+                    )}
+                  </div>
 
-            {documents.filter(d => d.file_type === 'url').length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No websites scraped yet. Use the crawler above!</p>
-            ) : (
-              <div className="space-y-3">
-                {documents.filter(d => d.file_type === 'url').map((doc) => (
-                  <div
-                    key={doc.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors"
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 truncate">{doc.filename}</h3>
-                        <div className="flex gap-4 mt-2 text-sm text-gray-600">
-                          <span>{doc.chunk_count} chunks</span>
-                          <span>{new Date(doc.created_at).toLocaleDateString()}</span>
-                        </div>
-                        <div className="mt-2">
-                          {getStatusBadge(doc.status)}
-                        </div>
-                      </div>
+                  {/* Bulk action bar */}
+                  {selectedDocuments.size > 0 && activeTab === 'scrape' && (
+                    <div className="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                      <span className="text-sm font-medium text-red-800">{selectedDocuments.size} selected</span>
                       <button
-                        onClick={() => handleDeleteDocument(doc.id)}
-                        className="text-red-600 hover:text-red-800 p-2"
+                        onClick={handleBulkDeleteDocuments}
+                        className="ml-auto flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
                       >
-                        <TrashIcon className="w-5 h-5" />
+                        <TrashIcon className="w-4 h-4" />
+                        Delete selected
+                      </button>
+                      <button
+                        onClick={() => setSelectedDocuments(new Set())}
+                        className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+                      >
+                        Clear
                       </button>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  )}
+
+                  {urlDocs.length === 0 ? (
+                    <p className="text-gray-500 text-center py-8">No websites scraped yet. Use the crawler above!</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {urlDocs.map((doc) => (
+                        <div
+                          key={doc.id}
+                          className={`border rounded-lg p-4 transition-colors ${selectedDocuments.has(doc.id) ? 'border-primary-400 bg-primary-50/50' : 'border-gray-200 hover:border-primary-300'}`}
+                        >
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-start gap-3 flex-1 min-w-0">
+                              <input
+                                type="checkbox"
+                                checked={selectedDocuments.has(doc.id)}
+                                onChange={() => toggleDocument(doc.id)}
+                                className="w-4 h-4 mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                              />
+                              <div className="min-w-0">
+                                <h3 className="font-semibold text-gray-900 truncate">{doc.filename}</h3>
+                                <div className="flex gap-4 mt-2 text-sm text-gray-600">
+                                  <span>{doc.chunk_count} chunks</span>
+                                  <span>{new Date(doc.created_at).toLocaleDateString()}</span>
+                                </div>
+                                <div className="mt-2">
+                                  {getStatusBadge(doc.status)}
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => handleDeleteDocument(doc.id)}
+                              className="text-red-600 hover:text-red-800 p-2"
+                            >
+                              <TrashIcon className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )
+            })()}
           </div>
         </div>
       )}
@@ -1093,10 +1371,43 @@ export default function KnowledgeBasePage() {
       {activeTab === 'chunks' && (
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">All AI Data Chunks ({entries.length})</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">All AI Data Chunks ({entries.length})</h2>
+              {entries.length > 0 && (
+                <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={entries.length > 0 && entries.every(e => selectedEntries.has(e.id))}
+                    onChange={() => toggleAllEntries(entries.map(e => e.id))}
+                    className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  />
+                  Select all
+                </label>
+              )}
+            </div>
             <p className="text-sm text-gray-500 mb-6">
               These are the individual pieces of information the AI uses to answer questions.
             </p>
+
+            {/* Bulk action bar */}
+            {selectedEntries.size > 0 && activeTab === 'chunks' && (
+              <div className="mb-4 flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                <span className="text-sm font-medium text-red-800">{selectedEntries.size} selected</span>
+                <button
+                  onClick={handleBulkDeleteEntries}
+                  className="ml-auto flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                >
+                  <TrashIcon className="w-4 h-4" />
+                  Delete selected
+                </button>
+                <button
+                  onClick={() => setSelectedEntries(new Set())}
+                  className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
             
             {entries.length === 0 ? (
               <p className="text-gray-500 text-center py-8">No data chunks found. Add some content via files, URLs, or manual entries!</p>
@@ -1105,18 +1416,26 @@ export default function KnowledgeBasePage() {
                 {entries.map((entry) => (
                   <div
                     key={entry.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors bg-gray-50"
+                    className={`border rounded-lg p-4 transition-colors ${selectedEntries.has(entry.id) ? 'border-primary-400 bg-primary-50/50' : 'border-gray-200 hover:border-primary-300 bg-gray-50'}`}
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-sm">{entry.title || 'Untitled Chunk'}</h3>
-                        <div className="flex gap-2 mt-1">
-                          <span className="text-[10px] px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full uppercase">
-                            {entry.language}
-                          </span>
-                          <span className="text-[10px] px-2 py-0.5 bg-gray-200 text-gray-700 rounded-full uppercase">
-                            {entry.category}
-                          </span>
+                      <div className="flex items-start gap-3 flex-1">
+                        <input
+                          type="checkbox"
+                          checked={selectedEntries.has(entry.id)}
+                          onChange={() => toggleEntry(entry.id)}
+                          className="w-4 h-4 mt-0.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-sm">{entry.title || 'Untitled Chunk'}</h3>
+                          <div className="flex gap-2 mt-1">
+                            <span className="text-[10px] px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full uppercase">
+                              {entry.language}
+                            </span>
+                            <span className="text-[10px] px-2 py-0.5 bg-gray-200 text-gray-700 rounded-full uppercase">
+                              {entry.category}
+                            </span>
+                          </div>
                         </div>
                       </div>
                       <button
@@ -1127,10 +1446,10 @@ export default function KnowledgeBasePage() {
                         <TrashIcon className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="text-xs text-gray-700 leading-relaxed bg-white p-3 rounded border border-gray-100">
+                    <div className="text-xs text-gray-700 leading-relaxed bg-white p-3 rounded border border-gray-100 ml-7">
                       {entry.content}
                     </div>
-                    <div className="mt-2 text-[10px] text-gray-400">
+                    <div className="mt-2 text-[10px] text-gray-400 ml-7">
                       ID: {entry.id} • Added {new Date(entry.created_at).toLocaleDateString()}
                     </div>
                   </div>
@@ -1140,6 +1459,15 @@ export default function KnowledgeBasePage() {
           </div>
         </div>
       )}
+
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   )
 }

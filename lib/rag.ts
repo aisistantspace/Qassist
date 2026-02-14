@@ -426,7 +426,15 @@ ${context}
 
 ### FALLBACK RESOURCES
 - ${branding.booking_url ? `Book an Appointment: ${branding.booking_url}` : ''}
-- Company Website: ${branding.company_website || '#'}`
+- Company Website: ${branding.company_website || '#'}
+
+### CUSTOMER IDENTIFICATION PROTOCOL
+- When a customer describes an urgent situation (accident, claim, damage, emergency, theft) or asks about their existing policy/account, you MUST ask for their email address so the system can identify them.
+- Say something like: "I want to make sure we can help you as quickly as possible. Could you share the email address you registered with us? That way I can pull up your information and connect you with the right team."
+- If the customer provides an email or phone number, the system will automatically check if they are an existing customer.
+- If a customer is identified as existing (you will see a CUSTOMER IDENTIFIED note in the conversation), acknowledge them by name and let them know their information has been found.
+- For urgent situations (accidents, emergencies, claims), reassure the customer that you are connecting them with the appropriate department and a human agent will follow up.
+- NEVER ask for sensitive data like policy numbers, SSN, or passwords. Only ask for name, email, or phone to identify them.`
 
   const activeForms = await getActiveForms(tid)
   console.log('[FORM DEBUG] Active forms:', activeForms.length, 'leadId:', leadId, 'hasUserMessage:', !!userMessage)

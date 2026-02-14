@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 
 function SparkleIcon({ className }: { className?: string }) {
   return (
@@ -123,6 +124,82 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ---- Product Showcase ---- */}
+      <section className="relative z-10 px-6 sm:px-12 lg:px-16 pb-24">
+        <div className="max-w-6xl mx-auto">
+          {/* Section label */}
+          <p className="text-center text-sm font-medium text-slate-500 uppercase tracking-wider mb-10">
+            A peek inside
+          </p>
+
+          {/* Main showcase layout */}
+          <div className="relative">
+            {/* Dashboard - main large screenshot */}
+            <div className="showcase-card relative mx-auto max-w-5xl rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/20 border border-white/40 ring-1 ring-slate-900/5">
+              {/* Browser chrome bar */}
+              <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-400/80" />
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="bg-white rounded-md px-4 py-1 text-[11px] text-slate-400 font-medium border border-slate-200 min-w-[200px] text-center">
+                    app.astuteaisistant.com/dashboard
+                  </div>
+                </div>
+                <div className="w-14" />
+              </div>
+              <Image
+                src="/preview-dashboard.png"
+                alt="Dashboard overview showing leads, active chats, and language distribution"
+                width={1920}
+                height={1080}
+                className="w-full h-auto block"
+                priority
+              />
+            </div>
+
+            {/* Conversations - overlapping from bottom-left */}
+            <div className="showcase-card showcase-delay-1 hidden md:block absolute -bottom-12 -left-4 lg:-left-8 w-[55%] max-w-[550px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5">
+              <div className="bg-slate-100 border-b border-slate-200 px-3 py-2 flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/80" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-400/80" />
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="bg-white rounded-md px-3 py-0.5 text-[10px] text-slate-400 font-medium border border-slate-200">
+                    Conversations
+                  </div>
+                </div>
+              </div>
+              <Image
+                src="/preview-conversations.png"
+                alt="Conversation management with lead tracking and language detection"
+                width={1920}
+                height={1080}
+                className="w-full h-auto block"
+              />
+            </div>
+
+            {/* Chat widget - floating on the right */}
+            <div className="showcase-card showcase-delay-2 hidden md:block absolute -bottom-16 -right-2 lg:-right-6 w-[32%] max-w-[320px] rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/25 border border-white/40 ring-1 ring-slate-900/5">
+              <Image
+                src="/preview-chat.png"
+                alt="Live chat in Papiamentu with AI-powered responses"
+                width={800}
+                height={1200}
+                className="w-full h-auto block"
+              />
+            </div>
+          </div>
+
+          {/* Spacer for overlapping elements */}
+          <div className="h-20 md:h-32" />
+        </div>
+      </section>
+
       {/* ---- Capabilities ---- */}
       <section className="relative z-10 px-6 sm:px-12 lg:px-16 pb-20">
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -173,7 +250,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* ---- Sheen animation styles ---- */}
+      {/* ---- Animation styles ---- */}
       <style jsx>{`
         @keyframes sheen {
           0% {
@@ -205,6 +282,26 @@ export default function Home() {
         .glass-card:nth-child(2) .sheen-overlay { animation-delay: 2s; }
         .glass-card:nth-child(3) .sheen-overlay { animation-delay: 4s; }
         .glass-card:nth-child(4) .sheen-overlay { animation-delay: 6s; }
+
+        @keyframes showcaseFadeUp {
+          0% {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .showcase-card {
+          animation: showcaseFadeUp 0.8s ease-out both;
+        }
+        .showcase-delay-1 {
+          animation-delay: 0.3s;
+        }
+        .showcase-delay-2 {
+          animation-delay: 0.6s;
+        }
       `}</style>
     </main>
   )
