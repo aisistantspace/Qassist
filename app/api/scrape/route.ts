@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
         throw new Error('Could not extract meaningful content from the page')
       }
 
-      const pageLanguage = detectLanguageForKbContent(content)
+      const pageLanguage = detectLanguageForKbContent(content, url)
       const chunks = chunkText(content)
 
       let chunkCount = 0

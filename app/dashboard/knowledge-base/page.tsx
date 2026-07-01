@@ -922,7 +922,7 @@ export default function KnowledgeBasePage() {
                     <option value="EN">English</option>
                     <option value="NL">Dutch</option>
                     <option value="ES">Spanish</option>
-                    <option value="PA">Papiamento</option>
+                    <option value="PA">Papiamentu</option>
                   </select>
                 </div>
 

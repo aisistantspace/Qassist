@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
 
         // Chunk and embed
         const chunks = chunkText(content)
-        const pageLanguage = detectLanguageForKbContent(content)
+        const pageLanguage = detectLanguageForKbContent(content, normalizedUrl)
         let chunkCount = 0
 
         for (let i = 0; i < chunks.length; i++) {

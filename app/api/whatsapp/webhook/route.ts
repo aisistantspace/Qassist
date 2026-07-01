@@ -117,12 +117,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Perform RAG search
-    const kbSearch = await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 5)
+    const kbSearch = await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 12)
     const relevantEntries = kbSearch.entries
     const context = buildContext(relevantEntries)
-    const kbUsesForeignContent =
-      effectiveLanguage === 'PA' &&
-      relevantEntries.some((e) => e.language && e.language !== 'PA')
+    const kbUsesForeignContent = relevantEntries.some(
+      (e) => e.language && e.language !== effectiveLanguage
+    )
 
     const isCaseQuery = isCaseSpecific(messageText)
 

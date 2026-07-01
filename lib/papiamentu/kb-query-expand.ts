@@ -1,6 +1,6 @@
 /**
- * Expand Papiamentu user queries with English/Dutch insurance terms so vector
- * search can match KB chunks scraped in EN/NL (e.g. ENNIA /en/ pages).
+ * Expand user queries with insurance/product synonyms so vector search matches
+ * KB chunks regardless of response language (EN scrape, PA question, etc.).
  */
 
 const PA_TERM_EXPANSIONS: { pattern: RegExp; terms: string }[] = [
@@ -17,19 +17,29 @@ const PA_TERM_EXPANSIONS: { pattern: RegExp; terms: string }[] = [
   { pattern: /\bkiko\b/i, terms: 'what information' },
 ]
 
-export function expandKbSearchQuery(query: string, responseLanguage: string): string {
-  if (responseLanguage !== 'PA') return query
+const UNIVERSAL_INSURANCE_PATTERNS: { pattern: RegExp; terms: string }[] = [
+  { pattern: /\btravel\b/i, terms: 'single-trip travel insurance vacation trip coverage' },
+  { pattern: /\breis\b/i, terms: 'travel insurance reisverzekering trip' },
+  { pattern: /\bviaje\b/i, terms: 'travel insurance trip seguro de viaje' },
+  { pattern: /\binsurance\b/i, terms: 'policy coverage premium seguro' },
+  { pattern: /\bseguro\b/i, terms: 'insurance policy coverage' },
+  { pattern: /\bclaim\b/i, terms: 'claim damage accident report' },
+  { pattern: /\bklaim\b/i, terms: 'claim insurance' },
+  { pattern: /\bquote\b/i, terms: 'premium price calculate policy' },
+  { pattern: /\bhome\b/i, terms: 'home house property insurance woon' },
+  { pattern: /\bcar\b|auto\b/i, terms: 'vehicle car motor insurance' },
+  { pattern: /\blife\b/i, terms: 'life insurance policy' },
+  { pattern: /\bhealth\b|care\b/i, terms: 'health medical care insurance' },
+]
 
+export function expandKbSearchQuery(query: string, _responseLanguage?: string): string {
   const parts: string[] = [query]
-  for (const { pattern, terms } of PA_TERM_EXPANSIONS) {
-    if (pattern.test(query)) {
-      parts.push(terms)
-    }
-  }
 
-  // Short PA questions often lack shared embedding overlap with English KB titles
-  if (parts.length === 1) {
-    parts.push('insurance travel policy coverage')
+  for (const { pattern, terms } of PA_TERM_EXPANSIONS) {
+    if (pattern.test(query)) parts.push(terms)
+  }
+  for (const { pattern, terms } of UNIVERSAL_INSURANCE_PATTERNS) {
+    if (pattern.test(query)) parts.push(terms)
   }
 
   return parts.join(' ')

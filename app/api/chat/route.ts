@@ -145,9 +145,9 @@ export async function POST(request: NextRequest) {
         : { entries: [], usedFallback: false }
     const relevantEntries = kbSearch.entries
     const context = buildContext(relevantEntries) + buildActionGuidance(relevantEntries)
-    const kbUsesForeignContent =
-      effectiveLanguage === 'PA' &&
-      relevantEntries.some((e) => e.language && e.language !== 'PA')
+    const kbUsesForeignContent = relevantEntries.some(
+      (e) => e.language && e.language !== effectiveLanguage
+    )
     if (relevantEntries.length === 0 && messageText) {
       logUnansweredQuery(messageText, effectiveLanguage, tenantId).catch(() => {})
     }

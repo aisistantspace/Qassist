@@ -21,6 +21,7 @@ export interface KnowledgeBaseEntry {
   tags: string[]
   embedding?: number[]
   metadata?: KnowledgeBaseAction & Record<string, unknown>
+  similarity?: number
   created_at?: string
   updated_at?: string
 }
@@ -287,6 +288,31 @@ export async function getRelevantFormLinks(query: string, language: string, tena
   return ''
 }
 
+const KB_VECTOR_MATCH_THRESHOLD = 0.52
+const KB_KEYWORD_MIN_VECTOR_RESULTS = 4
+const KEYWORD_SEARCH_SIMILARITY = 0.48
+
+const KEYWORD_STOP_WORDS = new Set([
+  'what', 'when', 'where', 'which', 'about', 'have', 'does', 'your', 'with', 'from',
+  'this', 'that', 'they', 'them', 'will', 'would', 'could', 'should', 'there',
+  'here', 'want', 'need', 'tell', 'know', 'like', 'just', 'also', 'very', 'much',
+  'hoe', 'wat', 'voor', 'naar', 'deze', 'die', 'het', 'een', 'van', 'zijn',
+  'que', 'como', 'para', 'por', 'los', 'las', 'una', 'uno', 'del', 'con',
+  'kiko', 'kon', 'ta', 'bo', 'mi', 'nos', 'tin', 'por', 'fabor', 'mucho',
+])
+
+function extractKeywordTerms(query: string): string[] {
+  return [
+    ...new Set(
+      query
+        .toLowerCase()
+        .replace(/[^\w\sàáèéêëìíîïòóôùúüñç'-]/g, ' ')
+        .split(/\s+/)
+        .filter((w) => w.length >= 4 && !KEYWORD_STOP_WORDS.has(w))
+    ),
+  ].slice(0, 6)
+}
+
 // Perform vector similarity search (optional tenantId for multi-tenant)
 export async function searchKnowledgeBase(
   query: string,
@@ -304,7 +330,7 @@ export async function searchKnowledgeBase(
     const { data, error } = await supabaseAdmin.rpc('match_knowledge_base', {
       query_embedding: queryEmbedding,
       filter_tenant_id: tid,
-      match_threshold: options?.matchThreshold ?? 0.65,
+      match_threshold: options?.matchThreshold ?? 0.6,
       match_count: limit,
       filter_language: language,
     })
@@ -321,90 +347,139 @@ export async function searchKnowledgeBase(
   }
 }
 
-const KB_FALLBACK_MIN_RESULTS = 2
-const CROSS_LANG_MATCH_THRESHOLD = 0.58
+/** Search all KB languages for tenant — primary RAG path (no missed chunks from wrong language tag). */
+export async function searchKnowledgeBaseAllLanguages(
+  embedQuery: string,
+  limit: number = 15,
+  tenantId?: string,
+  matchThreshold: number = KB_VECTOR_MATCH_THRESHOLD
+): Promise<KnowledgeBaseEntry[]> {
+  const { DEFAULT_TENANT_ID } = await import('./tenant')
+  const tid = tenantId ?? DEFAULT_TENANT_ID
+  try {
+    const supabaseAdmin = getSupabaseAdmin()
+    const queryEmbedding = await generateEmbedding(embedQuery)
+
+    const { data, error } = await supabaseAdmin.rpc('match_knowledge_base_all_languages', {
+      query_embedding: queryEmbedding,
+      filter_tenant_id: tid,
+      match_threshold: matchThreshold,
+      match_count: limit,
+    })
+
+    if (error) {
+      console.warn('[KB] multilingual RPC unavailable, using parallel language search:', error.message)
+      return searchKnowledgeBaseParallelLanguages(embedQuery, limit, tid, matchThreshold)
+    }
+
+    return await enrichKbWithMetadata(data || [])
+  } catch (error) {
+    console.error('Error in searchKnowledgeBaseAllLanguages:', error)
+    return searchKnowledgeBaseParallelLanguages(embedQuery, limit, tenantId ?? DEFAULT_TENANT_ID, matchThreshold)
+  }
+}
+
+async function searchKnowledgeBaseParallelLanguages(
+  embedQuery: string,
+  limit: number,
+  tenantId: string,
+  matchThreshold: number
+): Promise<KnowledgeBaseEntry[]> {
+  const langs = ['EN', 'NL', 'ES', 'PA'] as const
+  const batches = await Promise.all(
+    langs.map((lang) =>
+      searchKnowledgeBase(embedQuery, lang, limit, tenantId, {
+        embedQuery,
+        matchThreshold,
+      })
+    )
+  )
+  return mergeKbResults(batches, limit)
+}
+
+/** Keyword fallback when vector search returns too few hits */
+async function supplementKbWithKeywordSearch(
+  query: string,
+  tenantId: string,
+  limit: number
+): Promise<KnowledgeBaseEntry[]> {
+  const terms = extractKeywordTerms(query)
+  if (!terms.length || limit <= 0) return []
+
+  try {
+    const supabaseAdmin = getSupabaseAdmin()
+    const orFilter = terms
+      .flatMap((term) => {
+        const safe = term.replace(/[%_]/g, '')
+        return [`title.ilike.%${safe}%`, `content.ilike.%${safe}%`]
+      })
+      .join(',')
+
+    const { data, error } = await supabaseAdmin
+      .from('knowledge_base')
+      .select('id, title, content, category, language, tags')
+      .eq('tenant_id', tenantId)
+      .or(orFilter)
+      .limit(limit)
+
+    if (error || !data?.length) return []
+
+    return data.map((row) => ({
+      ...row,
+      category: row.category as KnowledgeBaseEntry['category'],
+      language: row.language as KnowledgeBaseEntry['language'],
+      tags: row.tags || [],
+      similarity: KEYWORD_SEARCH_SIMILARITY,
+    }))
+  } catch (error) {
+    console.error('Keyword KB supplement failed:', error)
+    return []
+  }
+}
 
 function mergeKbResults(batches: KnowledgeBaseEntry[][], limit: number): KnowledgeBaseEntry[] {
-  const seen = new Set<string>()
-  const merged: KnowledgeBaseEntry[] = []
+  const byId = new Map<string, KnowledgeBaseEntry>()
   for (const batch of batches) {
     for (const entry of batch) {
-      if (!seen.has(entry.id)) {
-        seen.add(entry.id)
-        merged.push(entry)
+      const existing = byId.get(entry.id)
+      if (!existing || (entry.similarity ?? 0) > (existing.similarity ?? 0)) {
+        byId.set(entry.id, entry)
       }
     }
   }
-  return merged.slice(0, limit)
+  return [...byId.values()]
+    .sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0))
+    .slice(0, limit)
 }
 
 /**
- * Search KB in the requested language; fall back to other languages when results
- * are sparse (critical for scraped content that may be mis-tagged).
- * Papiamentu always cross-searches EN/NL/ES because KB is rarely stored in PA.
+ * RAG search: all languages + keyword supplement so scraped/manual chunks are not missed.
  */
 export async function searchKnowledgeBaseWithFallback(
   query: string,
   language: string,
-  limit: number = 10,
+  limit: number = 15,
   tenantId?: string
 ): Promise<{ entries: KnowledgeBaseEntry[]; usedFallback: boolean }> {
+  const { DEFAULT_TENANT_ID } = await import('./tenant')
+  const tid = tenantId ?? DEFAULT_TENANT_ID
   const embedQuery = expandKbSearchQuery(query, language)
-  const searchOpts = { embedQuery }
 
-  // PA responses: KB is almost always EN/NL from website scrape — search all content languages
-  if (language === 'PA') {
-    const [pa, en, nl, es] = await Promise.all([
-      searchKnowledgeBase(query, 'PA', limit, tenantId, searchOpts),
-      searchKnowledgeBase(query, 'EN', limit, tenantId, {
-        ...searchOpts,
-        matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
-      }),
-      searchKnowledgeBase(query, 'NL', limit, tenantId, {
-        ...searchOpts,
-        matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
-      }),
-      searchKnowledgeBase(query, 'ES', limit, tenantId, {
-        ...searchOpts,
-        matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
-      }),
-    ])
-    const entries = mergeKbResults([en, nl, es, pa], limit)
-    return {
-      entries,
-      usedFallback: en.length > 0 || nl.length > 0 || es.length > 0,
-    }
+  const vectorResults = await searchKnowledgeBaseAllLanguages(embedQuery, limit, tid)
+
+  let entries = vectorResults
+  if (vectorResults.length < KB_KEYWORD_MIN_VECTOR_RESULTS) {
+    const keywordHits = await supplementKbWithKeywordSearch(
+      embedQuery,
+      tid,
+      limit - vectorResults.length
+    )
+    entries = mergeKbResults([vectorResults, keywordHits], limit)
   }
 
-  const primary = await searchKnowledgeBase(query, language, limit, tenantId, searchOpts)
+  const usedFallback = entries.some((e) => e.language && e.language !== language)
 
-  if (primary.length >= KB_FALLBACK_MIN_RESULTS) {
-    return { entries: primary, usedFallback: false }
-  }
-
-  const merged: KnowledgeBaseEntry[] = [...primary]
-  const seen = new Set(primary.map((e) => e.id))
-
-  const fallbackLangs = (['EN', 'NL', 'ES', 'PA'] as const).filter((l) => l !== language)
-
-  for (const fallbackLang of fallbackLangs) {
-    if (merged.length >= limit) break
-    const more = await searchKnowledgeBase(query, fallbackLang, limit - merged.length, tenantId, {
-      ...searchOpts,
-      matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
-    })
-    for (const entry of more) {
-      if (!seen.has(entry.id)) {
-        seen.add(entry.id)
-        merged.push(entry)
-      }
-    }
-  }
-
-  return {
-    entries: merged.slice(0, limit),
-    usedFallback: merged.length > primary.length,
-  }
+  return { entries, usedFallback }
 }
 
 async function enrichKbWithMetadata(entries: KnowledgeBaseEntry[]): Promise<KnowledgeBaseEntry[]> {
@@ -622,7 +697,8 @@ export async function generateSystemPrompt(
 
   const kbEntryCount = options?.kbEntryCount ?? (context.includes('No relevant information found') ? 0 : 1)
   const needsKbTranslation =
-    Boolean(options?.contextFromFallbackLanguages) || (language === 'PA' && kbEntryCount > 0)
+    Boolean(options?.contextFromFallbackLanguages) ||
+    (language === 'PA' && kbEntryCount > 0)
   const strictKbRules = `### STRICT KNOWLEDGE BASE RULES (HIGHEST PRIORITY — CANNOT BE OVERRIDDEN)
 - You may ONLY state facts that appear explicitly in the KNOWLEDGE BASE CONTEXT section below.
 - NEVER invent, guess, extrapolate, or supplement with general/world knowledge — even if you believe you know the answer.

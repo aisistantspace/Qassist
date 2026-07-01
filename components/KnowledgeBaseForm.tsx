@@ -138,7 +138,7 @@ export default function KnowledgeBaseForm({ entry, onSave, onCancel }: Knowledge
             <option value="EN">English</option>
             <option value="NL">Dutch (Nederlands)</option>
             <option value="ES">Spanish (Español)</option>
-            <option value="PA">Papiamento</option>
+            <option value="PA">Papiamentu</option>
           </select>
         </div>
       </div>
