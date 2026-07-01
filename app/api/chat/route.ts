@@ -12,7 +12,7 @@ import { sanitizeForPrompt, checkRateLimit, getClientIP } from '@/lib/security'
 import { getRecentConversation, summarizeConversation, isResumable, classifyDepartment, classifyPriority } from '@/lib/customer-matching'
 import type { Department, Priority } from '@/lib/customer-matching'
 import { resolveCustomerIdentity, formatCustomerContextForPrompt, syncLeadFromAnswers } from '@/lib/customer-identity'
-import { evaluateRouting, formatFormLinkMessage } from '@/lib/routing'
+import { evaluateRouting, formatFormLinkMessage, formatDepartmentLinkMessage } from '@/lib/routing'
 import { dispatchEscalation } from '@/lib/escalation'
 import { inferDepartmentFromFormName } from '@/lib/insurance-form-templates'
 import { createFormSubmissionNotification } from '@/lib/notifications'
@@ -612,6 +612,18 @@ export async function POST(request: NextRequest) {
     const finalDepartment = routingEval.department || department
     const finalPriority = routingEval.priority || priority
     const shouldEscalate = routingEval.shouldRoute
+
+    // Append department portal link when configured (escalation or link-only routing)
+    const actionUrl = routingEval.url
+    if (
+      actionUrl &&
+      !hasActiveFormInThisTurn &&
+      !assistantResponse.includes(actionUrl) &&
+      routingEval.suggestedAction === 'link'
+    ) {
+      assistantResponse += `\n\n${formatDepartmentLinkMessage(effectiveLanguage, finalDepartment, actionUrl)}`
+      assistantMessage.content = assistantResponse
+    }
 
     // Update conversation in database
     const updatedMessages = [...existingMessages, userMessage, assistantMessage]

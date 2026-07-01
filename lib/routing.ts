@@ -4,7 +4,7 @@
 
 import type { Department, Priority } from '@/lib/customer-matching'
 import { classifyDepartment, classifyPriority } from '@/lib/customer-matching'
-import { getRoutingConfig } from '@/lib/routing-config'
+import { getRoutingConfig, getDepartmentUrl, type RoutingConfig } from '@/lib/routing-config'
 
 export type SuggestedAction = 'form' | 'link' | 'human' | 'none'
 
@@ -47,6 +47,26 @@ function matchesAny(text: string, patterns: RegExp[]): boolean {
   return patterns.some((p) => p.test(text))
 }
 
+function resolveActionUrl(
+  config: RoutingConfig,
+  department: string,
+  matchedForm?: RoutingContext['matchedForm']
+): string | undefined {
+  const formUrl = matchedForm?.external_url?.trim()
+  if (formUrl) return formUrl
+  return getDepartmentUrl(config, department) || undefined
+}
+
+function resolveSuggestedAction(
+  url: string | undefined,
+  matchedForm?: RoutingContext['matchedForm'],
+  fallback: SuggestedAction = 'human'
+): SuggestedAction {
+  if (url) return 'link'
+  if (matchedForm?.id) return 'form'
+  return fallback
+}
+
 export async function evaluateRouting(ctx: RoutingContext): Promise<RoutingEvaluation> {
   const config = await getRoutingConfig(ctx.tenantId)
   const department = classifyDepartment(ctx.messages)
@@ -63,23 +83,29 @@ export async function evaluateRouting(ctx: RoutingContext): Promise<RoutingEvalu
   // Form completed → route to matching department
   if (ctx.formCompleted) {
     const dept = ctx.formCompleted.department || department
+    const url = resolveActionUrl(config, dept, ctx.matchedForm)
     return {
       shouldRoute: true,
       department: dept,
       priority: dept === 'claims' ? 'high' : priority,
       reason: `Form submitted: ${ctx.formCompleted.formName}`,
-      suggestedAction: 'none',
+      suggestedAction: url ? 'link' : 'none',
+      url,
+      formId: ctx.matchedForm?.id,
     }
   }
 
   // Explicit human contact request
   if (ctx.isHumanContactRequest) {
+    const url = resolveActionUrl(config, department, ctx.matchedForm)
     return {
       shouldRoute: true,
       department,
       priority: priority === 'medium' ? 'high' : priority,
       reason: 'Customer requested human assistance',
-      suggestedAction: 'human',
+      suggestedAction: resolveSuggestedAction(url, ctx.matchedForm, 'human'),
+      url,
+      formId: ctx.matchedForm?.id,
     }
   }
 
@@ -91,6 +117,7 @@ export async function evaluateRouting(ctx: RoutingContext): Promise<RoutingEvalu
   ) {
     const claimPriority: Priority =
       priority === 'medium' && isClaimIntent ? 'urgent' : priority
+    const url = resolveActionUrl(config, 'claims', ctx.matchedForm)
     return {
       shouldRoute: true,
       department: 'claims',
@@ -98,8 +125,9 @@ export async function evaluateRouting(ctx: RoutingContext): Promise<RoutingEvalu
       reason: isClaimIntent
         ? 'Insurance claim or incident detected'
         : 'Conversation classified as claims department',
-      suggestedAction: ctx.matchedForm?.id ? 'form' : 'human',
+      suggestedAction: resolveSuggestedAction(url, ctx.matchedForm, 'human'),
       formId: ctx.matchedForm?.id,
+      url,
     }
   }
 
@@ -110,12 +138,15 @@ export async function evaluateRouting(ctx: RoutingContext): Promise<RoutingEvalu
     (priority === 'high' || priority === 'urgent') &&
     config.department_routing.billing?.auto_route
   ) {
+    const url = resolveActionUrl(config, 'billing', ctx.matchedForm)
     return {
       shouldRoute: true,
       department: 'billing',
       priority,
       reason: 'Urgent billing issue detected',
-      suggestedAction: 'human',
+      suggestedAction: resolveSuggestedAction(url, ctx.matchedForm, 'human'),
+      url,
+      formId: ctx.matchedForm?.id,
     }
   }
 
@@ -125,14 +156,15 @@ export async function evaluateRouting(ctx: RoutingContext): Promise<RoutingEvalu
     isKnowledgeGap &&
     config.routing_rules.knowledge_gap_route
   ) {
+    const url = resolveActionUrl(config, 'sales', ctx.matchedForm)
     return {
       shouldRoute: true,
       department: 'sales',
       priority: 'medium',
       reason: 'Registration/sales intent with insufficient KB context',
-      suggestedAction: ctx.matchedForm?.external_url ? 'link' : 'form',
+      suggestedAction: resolveSuggestedAction(url, ctx.matchedForm, 'form'),
       formId: ctx.matchedForm?.id,
-      url: ctx.matchedForm?.external_url,
+      url,
     }
   }
 
@@ -142,14 +174,15 @@ export async function evaluateRouting(ctx: RoutingContext): Promise<RoutingEvalu
     config.routing_rules.auto_route_sales_registration &&
     config.department_routing.sales?.auto_route
   ) {
+    const url = resolveActionUrl(config, 'sales', ctx.matchedForm)
     return {
       shouldRoute: false,
       department: 'sales',
       priority,
       reason: 'Sales intent — guide to form or link',
-      suggestedAction: ctx.matchedForm?.external_url ? 'link' : ctx.matchedForm?.id ? 'form' : 'link',
+      suggestedAction: resolveSuggestedAction(url, ctx.matchedForm, url ? 'link' : 'none'),
       formId: ctx.matchedForm?.id,
-      url: ctx.matchedForm?.external_url,
+      url,
     }
   }
 
@@ -175,4 +208,52 @@ export function formatFormLinkMessage(
     PA: `Bo por kompletá nos ${formName} aki: ${url}`,
   }
   return templates[language] || templates.EN
+}
+
+const DEPARTMENT_LINK_TEMPLATES: Record<string, Record<'EN' | 'NL' | 'ES' | 'PA', string>> = {
+  claims: {
+    EN: 'You can submit your claim here: {url}',
+    NL: 'U kunt uw claim hier indienen: {url}',
+    ES: 'Puede presentar su reclamación aquí: {url}',
+    PA: 'Bo por entregá bo klaim aki: {url}',
+  },
+  sales: {
+    EN: 'You can get a quote or apply here: {url}',
+    NL: 'U kunt hier een offerte aanvragen of aanmelden: {url}',
+    ES: 'Puede solicitar una cotización o registrarse aquí: {url}',
+    PA: 'Bo por tuma un kotisashon òf apliká aki: {url}',
+  },
+  billing: {
+    EN: 'You can manage billing here: {url}',
+    NL: 'U kunt facturatie hier regelen: {url}',
+    ES: 'Puede gestionar la facturación aquí: {url}',
+    PA: 'Bo por maneha fakturashon aki: {url}',
+  },
+  support: {
+    EN: 'You can reach our support team here: {url}',
+    NL: 'U kunt hier contact opnemen met onze support: {url}',
+    ES: 'Puede contactar a nuestro equipo de soporte aquí: {url}',
+    PA: 'Bo por tuma kontakto ku nos soporte aki: {url}',
+  },
+  general: {
+    EN: 'You can continue here: {url}',
+    NL: 'U kunt hier verdergaan: {url}',
+    ES: 'Puede continuar aquí: {url}',
+    PA: 'Bo por kontinuá aki: {url}',
+  },
+}
+
+/** Multilingual templates for department page / portal links */
+export function formatDepartmentLinkMessage(
+  language: 'EN' | 'NL' | 'ES' | 'PA',
+  department: string,
+  url: string
+): string {
+  const deptKey = department.toLowerCase()
+  const template =
+    DEPARTMENT_LINK_TEMPLATES[deptKey]?.[language] ||
+    DEPARTMENT_LINK_TEMPLATES[deptKey]?.EN ||
+    DEPARTMENT_LINK_TEMPLATES.general[language] ||
+    DEPARTMENT_LINK_TEMPLATES.general.EN
+  return template.replace('{url}', url)
 }

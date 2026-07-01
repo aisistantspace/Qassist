@@ -10,7 +10,8 @@ export async function POST(request: NextRequest) {
       company_website,
       primary_color = '#3B82F6',
       crawl = true,
-      maxPages = 25,
+      maxPages = 125,
+      maxDepth = 125,
     } = body
 
     if (!company_name || !company_website) {
@@ -113,6 +114,7 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             url: company_website,
             maxPages,
+            maxDepth,
           }),
         })
 

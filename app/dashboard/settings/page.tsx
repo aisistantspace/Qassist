@@ -46,7 +46,7 @@ interface IntegrationConfig {
   smtp_secure: boolean
   smtp_enabled: boolean
   notification_recipient_email: string
-  department_routing?: Record<string, { email: string; auto_route: boolean }>
+  department_routing?: Record<string, { email: string; url: string; auto_route: boolean }>
   customer_lookup_config?: {
     enabled: boolean
     api_url: string
@@ -67,12 +67,12 @@ interface IntegrationConfig {
   }
 }
 
-const defaultDepartmentRouting: Record<string, { email: string; auto_route: boolean }> = {
-  claims: { email: '', auto_route: true },
-  support: { email: '', auto_route: false },
-  sales: { email: '', auto_route: false },
-  billing: { email: '', auto_route: true },
-  general: { email: '', auto_route: false },
+const defaultDepartmentRouting: Record<string, { email: string; url: string; auto_route: boolean }> = {
+  claims: { email: '', url: '', auto_route: true },
+  support: { email: '', url: '', auto_route: false },
+  sales: { email: '', url: '', auto_route: false },
+  billing: { email: '', url: '', auto_route: true },
+  general: { email: '', url: '', auto_route: false },
 }
 
 const defaultCustomerLookup = {
@@ -246,7 +246,12 @@ export default function SettingsPage() {
         const integrationsData = await integrationsRes.json()
         setIntegrations({
           ...integrationsData,
-          department_routing: { ...defaultDepartmentRouting, ...(integrationsData.department_routing || {}) },
+          department_routing: Object.fromEntries(
+            Object.entries(defaultDepartmentRouting).map(([dept, defaults]) => [
+              dept,
+              { ...defaults, ...(integrationsData.department_routing?.[dept] || {}) },
+            ])
+          ),
           customer_lookup_config: { ...defaultCustomerLookup, ...(integrationsData.customer_lookup_config || {}) },
           routing_rules: { ...defaultRoutingRules, ...(integrationsData.routing_rules || {}) },
         })
@@ -1162,27 +1167,56 @@ export default function SettingsPage() {
       {/* Routing Tab */}
       {activeTab === 'routing' && (
         <div className="bg-white rounded-lg shadow-md p-6 space-y-10">
+          <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
+            <p className="font-medium mb-1">Links + triggers live here</p>
+            <p>
+              Set a <strong>customer link</strong> per department (claim page, quote portal, contact form).
+              Use <strong>auto-route</strong> and <strong>routing rules</strong> below to decide when each department fires.
+              Scroll down and click <strong>Save Routing Settings</strong> when done.
+            </p>
+          </div>
           <div>
             <h2 className="text-xl font-semibold mb-2 text-gray-900">Department Routing</h2>
-            <p className="text-sm text-gray-600 mb-6">Configure email inboxes and auto-route rules per department.</p>
+            <p className="text-sm text-gray-600 mb-6">
+              Configure team email, customer-facing links, and auto-route rules per department.
+            </p>
             <div className="space-y-4">
               {Object.entries(integrations.department_routing || defaultDepartmentRouting).map(([dept, config]) => (
-                <div key={dept} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end border-b border-gray-100 pb-4">
-                  <div className="font-medium text-gray-900 capitalize">{dept}</div>
-                  <input
-                    type="email"
-                    value={config.email}
-                    onChange={(e) => setIntegrations({
-                      ...integrations,
-                      department_routing: {
-                        ...integrations.department_routing!,
-                        [dept]: { ...config, email: e.target.value },
-                      },
-                    })}
-                    placeholder={`${dept}@company.com`}
-                    className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
-                  />
-                  <label className="flex items-center gap-2 text-sm text-gray-700">
+                <div key={dept} className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end border-b border-gray-100 pb-4">
+                  <div className="font-medium text-gray-900 capitalize lg:col-span-1">{dept}</div>
+                  <div className="lg:col-span-2">
+                    <label className="block text-xs text-gray-500 mb-1">Team email</label>
+                    <input
+                      type="email"
+                      value={config.email}
+                      onChange={(e) => setIntegrations({
+                        ...integrations,
+                        department_routing: {
+                          ...integrations.department_routing!,
+                          [dept]: { ...config, email: e.target.value },
+                        },
+                      })}
+                      placeholder={`${dept}@company.com`}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <div className="lg:col-span-2">
+                    <label className="block text-xs text-gray-500 mb-1">Customer link (form, portal, store)</label>
+                    <input
+                      type="url"
+                      value={config.url || ''}
+                      onChange={(e) => setIntegrations({
+                        ...integrations,
+                        department_routing: {
+                          ...integrations.department_routing!,
+                          [dept]: { ...config, url: e.target.value },
+                        },
+                      })}
+                      placeholder="https://..."
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+                    />
+                  </div>
+                  <label className="flex items-center gap-2 text-sm text-gray-700 lg:col-span-5 lg:justify-end">
                     <input
                       type="checkbox"
                       checked={config.auto_route}
@@ -1203,7 +1237,10 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold mb-2 text-gray-900">Routing Rules</h2>
+            <h2 className="text-xl font-semibold mb-2 text-gray-900">Trigger rules</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              When the bot detects these intents in chat, it escalates to the matching department (if auto-route is on) and sends the customer link when configured.
+            </p>
             <div className="space-y-3">
               {([
                 ['auto_route_claims', 'Auto-escalate claims (accidents, damage, claim keywords)'],

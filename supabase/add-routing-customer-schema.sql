@@ -57,11 +57,11 @@ ALTER TABLE event_logs ADD CONSTRAINT event_logs_event_type_check
 -- 5. INTEGRATION_CONFIG — routing & customer lookup
 -- -----------------------------------------------------------------------------
 ALTER TABLE integration_config ADD COLUMN IF NOT EXISTS department_routing JSONB DEFAULT '{
-  "claims": {"email": "", "auto_route": true},
-  "support": {"email": "", "auto_route": false},
-  "sales": {"email": "", "auto_route": false},
-  "billing": {"email": "", "auto_route": true},
-  "general": {"email": "", "auto_route": false}
+  "claims": {"email": "", "url": "", "auto_route": true},
+  "support": {"email": "", "url": "", "auto_route": false},
+  "sales": {"email": "", "url": "", "auto_route": false},
+  "billing": {"email": "", "url": "", "auto_route": true},
+  "general": {"email": "", "url": "", "auto_route": false}
 }'::jsonb;
 
 ALTER TABLE integration_config ADD COLUMN IF NOT EXISTS customer_lookup_config JSONB DEFAULT '{
@@ -83,6 +83,6 @@ ALTER TABLE integration_config ADD COLUMN IF NOT EXISTS routing_rules JSONB DEFA
   "knowledge_gap_route": false
 }'::jsonb;
 
-COMMENT ON COLUMN integration_config.department_routing IS 'Per-department email and auto_route toggles';
+COMMENT ON COLUMN integration_config.department_routing IS 'Per-department email, customer link (url), and auto_route toggles';
 COMMENT ON COLUMN integration_config.customer_lookup_config IS 'External customer API lookup settings (on-demand)';
 COMMENT ON COLUMN integration_config.routing_rules IS 'When to auto-escalate conversations to departments';

@@ -6,6 +6,8 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 
 export interface DepartmentConfig {
   email: string
+  /** Customer-facing page (claim portal, quote app, department form, etc.) */
+  url: string
   auto_route: boolean
 }
 
@@ -22,11 +24,26 @@ export interface RoutingConfig {
 }
 
 const DEFAULT_DEPARTMENT_ROUTING: Record<string, DepartmentConfig> = {
-  claims: { email: '', auto_route: true },
-  support: { email: '', auto_route: false },
-  sales: { email: '', auto_route: false },
-  billing: { email: '', auto_route: true },
-  general: { email: '', auto_route: false },
+  claims: { email: '', url: '', auto_route: true },
+  support: { email: '', url: '', auto_route: false },
+  sales: { email: '', url: '', auto_route: false },
+  billing: { email: '', url: '', auto_route: true },
+  general: { email: '', url: '', auto_route: false },
+}
+
+function mergeDepartmentRouting(
+  stored?: Record<string, Partial<DepartmentConfig>>
+): Record<string, DepartmentConfig> {
+  const merged: Record<string, DepartmentConfig> = { ...DEFAULT_DEPARTMENT_ROUTING }
+  for (const key of Object.keys(DEFAULT_DEPARTMENT_ROUTING)) {
+    merged[key] = { ...DEFAULT_DEPARTMENT_ROUTING[key], ...(stored?.[key] || {}) }
+  }
+  for (const [key, config] of Object.entries(stored || {})) {
+    if (!merged[key]) {
+      merged[key] = { email: '', url: '', auto_route: false, ...config }
+    }
+  }
+  return merged
 }
 
 const DEFAULT_ROUTING_RULES: RoutingRules = {
@@ -59,7 +76,7 @@ export async function getRoutingConfig(tenantId: string): Promise<RoutingConfig>
     }
 
     return {
-      department_routing: { ...DEFAULT_DEPARTMENT_ROUTING, ...(data?.department_routing || {}) },
+      department_routing: mergeDepartmentRouting(data?.department_routing),
       routing_rules: { ...DEFAULT_ROUTING_RULES, ...(data?.routing_rules || {}) },
     }
   } catch {
@@ -76,4 +93,12 @@ export function getDepartmentEmail(
 ): string | null {
   const dept = config.department_routing[department]
   return dept?.email?.trim() || null
+}
+
+export function getDepartmentUrl(
+  config: RoutingConfig,
+  department: string
+): string | null {
+  const dept = config.department_routing[department]
+  return dept?.url?.trim() || null
 }

@@ -202,6 +202,7 @@ export default function KnowledgeBasePage() {
   // Website crawl
   const [crawlUrl, setCrawlUrl] = useState('')
   const [crawlMaxPages, setCrawlMaxPages] = useState(25)
+  const [crawlMaxDepth, setCrawlMaxDepth] = useState(3)
   const [crawling, setCrawling] = useState(false)
   const [crawlResults, setCrawlResults] = useState<{
     pagesScraped: number
@@ -530,7 +531,7 @@ export default function KnowledgeBasePage() {
       const res = await fetch('/api/scrape/crawl', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: crawlUrl, maxPages: crawlMaxPages }),
+        body: JSON.stringify({ url: crawlUrl, maxPages: crawlMaxPages, maxDepth: crawlMaxDepth }),
       })
 
       const data = await res.json()
@@ -1209,7 +1210,7 @@ export default function KnowledgeBasePage() {
                 <input
                   type="range"
                   min="5"
-                  max="50"
+                  max="125"
                   step="5"
                   value={crawlMaxPages}
                   onChange={(e) => setCrawlMaxPages(parseInt(e.target.value))}
@@ -1217,7 +1218,26 @@ export default function KnowledgeBasePage() {
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
                   <span>5 pages</span>
-                  <span>50 pages</span>
+                  <span>125 pages</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Max Depth: {crawlMaxDepth}
+                </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="125"
+                  step="1"
+                  value={crawlMaxDepth}
+                  onChange={(e) => setCrawlMaxDepth(parseInt(e.target.value))}
+                  className="w-full accent-primary-600"
+                />
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>1 level</span>
+                  <span>125 levels</span>
                 </div>
               </div>
 

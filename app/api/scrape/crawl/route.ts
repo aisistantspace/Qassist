@@ -66,12 +66,16 @@ function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+const CRAWL_LIMIT = 125
+
 export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const tenantId = (await getTenantFromRequest(request)).tenantId
     const body = await request.json()
-    const { url, maxPages = 25, maxDepth = 3 } = body
+    const maxPages = Math.min(CRAWL_LIMIT, Math.max(1, Number(body.maxPages) || 25))
+    const maxDepth = Math.min(CRAWL_LIMIT, Math.max(1, Number(body.maxDepth) || 3))
+    const { url } = body
 
     if (!url) {
       return NextResponse.json({ error: 'URL is required' }, { status: 400 })
