@@ -82,6 +82,11 @@ const GREETING_FIXES: [RegExp, string][] = [
   [/\bof\b/gi, 'òf'],
   // "Con mi por" (misspelled "How can I") → "Kon mi por"
   [/\bcon\s+mi\s+por\b/gi, 'Kon mi por'],
+  // Spanish "equipo" (team) — NOT "ekipá" (verb: to equip)
+  [/\bequipo\b/gi, 'ekipo'],
+  [/\be\s+ekipá\b/gi, 'e ekipo'],
+  [/\bku\s+e\s+ekipá\b/gi, 'ku e ekipo'],
+  [/\bnos\s+ekipá\b/gi, 'nos ekipo'],
   // Common misspellings
   [/\bnomber\b/gi, 'nòmber'],
   [/\bcon\s+mi\s+por\s+yuda\s+bo\b/gi, 'kon mi por yudabo'],
@@ -165,6 +170,12 @@ const SPANISH_PHRASE_FIXES: [RegExp, string][] = [
   [/\bcon\s+(?!mi\b)([a-záéíóúñüèòù]+)\b/gi, 'ku $1'],
   // "si tiene(s)" → "si bo tin" (if you have)
   [/\bsi\s+tienes?\b/gi, 'si bo tin'],
+  // Chatbot: contact the team (ekipá = equip verb — wrong)
+  [/\bmi\s+por\s+kontakt[aá]\s+e\s+ekip[aá]\s+pa\s+bo\b/gi, 'mi por tuma kontakto ku e ekipo pa bo'],
+  [/\bmi\s+por\s+kontakt[aá]\s+e\s+ekip[aá]\b/gi, 'mi por tuma kontakto ku e ekipo'],
+  [/\bkontakt[aá]\s+e\s+ekip[aá]\s+pa\s+bo\b/gi, 'tuma kontakto ku e ekipo pa bo'],
+  [/\bkontakt[aá]\s+e\s+ekip[aá]\b/gi, 'tuma kontakto ku e ekipo'],
+  [/\bmi\s+por\s+kontakt[aá]\s+e\s+team\s+pa\s+bo\b/gi, 'mi por tuma kontakto ku e team pa bo'],
 ]
 
 // ── Standalone-nan plural merging ────────────────────────────────────

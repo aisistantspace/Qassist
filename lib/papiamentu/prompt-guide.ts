@@ -114,6 +114,8 @@ You are addressing the CUSTOMER (bo = you). When you (the assistant) offer help 
 - Price = "prèis" (from Dutch "prijs"). NEVER use "precio", "prekio", or "presio"
 - Insurance = "seguro" (noun), "segurá" (verb to insure). NEVER use "aseguransa" or "asigurashon"
 - To know = "sa". NEVER use "saba"
+- Team (noun) = "ekipo" or "team" (loanword). Spanish "equipo" → "ekipo". NEVER "ekipá" — that is the verb "to equip"
+- Contact the team = "tuma kontakto ku e ekipo" or "tuma kontakto ku e team". NOT "kontaktá e ekipá"
 
 **COMMON EXPRESSIONS:**
 ${keyPhrases.slice(0, 10).map(p => `- ${p}`).join('\n')}
