@@ -141,13 +141,13 @@ export async function POST(request: NextRequest) {
     // Skip RAG in eligibility mode — no KB needed
     const kbSearch =
       !isEligibilityMode && messageText
-        ? await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 10, tenantId)
-        : { entries: [], usedFallback: false }
+        ? await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 15, tenantId)
+        : { entries: [], usedFallback: false, sourceLanguages: [] as string[] }
     const relevantEntries = kbSearch.entries
     const context = buildContext(relevantEntries) + buildActionGuidance(relevantEntries)
-    const kbUsesForeignContent = relevantEntries.some(
-      (e) => e.language && e.language !== effectiveLanguage
-    )
+    const kbUsesForeignContent =
+      kbSearch.sourceLanguages.some((l) => l && l !== effectiveLanguage) ||
+      relevantEntries.some((e) => e.language && e.language !== effectiveLanguage)
     if (relevantEntries.length === 0 && messageText) {
       logUnansweredQuery(messageText, effectiveLanguage, tenantId).catch(() => {})
     }
@@ -155,6 +155,7 @@ export async function POST(request: NextRequest) {
     const systemPrompt = await generateSystemPrompt(context, effectiveLanguage, leadId, messageText || undefined, tenantId, {
       contextFromFallbackLanguages: kbSearch.usedFallback || kbUsesForeignContent,
       kbEntryCount: relevantEntries.length,
+      kbSourceLanguages: kbSearch.sourceLanguages,
     })
     const userMessage: Message = {
       role: 'user',

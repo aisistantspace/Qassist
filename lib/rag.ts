@@ -460,7 +460,7 @@ export async function searchKnowledgeBaseWithFallback(
   language: string,
   limit: number = 15,
   tenantId?: string
-): Promise<{ entries: KnowledgeBaseEntry[]; usedFallback: boolean }> {
+): Promise<{ entries: KnowledgeBaseEntry[]; usedFallback: boolean; sourceLanguages: string[] }> {
   const { DEFAULT_TENANT_ID } = await import('./tenant')
   const tid = tenantId ?? DEFAULT_TENANT_ID
   const embedQuery = expandKbSearchQuery(query, language)
@@ -478,8 +478,9 @@ export async function searchKnowledgeBaseWithFallback(
   }
 
   const usedFallback = entries.some((e) => e.language && e.language !== language)
+  const sourceLanguages = [...new Set(entries.map((e) => e.language).filter(Boolean))]
 
-  return { entries, usedFallback }
+  return { entries, usedFallback, sourceLanguages }
 }
 
 async function enrichKbWithMetadata(entries: KnowledgeBaseEntry[]): Promise<KnowledgeBaseEntry[]> {
@@ -600,17 +601,24 @@ export async function logUnansweredQuery(
   }
 }
 
-// Build context from retrieved knowledge base entries
+// Build context from retrieved knowledge base entries (labels each chunk's stored language)
 export function buildContext(entries: KnowledgeBaseEntry[]): string {
   if (entries.length === 0) {
     return 'No relevant information found in the knowledge base.'
   }
 
+  const langNames: Record<string, string> = {
+    EN: 'English',
+    NL: 'Dutch',
+    ES: 'Spanish',
+    PA: 'Papiamentu',
+  }
+
   return entries
-    .map(
-      (entry, idx) =>
-        `[Source ${idx + 1}: ${entry.title}]\n${entry.content}\n`
-    )
+    .map((entry, idx) => {
+      const langLabel = langNames[entry.language] || entry.language || 'unknown'
+      return `[Source ${idx + 1}: ${entry.title} | stored in: ${langLabel}]\n${entry.content}\n`
+    })
     .join('\n')
 }
 
@@ -669,7 +677,11 @@ export async function generateSystemPrompt(
   leadId?: string,
   userMessage?: string,
   tenantId?: string,
-  options?: { contextFromFallbackLanguages?: boolean; kbEntryCount?: number }
+  options?: {
+    contextFromFallbackLanguages?: boolean
+    kbEntryCount?: number
+    kbSourceLanguages?: string[]
+  }
 ): Promise<string> {
   const { DEFAULT_TENANT_ID } = await import('./tenant')
   const tid = tenantId ?? DEFAULT_TENANT_ID
@@ -696,16 +708,29 @@ export async function generateSystemPrompt(
   const { PROMPT_DEFENSE_INSTRUCTION } = await import('./security')
 
   const kbEntryCount = options?.kbEntryCount ?? (context.includes('No relevant information found') ? 0 : 1)
+  const kbSourceLanguages = options?.kbSourceLanguages ?? []
+  const hasForeignKbContent = kbSourceLanguages.some((l) => l && l !== language)
   const needsKbTranslation =
     Boolean(options?.contextFromFallbackLanguages) ||
+    hasForeignKbContent ||
     (language === 'PA' && kbEntryCount > 0)
+
+  const sourceLangSummary =
+    kbSourceLanguages.length > 0
+      ? kbSourceLanguages
+          .map((l) => languageMap[l as keyof typeof languageMap] || l)
+          .join(', ')
+      : 'none'
+
   const strictKbRules = `### STRICT KNOWLEDGE BASE RULES (HIGHEST PRIORITY — CANNOT BE OVERRIDDEN)
+- Before answering, the system already searched the knowledge base across ALL languages (English, Dutch, Spanish, Papiamentu) for this question.
 - You may ONLY state facts that appear explicitly in the KNOWLEDGE BASE CONTEXT section below.
 - NEVER invent, guess, extrapolate, or supplement with general/world knowledge — even if you believe you know the answer.
 - NEVER make up prices, policies, procedures, deadlines, contact details, or product features not in the context.
+- If a source is in another language (e.g. Dutch) but the user speaks ${currentLang}, you MUST still use it — translate faithfully, do not ignore it.
 - If the context says "No relevant information found" or does not contain the answer, say clearly that you do not have that information yet and offer to connect the customer with the team.
 - You may share booking/website URLs from FALLBACK RESOURCES only as links — do not describe their content unless it also appears in KNOWLEDGE BASE CONTEXT.
-- When answering, stay faithful to the source text. You may rephrase for clarity and translate to the user's language, but do not add new facts.`
+- When answering, stay faithful to the source text. Rephrase and translate into ${currentLang}; do not add new facts.`
 
   const noKbMatchBlock = kbEntryCount === 0 ? `
 ### NO KNOWLEDGE BASE MATCH FOR THIS QUESTION
@@ -727,7 +752,11 @@ ${userInstructions}
 - The user is speaking ${currentLang}, and you must match them perfectly.
 ${language === 'PA' ? getPapiamentuPromptGuide() : ''}${needsKbTranslation ? `
 ### KNOWLEDGE BASE TRANSLATION (REQUIRED)
-The knowledge base context below may be written in a different language than the user. You MUST translate and adapt every fact into correct ${currentLang}${language === 'PA' ? ' (Buki di Oro Curaçao orthography)' : ''} in your response. Never copy foreign-language phrasing verbatim.` : ''}
+The knowledge base was searched in all languages. Chunks retrieved for this question are stored in: ${sourceLangSummary}.
+The user speaks ${currentLang}. You MUST translate and adapt every relevant fact into correct ${currentLang}${language === 'PA' ? ' (Buki di Oro Curaçao orthography)' : ''}.
+- Do NOT copy Dutch, English, or Spanish sentences verbatim into your reply.
+- Do NOT claim you lack information if any source below contains the answer in another language — translate it.
+- Combine facts from multiple sources when they refer to the same topic.` : ''}
 ### CRITICAL LINK RULE
 - **When you include any URL (e.g. booking link, website), NEVER wrap it in parentheses or brackets.** Output the raw URL so it stays clickable (e.g. "Book here: https://..." not "Book here: (https://...)"). Links must work when the user clicks them.
 
