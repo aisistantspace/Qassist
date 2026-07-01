@@ -78,6 +78,29 @@ const GREETING_FIXES: [RegExp, string][] = [
   // "y" (Spanish conjunction) → "i" (PA conjunction)
   // Only match standalone "y" between word boundaries (not inside words)
   [/\by\b/gi, 'i'],
+  // English/Spanish "or" → PA "òf"
+  [/\bof\b/gi, 'òf'],
+  // "Con mi por" (misspelled "How can I") → "Kon mi por"
+  [/\bcon\s+mi\s+por\b/gi, 'Kon mi por'],
+  // Common misspellings
+  [/\bnomber\b/gi, 'nòmber'],
+  [/\bcon\s+mi\s+por\s+yuda\s+bo\b/gi, 'kon mi por yudabo'],
+  [/\bmi\s+por\s+yuda\s+bo\b/gi, 'mi por yudabo'],
+]
+
+// ── Verb + object pronoun merges (Buki di Oro Chapter IX style) ─────
+// AI often writes "yuda bo" instead of fused "yudabo"
+
+const PRONOUN_MERGE_FIXES: [RegExp, string][] = [
+  [/\byuda\s+bo\b/gi, 'yudabo'],
+  [/\bmanda\s+bo\b/gi, 'mandabo'],
+  [/\bkontakta\s+bo\b/gi, 'kontaktabo'],
+  [/\binforma\s+bo\b/gi, 'informabo'],
+  [/\bsegurá\s+bo\b/gi, 'segurabo'],
+  [/\bsegura\s+bo\b/gi, 'segurabo'],
+  [/\beksplika\s+bo\b/gi, 'eksplikabo'],
+  [/\bastè\s+bo\b/gi, 'astèbo'],
+  [/\bayuda\s+bo\b/gi, 'yudabo'],
 ]
 
 // ── Buki di Oro official day spellings (Chapter X) ──────────────────
@@ -138,6 +161,8 @@ const SPANISH_PHRASE_FIXES: [RegExp, string][] = [
   [/\bestamos\s+aqu[ií]\s+para\b/gi, 'nos ta aki pa'],
   // "con gusto" → "ku gusto" (with pleasure)
   [/\bcon\s+gusto\b/gi, 'ku gusto'],
+  // Spanish "con" (with) + noun → PA "ku"
+  [/\bcon\s+(?!mi\b)([a-záéíóúñüèòù]+)\b/gi, 'ku $1'],
   // "si tiene(s)" → "si bo tin" (if you have)
   [/\bsi\s+tienes?\b/gi, 'si bo tin'],
 ]
@@ -222,17 +247,27 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     }
   )
 
-  // 1d. Fix doubled pronoun: verb+bo followed by standalone bo
-  //     e.g. "kontaktabo bo" → "kontakta bo", "yudabo bo" → "yuda bo"
-  //     The AI fuses verb+pronoun AND writes the pronoun again separately.
+  // 1d. Remove duplicate "bo" after fused verb+bo suffix
+  //     e.g. "yudabo bo" → "yudabo", "kontaktabo bo" → "kontaktabo"
   result = result.replace(
-    /\b([a-záéíóúñüèòùàâêîôûäëïöÿ]+)(bo)\s+(bo)\b/gi,
-    (full, verbStem, _suffix, _extra) => {
-      const fixed = verbStem + ' bo'
-      corrections.push({ from: full.trim(), to: fixed.trim() })
-      return fixed
+    /\b([a-záéíóúñüèòùàâêîôûäëïöÿ]+bo)\s+bo\b/gi,
+    (full, fused) => {
+      corrections.push({ from: full.trim(), to: fused })
+      return fused
     }
   )
+
+  // 1d2. Merge separated verb + bo into fused pronoun suffix
+  for (const [pattern, replacement] of PRONOUN_MERGE_FIXES) {
+    const match = result.match(pattern)
+    if (match) {
+      const original = match[0]
+      result = result.replace(pattern, replacement)
+      if (original.toLowerCase() !== replacement.toLowerCase()) {
+        corrections.push({ from: original, to: replacement })
+      }
+    }
+  }
 
   // 1e. Remove duplicate consecutive phrases the AI sometimes stutters
   //     e.g. "Por fabor, Por fabor" → "Por fabor,"

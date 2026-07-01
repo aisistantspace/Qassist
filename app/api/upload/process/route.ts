@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { generateEmbedding } from '@/lib/openai'
+import { detectLanguageForKbContent } from '@/lib/kb-ingest'
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,30 +32,29 @@ export async function POST(request: NextRequest) {
 
     // Process chunks (either provided or use content)
     const textChunks = chunks || [content]
-    const processedChunks: any[] = []
+    const fullText = Array.isArray(chunks) ? chunks.join('\n\n') : content
+    const docLanguage = detectLanguageForKbContent(fullText)
+    const tenantId = (document as { tenant_id?: string }).tenant_id
+    const processedChunks: unknown[] = []
 
     for (let i = 0; i < textChunks.length; i++) {
       const chunk = textChunks[i]
       
       try {
-        // Generate embedding
         const embedding = await generateEmbedding(chunk)
 
-        // Determine language (simple heuristic)
-        const language = detectLanguage(chunk)
-
-        // Insert into knowledge base
         const { data: kbEntry, error: kbError } = await supabaseAdmin
           .from('knowledge_base')
           .insert({
             title: `${document.filename} - Part ${i + 1}`,
             content: chunk,
-            category: 'Service', // Can be customized
-            language,
+            category: 'Service',
+            language: docLanguage,
             tags: [document.filename],
             embedding,
             source_document_id: documentId,
             chunk_index: i,
+            ...(tenantId ? { tenant_id: tenantId } : {}),
           })
           .select()
           .single()
@@ -109,28 +109,4 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-
-// Simple language detection
-function detectLanguage(text: string): 'EN' | 'NL' | 'ES' | 'PA' {
-  const lowerText = text.toLowerCase()
-  
-  // Dutch indicators
-  if (lowerText.includes('het ') || lowerText.includes('de ') || lowerText.includes('een ')) {
-    return 'NL'
-  }
-  
-  // Spanish indicators
-  if (lowerText.includes('el ') || lowerText.includes('la ') || lowerText.includes('los ')) {
-    return 'ES'
-  }
-  
-  // Papiamento indicators
-  if (lowerText.includes('e ') || lowerText.includes('ta ') || lowerText.includes('ku ')) {
-    return 'PA'
-  }
-  
-  // Default to English
-  return 'EN'
-}
-
 

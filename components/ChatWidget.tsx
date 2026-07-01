@@ -28,7 +28,7 @@ const LANGUAGES = [
   { code: 'EN', name: 'English', flag: '🇬🇧' },
   { code: 'NL', name: 'Nederlands', flag: '🇳🇱' },
   { code: 'ES', name: 'Español', flag: '🇪🇸' },
-  { code: 'PA', name: 'Papiamento', flag: '🇨🇼' },
+  { code: 'PA', name: 'Papiamentu', flag: '🇨🇼' },
 ]
 
 const DEFAULT_BOOKING_URL = 'https://www.getprobooking.com/livinginparadise/Immigration-Advice?utm_source=ai-assistant&utm_medium=chat&utm_campaign=assistant'
@@ -59,6 +59,7 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
   const [isLoading, setIsLoading] = useState(false)
   const [conversationId, setConversationId] = useState<string | null>(recentConversation?.id || null)
   const [language, setLanguage] = useState<'EN' | 'NL' | 'ES' | 'PA'>(initialLanguage)
+  const [languageExplicit, setLanguageExplicit] = useState(initialLanguage !== 'EN')
   const [showBooking, setShowBooking] = useState(false)
   const [turnCount, setTurnCount] = useState(0)
   const [branding, setBranding] = useState<BrandingConfig | null>(null)
@@ -148,7 +149,7 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
       EN: `Hi ${firstName}! 👋 I'm ${agentName}, your assistant. How can I help you today?`,
       NL: `Hallo ${firstName}! 👋 Ik ben ${agentName}, je assistent. Hoe kan ik je helpen?`,
       ES: `¡Hola ${firstName}! 👋 Soy ${agentName}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
-      PA: `Bon dia ${firstName}! 👋 Mi ta ${agentName}, bo asistente. Con mi por yuda bo?`,
+      PA: `Bon dia ${firstName}! 👋 Mi ta ${agentName}, bo asistente. Kon mi por yudabo?`,
     }
     return greetings[lang as keyof typeof greetings] || greetings.EN
   }
@@ -176,6 +177,7 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
           conversationId,
           leadId: lead.id,
           language,
+          languageExplicit,
         }),
       })
 
@@ -241,7 +243,10 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
             {LANGUAGES.map(lang => (
               <button
                 key={lang.code}
-                onClick={() => setLanguage(lang.code as any)}
+                onClick={() => {
+                  setLanguage(lang.code as 'EN' | 'NL' | 'ES' | 'PA')
+                  setLanguageExplicit(true)
+                }}
                 className={`text-xl hover:scale-110 transition-transform ${
                   language === lang.code ? 'scale-125' : 'opacity-60'
                 }`}

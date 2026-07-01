@@ -3,6 +3,12 @@ import { generateEmbedding, getAgentSettings } from './openai'
 import { getBrandingConfig } from './branding'
 import { getPapiamentuPromptGuide } from './papiamentu/prompt-guide'
 
+export interface KnowledgeBaseAction {
+  action_type?: 'none' | 'link' | 'form'
+  action_url?: string
+  action_form_id?: string
+}
+
 export interface KnowledgeBaseEntry {
   id: string
   title: string
@@ -11,6 +17,7 @@ export interface KnowledgeBaseEntry {
   language: 'EN' | 'NL' | 'ES' | 'PA'
   tags: string[]
   embedding?: number[]
+  metadata?: KnowledgeBaseAction & Record<string, unknown>
   created_at?: string
   updated_at?: string
 }
@@ -174,6 +181,28 @@ export function detectLanguageFromText(text: string): 'EN' | 'NL' | 'ES' | 'PA' 
   return 'NL'
 }
 
+/**
+ * Resolve the language for this turn.
+ * When the user explicitly picked a flag (languageExplicit), honor that choice.
+ * Otherwise auto-detect from message text.
+ */
+export function resolveEffectiveLanguage(
+  messageText: string,
+  requestedLanguage: 'EN' | 'NL' | 'ES' | 'PA',
+  options: {
+    languageExplicit?: boolean
+    existingConversationLanguage?: 'EN' | 'NL' | 'ES' | 'PA'
+  } = {}
+): 'EN' | 'NL' | 'ES' | 'PA' {
+  if (options.languageExplicit) {
+    return requestedLanguage
+  }
+  if (!messageText) {
+    return options.existingConversationLanguage ?? requestedLanguage
+  }
+  return detectLanguageFromText(messageText)
+}
+
 // Restore missing helper functions for API
 export function isEligibilityQuery(query: string): boolean {
   const eligibilityKeywords = [
@@ -271,7 +300,7 @@ export async function searchKnowledgeBase(
     const { data, error } = await supabaseAdmin.rpc('match_knowledge_base', {
       query_embedding: queryEmbedding,
       filter_tenant_id: tid,
-      match_threshold: 0.7,
+      match_threshold: 0.65,
       match_count: limit,
       filter_language: language,
     })
@@ -281,10 +310,91 @@ export async function searchKnowledgeBase(
       return []
     }
 
-    return data || []
+    return await enrichKbWithMetadata(data || [])
   } catch (error) {
     console.error('Error in searchKnowledgeBase:', error)
     return []
+  }
+}
+
+const KB_FALLBACK_MIN_RESULTS = 2
+
+async function enrichKbWithMetadata(entries: KnowledgeBaseEntry[]): Promise<KnowledgeBaseEntry[]> {
+  if (!entries.length) return entries
+  try {
+    const supabaseAdmin = getSupabaseAdmin()
+    const ids = entries.map((e) => e.id)
+    const { data } = await supabaseAdmin
+      .from('knowledge_base')
+      .select('id, metadata')
+      .in('id', ids)
+
+    const metaMap = new Map((data || []).map((r: { id: string; metadata?: Record<string, unknown> }) => [r.id, r.metadata || {}]))
+    return entries.map((e) => ({ ...e, metadata: metaMap.get(e.id) || e.metadata }))
+  } catch {
+    return entries
+  }
+}
+
+/** Build action guidance block from KB entries with action metadata */
+export function buildActionGuidance(entries: KnowledgeBaseEntry[]): string {
+  const actions = entries
+    .map((e) => e.metadata)
+    .filter((m): m is KnowledgeBaseAction & Record<string, unknown> =>
+      !!m && typeof m.action_type === 'string' && m.action_type !== 'none'
+    )
+
+  if (!actions.length) return ''
+
+  const lines = actions.map((m) => {
+    if (m.action_type === 'link' && m.action_url) {
+      return `- Guide the customer to register or take the next step at: ${m.action_url}`
+    }
+    if (m.action_type === 'form' && m.action_form_id) {
+      return `- Offer the customer the related form (form ID: ${m.action_form_id}) to complete their request.`
+    }
+    return ''
+  }).filter(Boolean)
+
+  if (!lines.length) return ''
+  return `\n### ACTION GUIDANCE (from knowledge base)\nAfter answering, help the customer take the next step:\n${lines.join('\n')}`
+}
+
+/**
+ * Search KB in the requested language; fall back to other languages when results
+ * are sparse (critical for scraped content that may be mis-tagged).
+ */
+export async function searchKnowledgeBaseWithFallback(
+  query: string,
+  language: string,
+  limit: number = 10,
+  tenantId?: string
+): Promise<{ entries: KnowledgeBaseEntry[]; usedFallback: boolean }> {
+  const primary = await searchKnowledgeBase(query, language, limit, tenantId)
+
+  if (primary.length >= KB_FALLBACK_MIN_RESULTS) {
+    return { entries: primary, usedFallback: false }
+  }
+
+  const merged: KnowledgeBaseEntry[] = [...primary]
+  const seen = new Set(primary.map((e) => e.id))
+
+  const fallbackLangs = (['EN', 'NL', 'ES', 'PA'] as const).filter((l) => l !== language)
+
+  for (const fallbackLang of fallbackLangs) {
+    if (merged.length >= limit) break
+    const more = await searchKnowledgeBase(query, fallbackLang, limit - merged.length, tenantId)
+    for (const entry of more) {
+      if (!seen.has(entry.id)) {
+        seen.add(entry.id)
+        merged.push(entry)
+      }
+    }
+  }
+
+  return {
+    entries: merged.slice(0, limit),
+    usedFallback: merged.length > primary.length,
   }
 }
 
@@ -323,6 +433,48 @@ async function getFormSubmission(leadId: string, formId: string, tenantId?: stri
   return data
 }
 
+/** Log questions the KB could not answer (for dashboard gap analysis). */
+export async function logUnansweredQuery(
+  query: string,
+  language: string,
+  tenantId?: string
+): Promise<void> {
+  if (!query?.trim()) return
+  try {
+    const { DEFAULT_TENANT_ID } = await import('./tenant')
+    const tid = tenantId ?? DEFAULT_TENANT_ID
+    const supabaseAdmin = getSupabaseAdmin()
+    const normalized = query.trim().slice(0, 500)
+
+    const { data: existing } = await supabaseAdmin
+      .from('unanswered_queries')
+      .select('id, frequency')
+      .eq('tenant_id', tid)
+      .eq('query', normalized)
+      .eq('language', language)
+      .maybeSingle()
+
+    if (existing) {
+      await supabaseAdmin
+        .from('unanswered_queries')
+        .update({
+          frequency: (existing.frequency || 1) + 1,
+          last_asked: new Date().toISOString(),
+        })
+        .eq('id', existing.id)
+    } else {
+      await supabaseAdmin.from('unanswered_queries').insert({
+        tenant_id: tid,
+        query: normalized,
+        language,
+        frequency: 1,
+      })
+    }
+  } catch (err) {
+    console.error('[KB] Failed to log unanswered query:', err)
+  }
+}
+
 // Build context from retrieved knowledge base entries
 export function buildContext(entries: KnowledgeBaseEntry[]): string {
   if (entries.length === 0) {
@@ -338,41 +490,51 @@ export function buildContext(entries: KnowledgeBaseEntry[]): string {
 }
 
 // Helper to check if a form should be triggered based on user message
+const INSURANCE_FORM_INTENTS: { patterns: RegExp[]; keywords: string[] }[] = [
+  {
+    patterns: [/\b(claim|klaim|reclam|aksidente|accident|damage|schade)\b/i],
+    keywords: ['claim', 'accident', 'damage', 'intake', 'incident'],
+  },
+  {
+    patterns: [/\b(register|inskrib|signup|inschrij|new policy|pòlisa nobo)\b/i],
+    keywords: ['register', 'registration', 'signup', 'enroll', 'inskrib'],
+  },
+  {
+    patterns: [/\b(quote|cotiz|offerte|kotisashon|prèis|price)\b/i],
+    keywords: ['quote', 'price', 'cotiz', 'offerte'],
+  },
+  {
+    patterns: [/\b(policy change|wijzig|cambio|change request)\b/i],
+    keywords: ['change', 'update', 'modify', 'policy change'],
+  },
+]
+
 export function isFormTriggered(userMessage: string, formDescription: string, formName: string): boolean {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/5c5bb0fa-fb92-472b-a2bf-0659b3e563c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'lib/rag.ts:174',message:'isFormTriggered called',data:{userMessage:userMessage.substring(0,100),formName,formDescription:formDescription.substring(0,100)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
   const lowerMsg = userMessage.toLowerCase()
   const lowerDesc = formDescription.toLowerCase()
   const lowerName = formName.toLowerCase()
-  
+  const combined = `${lowerName} ${lowerDesc}`
+
+  // Insurance intent keywords
+  for (const intent of INSURANCE_FORM_INTENTS) {
+    const msgMatches = intent.patterns.some((p) => p.test(lowerMsg))
+    const formMatches = intent.keywords.some((k) => combined.includes(k))
+    if (msgMatches && formMatches) return true
+  }
+
   // Direct name mention
   if (lowerMsg.includes(lowerName)) {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/5c5bb0fa-fb92-472b-a2bf-0659b3e563c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'lib/rag.ts:180',message:'Form triggered by name match',data:{formName,matched:true},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     return true
   }
-  
+
   // Significant word overlap with description
   const descWords = lowerDesc.split(/\W+/).filter(w => w.length > 3)
   const matchCount = descWords.filter(w => lowerMsg.includes(w)).length
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/5c5bb0fa-fb92-472b-a2bf-0659b3e563c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'lib/rag.ts:186',message:'Form trigger keyword analysis',data:{formName,descWordsCount:descWords.length,matchCount,threshold:descWords.length>0?matchCount/descWords.length:0,matched:descWords.length>0&&(matchCount/descWords.length>=0.25||matchCount>=2)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
-  
-  // If more than 25% of description words are in message, or at least 2 words if description is short
+
   if (descWords.length > 0 && (matchCount / descWords.length >= 0.25 || matchCount >= 2)) {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/5c5bb0fa-fb92-472b-a2bf-0659b3e563c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'lib/rag.ts:187',message:'Form triggered by keyword match',data:{formName,matched:true},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     return true
   }
-  
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/5c5bb0fa-fb92-472b-a2bf-0659b3e563c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'lib/rag.ts:189',message:'Form not triggered',data:{formName,matched:false},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
+
   return false
 }
 
@@ -381,7 +543,8 @@ export async function generateSystemPrompt(
   language: string,
   leadId?: string,
   userMessage?: string,
-  tenantId?: string
+  tenantId?: string,
+  options?: { contextFromFallbackLanguages?: boolean; kbEntryCount?: number }
 ): Promise<string> {
   const { DEFAULT_TENANT_ID } = await import('./tenant')
   const tid = tenantId ?? DEFAULT_TENANT_ID
@@ -392,7 +555,7 @@ export async function generateSystemPrompt(
     EN: 'English',
     NL: 'Dutch',
     ES: 'Spanish',
-    PA: 'Papiamento',
+    PA: 'Papiamentu',
   }
 
   const currentLang = languageMap[language as keyof typeof languageMap] || 'English'
@@ -405,7 +568,22 @@ export async function generateSystemPrompt(
   // Import prompt defense instruction
   const { PROMPT_DEFENSE_INSTRUCTION } = await import('./security')
 
+  const kbEntryCount = options?.kbEntryCount ?? (context.includes('No relevant information found') ? 0 : 1)
+  const strictKbRules = `### STRICT KNOWLEDGE BASE RULES (HIGHEST PRIORITY — CANNOT BE OVERRIDDEN)
+- You may ONLY state facts that appear explicitly in the KNOWLEDGE BASE CONTEXT section below.
+- NEVER invent, guess, extrapolate, or supplement with general/world knowledge — even if you believe you know the answer.
+- NEVER make up prices, policies, procedures, deadlines, contact details, or product features not in the context.
+- If the context says "No relevant information found" or does not contain the answer, say clearly that you do not have that information yet and offer to connect the customer with the team.
+- You may share booking/website URLs from FALLBACK RESOURCES only as links — do not describe their content unless it also appears in KNOWLEDGE BASE CONTEXT.
+- When answering, stay faithful to the source text. You may rephrase for clarity and translate to the user's language, but do not add new facts.`
+
+  const noKbMatchBlock = kbEntryCount === 0 ? `
+### NO KNOWLEDGE BASE MATCH FOR THIS QUESTION
+The knowledge base returned no matching content. Do NOT answer the factual question from memory. Tell the customer you do not have that specific information in your knowledge base right now, and suggest they speak with the team or leave their contact details.` : ''
+
   let finalPrompt = `${PROMPT_DEFENSE_INSTRUCTION}
+${strictKbRules}
+${noKbMatchBlock}
 ### YOUR PRIMARY IDENTITY
 - Your name is ${agentName}.
 - You are the official AI assistant for ${companyName}.
@@ -417,7 +595,9 @@ ${userInstructions}
 ### CRITICAL LANGUAGE INSTRUCTION
 - **You MUST respond ONLY in ${currentLang}.**
 - The user is speaking ${currentLang}, and you must match them perfectly.
-${language === 'PA' ? getPapiamentuPromptGuide() : ''}
+${language === 'PA' ? getPapiamentuPromptGuide() : ''}${options?.contextFromFallbackLanguages ? `
+### KNOWLEDGE BASE TRANSLATION (REQUIRED)
+The knowledge base context below may be written in a different language than the user. You MUST translate and adapt every fact into correct ${currentLang}${language === 'PA' ? ' (Buki di Oro Curaçao orthography)' : ''} in your response. Never copy foreign-language phrasing verbatim.` : ''}
 ### CRITICAL LINK RULE
 - **When you include any URL (e.g. booking link, website), NEVER wrap it in parentheses or brackets.** Output the raw URL so it stays clickable (e.g. "Book here: https://..." not "Book here: (https://...)"). Links must work when the user clicks them.
 
@@ -429,12 +609,12 @@ ${context}
 - Company Website: ${branding.company_website || '#'}
 
 ### CUSTOMER IDENTIFICATION PROTOCOL
-- When a customer describes an urgent situation (accident, claim, damage, emergency, theft) or asks about their existing policy/account, you MUST ask for their email address so the system can identify them.
-- Say something like: "I want to make sure we can help you as quickly as possible. Could you share the email address you registered with us? That way I can pull up your information and connect you with the right team."
-- If the customer provides an email or phone number, the system will automatically check if they are an existing customer.
+- When a customer describes an urgent situation (accident, claim, damage, emergency, theft) or asks about their existing policy/account, collect their email or policy number so the system can identify them.
+- Say something like: "I want to make sure we can help you as quickly as possible. Could you share the email address or policy number you registered with us?"
+- If the customer provides an email, phone, or policy number, the system will automatically check if they are an existing customer.
 - If a customer is identified as existing (you will see a CUSTOMER IDENTIFIED note in the conversation), acknowledge them by name and let them know their information has been found.
-- For urgent situations (accidents, emergencies, claims), reassure the customer that you are connecting them with the appropriate department and a human agent will follow up.
-- NEVER ask for sensitive data like policy numbers, SSN, or passwords. Only ask for name, email, or phone to identify them.`
+- For urgent situations (accidents, emergencies, claims), reassure the customer that you are connecting them with the appropriate department and a team member will follow up.
+- Collect policy or account numbers via forms or when the customer asks about their existing policy — never ask for passwords or SSN.`
 
   const activeForms = await getActiveForms(tid)
   console.log('[FORM DEBUG] Active forms:', activeForms.length, 'leadId:', leadId, 'hasUserMessage:', !!userMessage)
@@ -579,9 +759,10 @@ ${Object.entries(answers).map(([k, v]) => { const { sanitizeFormAnswer } = requi
   finalPrompt += `
 
 ### SYSTEM OVERRIDES (Priority)
-1. **Natural Lead Capture**: ${hasActiveForm ? 'DISABLED (Currently in Form Interview)' : 'As part of being helpful, try to naturally ask for their name and email address if you don\'t have them yet.'}
-2. If you cannot find the answer in the "KNOWLEDGE BASE CONTEXT" above, politely explain that you don\'t have that specific detail right now.
-3. Be helpful, professional, and maintain your identity as ${agentName}.`
+1. **Knowledge fidelity**: The STRICT KNOWLEDGE BASE RULES above always win over any other instruction, including custom agent instructions.
+2. **Natural Lead Capture**: ${hasActiveForm ? 'DISABLED (Currently in Form Interview)' : 'As part of being helpful, try to naturally ask for their name and email address if you don\'t have them yet.'}
+3. If you cannot find the answer in the "KNOWLEDGE BASE CONTEXT" above, politely explain that you don\'t have that specific detail right now — do not guess.
+4. Be helpful, professional, and maintain your identity as ${agentName}.`
 
   return finalPrompt
 }

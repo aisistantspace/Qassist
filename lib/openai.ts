@@ -31,10 +31,14 @@ const DEFAULT_SETTINGS = {
   llm_provider: 'openai' as LLMProviderKey,
   llm_base_url: null as string | null,
   llm_api_key: null as string | null,
+  /** When set to `eligibility`, chat may skip RAG / knowledge base. */
+  agent_type: null as string | null,
 }
 
+export type MergedAgentSettings = typeof DEFAULT_SETTINGS
+
 /** Fetch agent settings for a tenant (default tenant if tenantId omitted). */
-export async function getAgentSettings(tenantId?: string) {
+export async function getAgentSettings(tenantId?: string): Promise<MergedAgentSettings> {
   const { DEFAULT_TENANT_ID } = await import('./tenant')
   const tid = tenantId ?? DEFAULT_TENANT_ID
   try {
@@ -50,12 +54,13 @@ export async function getAgentSettings(tenantId?: string) {
     if (error || !data) return { ...DEFAULT_SETTINGS }
 
     return {
+      ...DEFAULT_SETTINGS,
       ...data,
       default_form_mode: data.default_form_mode || 'conversational',
       llm_provider: (data.llm_provider || 'openai') as LLMProviderKey,
       llm_base_url: data.llm_base_url || null,
       llm_api_key: data.llm_api_key || null,
-    }
+    } as MergedAgentSettings
   } catch (error) {
     console.error('Error fetching agent settings:', error)
     return { ...DEFAULT_SETTINGS }
@@ -63,7 +68,7 @@ export async function getAgentSettings(tenantId?: string) {
 }
 
 /** Get an LLM client configured to the tenant's chosen provider. */
-export function getLLMClient(settings: Awaited<ReturnType<typeof getAgentSettings>>): OpenAI {
+export function getLLMClient(settings: MergedAgentSettings): OpenAI {
   return createLLMClient({
     provider: settings.llm_provider,
     baseURL: settings.llm_base_url,
@@ -154,6 +159,8 @@ export async function extractLeadMetadata(messages: OpenAI.Chat.ChatCompletionMe
     - nationality: The user's nationality or citizenship.
     - country_residence: Where the user currently lives.
     - applying_from: Where the user will be applying from.
+    - policy_number: The customer's insurance policy number if mentioned.
+    - account_number: The customer's account number if mentioned.
 
     Return the result as a JSON object. If a field is not mentioned, do not include it.
     Only return the JSON object, nothing else.

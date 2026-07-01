@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { 
   DocumentTextIcon, 
   CloudArrowUpIcon, 
@@ -10,7 +11,8 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
-  CommandLineIcon, // Added for Agent tab
+  CommandLineIcon,
+  QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline'
 
 interface KnowledgeBaseEntry {
@@ -211,6 +213,21 @@ export default function KnowledgeBasePage() {
   useEffect(() => {
     fetchData()
     fetchAgentSettings()
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const prefill = params.get('prefill')
+      const lang = params.get('lang')
+      if (prefill) {
+        setActiveTab('manual')
+        setManualForm((prev) => ({
+          ...prev,
+          title: prefill.length > 80 ? `${prefill.slice(0, 77)}...` : prefill,
+          content: `Question customers asked:\n"${prefill}"\n\nAnswer:\n`,
+          language: lang && ['EN', 'NL', 'ES', 'PA'].includes(lang) ? lang : prev.language,
+        }))
+      }
+    }
   }, [])
 
   const fetchData = async () => {
@@ -563,11 +580,20 @@ export default function KnowledgeBasePage() {
   return (
     <div className="max-w-6xl">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Knowledge Base</h1>
-        <p className="text-gray-600 mt-2">
-          Add content for your AI assistant to learn from - text entries, files, or websites
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Knowledge Base</h1>
+          <p className="text-gray-600 mt-2">
+            Add content for your AI assistant to learn from - text entries, files, or websites
+          </p>
+        </div>
+        <Link
+          href="/dashboard/knowledge-gaps"
+          className="inline-flex items-center gap-2 px-4 py-2 border border-amber-300 bg-amber-50 text-amber-800 rounded-lg hover:bg-amber-100 text-sm font-medium shrink-0"
+        >
+          <QuestionMarkCircleIcon className="w-5 h-5" />
+          View knowledge gaps
+        </Link>
       </div>
 
       {/* Message Alert */}

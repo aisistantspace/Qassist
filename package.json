@@ -29,7 +29,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.2.3",
-    "recharts": "^2.10.0"
+    "recharts": "^2.10.0",
+    "supports-color": "^10.2.2"
   },
   "devDependencies": {
     "@types/node": "^20",

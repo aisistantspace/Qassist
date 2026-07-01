@@ -13,12 +13,15 @@ interface Ticket {
   intent: string | null
   department: string | null
   priority: string | null
+  routing_reason: string | null
+  routed_at: string | null
   customer_verified: boolean
   created_at: string
   updated_at: string
   lead?: {
     name: string
     email: string
+    policy_number?: string
   }
 }
 
@@ -64,7 +67,7 @@ export default function TicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(true)
   const [typeFilter, setTypeFilter] = useState<string>('all')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>('escalated')
   const [deptFilter, setDeptFilter] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -75,13 +78,21 @@ export default function TicketsPage() {
   async function fetchTickets() {
     setLoading(true)
     try {
-      // Fetch service + inquiry conversations
+      const params = new URLSearchParams()
+      if (statusFilter === 'escalated') {
+        params.set('escalated', 'true')
+      } else if (statusFilter !== 'all') {
+        params.set('status', statusFilter)
+      }
+      if (deptFilter !== 'all') params.set('department', deptFilter)
+
       const fetches = typeFilter === 'all'
         ? [
-            fetch('/api/dashboard/conversations?intent=service'),
-            fetch('/api/dashboard/conversations?intent=inquiry'),
+            fetch(`/api/dashboard/conversations?intent=service&${params}`),
+            fetch(`/api/dashboard/conversations?intent=inquiry&${params}`),
+            fetch(`/api/dashboard/conversations?${params}`),
           ]
-        : [fetch(`/api/dashboard/conversations?intent=${typeFilter}`)]
+        : [fetch(`/api/dashboard/conversations?intent=${typeFilter}&${params}`)]
 
       const responses = await Promise.all(fetches)
       let all: Ticket[] = []
@@ -92,19 +103,19 @@ export default function TicketsPage() {
         }
       }
 
-      // Deduplicate and sort by date desc
+      // Deduplicate (priority sort done server-side)
       const seen = new Set<string>()
-      all = all
-        .filter(t => {
-          if (seen.has(t.id)) return false
-          seen.add(t.id)
-          return true
-        })
-        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      all = all.filter(t => {
+        if (seen.has(t.id)) return false
+        seen.add(t.id)
+        return true
+      })
 
-      // Apply status filter client-side
-      if (statusFilter !== 'all') {
+      // Apply status filter client-side for non-escalated views
+      if (statusFilter !== 'all' && statusFilter !== 'escalated') {
         all = all.filter(t => t.status === statusFilter)
+      } else if (statusFilter === 'escalated') {
+        all = all.filter(t => t.status === 'escalated')
       }
 
       // Apply department filter client-side
@@ -140,7 +151,7 @@ export default function TicketsPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Tickets</h1>
-        <p className="text-gray-600 mt-2">Service desk — support requests and customer inquiries</p>
+        <p className="text-gray-600 mt-2">Escalation queue — pick up routed conversations by department</p>
       </div>
 
       {/* Stats */}
@@ -267,6 +278,12 @@ export default function TicketsPage() {
                     </div>
                     <div className="font-medium text-gray-900">{ticket.lead?.name || 'Unknown'}</div>
                     <div className="text-sm text-gray-500">{ticket.lead?.email || 'No email'}</div>
+                    {ticket.lead?.policy_number && (
+                      <div className="text-xs text-gray-500">Policy #{ticket.lead.policy_number}</div>
+                    )}
+                    {ticket.routing_reason && (
+                      <div className="text-xs text-amber-700">{ticket.routing_reason}</div>
+                    )}
                     <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
                       <span>{ticket.turn_count} messages</span>
                       <span>·</span>
@@ -316,7 +333,8 @@ export default function TicketsPage() {
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Lang</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reason</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waiting</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                   </tr>
@@ -342,6 +360,9 @@ export default function TicketsPage() {
                         <td className="px-4 py-4">
                           <div className="font-medium text-gray-900">{ticket.lead?.name || 'Unknown'}</div>
                           <div className="text-sm text-gray-500">{ticket.lead?.email || 'No email'}</div>
+                          {ticket.lead?.policy_number && (
+                            <div className="text-xs text-gray-400">Policy #{ticket.lead.policy_number}</div>
+                          )}
                         </td>
                         <td className="px-4 py-4">
                           {db ? (
@@ -375,9 +396,13 @@ export default function TicketsPage() {
                             <span className="text-xs text-gray-400">-</span>
                           )}
                         </td>
-                        <td className="px-4 py-4 text-sm text-gray-900">{ticket.language}</td>
+                        <td className="px-4 py-4 text-sm text-gray-600 max-w-[160px] truncate" title={ticket.routing_reason || ''}>
+                          {ticket.routing_reason || '-'}
+                        </td>
                         <td className="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
-                          {format(new Date(ticket.created_at), 'MMM d, HH:mm')}
+                          {ticket.routed_at
+                            ? format(new Date(ticket.routed_at), 'MMM d, HH:mm')
+                            : format(new Date(ticket.created_at), 'MMM d, HH:mm')}
                         </td>
                         <td className="px-4 py-4">
                           <Link

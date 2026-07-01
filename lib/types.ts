@@ -54,6 +54,8 @@ export interface ChatRequest {
   conversationId?: string
   leadId: string
   language: 'EN' | 'NL' | 'ES' | 'PA'
+  /** When true, the user explicitly picked a language (flag) — server honors it over auto-detect */
+  languageExplicit?: boolean
   channel?: 'web' | 'whatsapp' | 'telegram'
   triggerFormId?: string
   tenantId?: string

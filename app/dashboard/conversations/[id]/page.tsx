@@ -48,11 +48,20 @@ interface ConversationDetail {
   status: string
   language: string
   notes: string | null
+  department?: string | null
+  priority?: string | null
+  routing_reason?: string | null
+  assigned_to?: string | null
+  routed_at?: string | null
+  customer_verified?: boolean
   created_at: string
   lead: {
     name: string
     email: string
     phone: string
+    policy_number?: string
+    account_number?: string
+    metadata?: Record<string, unknown>
     service_interest?: string
     visa_type?: string
     num_applicants?: number
@@ -62,13 +71,24 @@ interface ConversationDetail {
   }
 }
 
+interface FormSubmissionRow {
+  id: string
+  form_id: string
+  answers: Record<string, unknown>
+  status: string
+  created_at: string
+}
+
 export default function ConversationDetailPage() {
   const params = useParams()
   const router = useRouter()
   const [conversation, setConversation] = useState<ConversationDetail | null>(null)
+  const [formSubmissions, setFormSubmissions] = useState<FormSubmissionRow[]>([])
   const [loading, setLoading] = useState(true)
   const [notes, setNotes] = useState('')
   const [rating, setRating] = useState<number | null>(null)
+  const [staffEmail, setStaffEmail] = useState('')
+  const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
     if (params.id) {
@@ -82,7 +102,9 @@ export default function ConversationDetailPage() {
       if (response.ok) {
         const data = await response.json()
         setConversation(data.conversation)
+        setFormSubmissions(data.formSubmissions || [])
         setNotes(data.conversation.notes || '')
+        setStaffEmail(data.conversation.assigned_to || '')
       }
     } catch (error) {
       console.error('Error fetching conversation:', error)
@@ -128,6 +150,26 @@ export default function ConversationDetailPage() {
       }
     } catch (error) {
       console.error('Error rating conversation:', error)
+    }
+  }
+
+  async function handleStaffAction(action: 'assign' | 'resolve' | 'in_progress') {
+    if (!conversation) return
+    setActionLoading(true)
+    try {
+      const response = await fetch(`/api/dashboard/conversations/${conversation.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, staffEmail: staffEmail || 'Staff' }),
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setConversation({ ...conversation, ...data.data })
+      }
+    } catch (error) {
+      console.error('Error updating conversation:', error)
+    } finally {
+      setActionLoading(false)
     }
   }
 
@@ -289,6 +331,18 @@ export default function ConversationDetailPage() {
                 <div className="text-sm text-gray-600">Phone</div>
                 <div className="font-medium text-gray-900">{conversation.lead.phone || 'N/A'}</div>
               </div>
+              {conversation.lead.policy_number && (
+                <div>
+                  <div className="text-sm text-gray-600">Policy #</div>
+                  <div className="font-medium text-gray-900">{conversation.lead.policy_number}</div>
+                </div>
+              )}
+              {conversation.lead.account_number && (
+                <div>
+                  <div className="text-sm text-gray-600">Account #</div>
+                  <div className="font-medium text-gray-900">{conversation.lead.account_number}</div>
+                </div>
+              )}
             </div>
 
             {(conversation.lead.service_interest || conversation.lead.visa_type || conversation.lead.nationality) && (
@@ -335,6 +389,76 @@ export default function ConversationDetailPage() {
               </div>
             )}
           </div>
+
+          {/* Routing & Pickup */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-lg font-semibold mb-4 text-gray-900">Routing & Pickup</h2>
+            <div className="space-y-3 mb-4">
+              {conversation.department && (
+                <div>
+                  <div className="text-sm text-gray-600">Department</div>
+                  <div className="font-medium text-gray-900 capitalize">{conversation.department}</div>
+                </div>
+              )}
+              {conversation.priority && (
+                <div>
+                  <div className="text-sm text-gray-600">Priority</div>
+                  <div className="font-medium text-gray-900 capitalize">{conversation.priority}</div>
+                </div>
+              )}
+              {conversation.routing_reason && (
+                <div>
+                  <div className="text-sm text-gray-600">Routing reason</div>
+                  <div className="text-sm text-gray-900">{conversation.routing_reason}</div>
+                </div>
+              )}
+              {conversation.assigned_to && (
+                <div>
+                  <div className="text-sm text-gray-600">Assigned to</div>
+                  <div className="font-medium text-gray-900">{conversation.assigned_to}</div>
+                </div>
+              )}
+            </div>
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={staffEmail}
+                onChange={(e) => setStaffEmail(e.target.value)}
+                placeholder="Your name or email"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50 text-gray-900"
+              />
+              <button
+                onClick={() => handleStaffAction('assign')}
+                disabled={actionLoading}
+                className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-lg text-sm"
+              >
+                Assign to me
+              </button>
+              <button
+                onClick={() => handleStaffAction('resolve')}
+                disabled={actionLoading}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg text-sm"
+              >
+                Mark resolved
+              </button>
+            </div>
+          </div>
+
+          {/* Form submissions */}
+          {formSubmissions.length > 0 && (
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900">Form Submissions</h2>
+              <div className="space-y-3">
+                {formSubmissions.map((sub) => (
+                  <div key={sub.id} className="border border-gray-100 rounded-lg p-3 text-sm">
+                    <div className="font-medium text-gray-900 mb-1">Form {sub.form_id.slice(0, 8)}</div>
+                    <div className="text-xs text-gray-500 mb-2">{format(new Date(sub.created_at), 'MMM d, HH:mm')}</div>
+                    <pre className="text-xs text-gray-700 whitespace-pre-wrap">{JSON.stringify(sub.answers, null, 2)}</pre>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Conversation Meta */}
           <div className="bg-white rounded-lg shadow-md p-6">

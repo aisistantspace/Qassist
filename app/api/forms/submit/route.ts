@@ -4,6 +4,10 @@ import { analyzeEligibility, formatEligibilityResults, type EligibilityResult } 
 import { sendFormSubmissionEmail, sendFormNotificationEmail } from '@/lib/email'
 import { createFormSubmissionNotification } from '@/lib/notifications'
 import { checkRateLimit, getClientIP, sanitizeInput } from '@/lib/security'
+import { syncLeadFromAnswers } from '@/lib/customer-identity'
+import { evaluateRouting } from '@/lib/routing'
+import { dispatchEscalation } from '@/lib/escalation'
+import { inferDepartmentFromFormName } from '@/lib/insurance-form-templates'
 
 export async function POST(request: NextRequest) {
   // Rate limiting: max 10 requests per minute per IP
@@ -184,6 +188,45 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (submitError) throw submitError
+
+    await syncLeadFromAnswers(tenantId, leadId, mergedAnswers)
+
+    // Post-submit routing for claim and service forms
+    const formDept = inferDepartmentFromFormName(form.name)
+    const { data: conversation } = await supabaseAdmin
+      .from('conversations')
+      .select('id, messages')
+      .eq('tenant_id', tenantId)
+      .eq('lead_id', leadId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (conversation?.id) {
+      const messages = (conversation.messages || []) as { role: string; content: string }[]
+      const routingEval = await evaluateRouting({
+        tenantId,
+        message: `Form submitted: ${form.name}`,
+        messages,
+        kbEntryCount: 1,
+        isHumanContactRequest: false,
+        customerVerified: true,
+        formCompleted: { formName: form.name, department: formDept },
+      })
+
+      if (routingEval.shouldRoute) {
+        await dispatchEscalation({
+          tenantId,
+          conversationId: conversation.id,
+          leadId,
+          department: routingEval.department,
+          priority: routingEval.priority,
+          reason: routingEval.reason,
+          messages,
+          customerVerified: true,
+        })
+      }
+    }
 
     // Get lead info for notifications
     const { data: leadRow } = await supabaseAdmin.from('leads').select('name, email').eq('tenant_id', tenantId).eq('id', leadId).single()

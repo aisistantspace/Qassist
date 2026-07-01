@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { sendWhatsAppMessage, markWhatsAppMessageRead, formatWhatsAppNumber } from '@/lib/whatsapp'
-import { searchKnowledgeBase, buildContext, generateSystemPrompt, isCaseSpecific, detectLanguageFromText } from '@/lib/rag'
+import { searchKnowledgeBaseWithFallback, buildContext, generateSystemPrompt, isCaseSpecific, detectLanguageFromText } from '@/lib/rag'
 import { createChatCompletion } from '@/lib/openai'
 import { updateLeadScore } from '@/lib/lead-scoring'
 import { sanitizeForPrompt, checkRateLimit } from '@/lib/security'
@@ -117,14 +117,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Perform RAG search
-    const relevantEntries = await searchKnowledgeBase(messageText, effectiveLanguage, 5)
+    const kbSearch = await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 5)
+    const relevantEntries = kbSearch.entries
     const context = buildContext(relevantEntries)
 
-    // Check if case-specific
     const isCaseQuery = isCaseSpecific(messageText)
 
-    // Build messages for OpenAI
-    const systemPrompt = await generateSystemPrompt(context, effectiveLanguage, lead.id)
+    const systemPrompt = await generateSystemPrompt(context, effectiveLanguage, lead.id, messageText, undefined, {
+      contextFromFallbackLanguages: kbSearch.usedFallback,
+      kbEntryCount: relevantEntries.length,
+    })
     const userMessage: Message = {
       role: 'user',
       content: messageText,

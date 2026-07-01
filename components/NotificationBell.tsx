@@ -1,28 +1,31 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { BellIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
+import { BellIcon, CheckIcon } from '@heroicons/react/24/outline'
 import { BellAlertIcon } from '@heroicons/react/24/solid'
 import { formatDistanceToNow } from 'date-fns'
 
 interface Notification {
   id: string
-  type: 'form_submission' | 'lead_capture' | 'system'
+  type: 'form_submission' | 'lead_capture' | 'system' | 'escalation' | 'department_routing'
   title: string
   message: string | null
-  metadata: Record<string, any>
+  metadata: Record<string, unknown>
+  conversation_id?: string | null
+  department?: string | null
   is_read: boolean
   created_at: string
 }
 
 export default function NotificationBell() {
+  const router = useRouter()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Fetch notifications
   const fetchNotifications = async () => {
     try {
       const res = await fetch('/api/notifications?limit=10')
@@ -36,28 +39,22 @@ export default function NotificationBell() {
     }
   }
 
-  // Initial fetch and polling
   useEffect(() => {
     fetchNotifications()
-    
-    // Poll every 30 seconds for new notifications
     const interval = setInterval(fetchNotifications, 30000)
     return () => clearInterval(interval)
   }, [])
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false)
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Mark single notification as read
   const markAsRead = async (id: string) => {
     try {
       const res = await fetch(`/api/notifications/${id}`, {
@@ -65,11 +62,8 @@ export default function NotificationBell() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_read: true })
       })
-      
       if (res.ok) {
-        setNotifications(prev => 
-          prev.map(n => n.id === id ? { ...n, is_read: true } : n)
-        )
+        setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n))
         setUnreadCount(prev => Math.max(0, prev - 1))
       }
     } catch (error) {
@@ -77,7 +71,19 @@ export default function NotificationBell() {
     }
   }
 
-  // Mark all as read
+  const handleNotificationClick = async (notification: Notification) => {
+    if (!notification.is_read) {
+      await markAsRead(notification.id)
+    }
+    const conversationId =
+      notification.conversation_id ||
+      (notification.metadata?.conversationId as string | undefined)
+    if (conversationId && (notification.type === 'escalation' || notification.type === 'department_routing')) {
+      setIsOpen(false)
+      router.push(`/dashboard/conversations/${conversationId}`)
+    }
+  }
+
   const markAllAsRead = async () => {
     setLoading(true)
     try {
@@ -86,7 +92,6 @@ export default function NotificationBell() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'mark_all_read' })
       })
-      
       if (res.ok) {
         setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
         setUnreadCount(0)
@@ -98,7 +103,6 @@ export default function NotificationBell() {
     }
   }
 
-  // Get icon based on notification type
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'form_submission':
@@ -117,6 +121,15 @@ export default function NotificationBell() {
             </svg>
           </div>
         )
+      case 'escalation':
+      case 'department_routing':
+        return (
+          <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+            <svg className="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+        )
       default:
         return (
           <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
@@ -128,7 +141,6 @@ export default function NotificationBell() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -139,8 +151,6 @@ export default function NotificationBell() {
         ) : (
           <BellIcon className="w-6 h-6" />
         )}
-        
-        {/* Unread Badge */}
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1">
             {unreadCount > 99 ? '99+' : unreadCount}
@@ -148,10 +158,8 @@ export default function NotificationBell() {
         )}
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
-          {/* Header */}
           <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
             <h3 className="font-semibold text-gray-900">Notifications</h3>
             {unreadCount > 0 && (
@@ -166,7 +174,6 @@ export default function NotificationBell() {
             )}
           </div>
 
-          {/* Notification List */}
           <div className="max-h-[400px] overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="px-4 py-8 text-center text-gray-500">
@@ -181,7 +188,7 @@ export default function NotificationBell() {
                     className={`px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer ${
                       !notification.is_read ? 'bg-blue-50/50' : ''
                     }`}
-                    onClick={() => !notification.is_read && markAsRead(notification.id)}
+                    onClick={() => handleNotificationClick(notification)}
                   >
                     <div className="flex gap-3">
                       {getTypeIcon(notification.type)}
@@ -192,6 +199,11 @@ export default function NotificationBell() {
                         {notification.message && (
                           <p className="text-xs text-gray-500 mt-0.5 truncate">
                             {notification.message}
+                          </p>
+                        )}
+                        {notification.department && (
+                          <p className="text-xs text-gray-400 mt-0.5 capitalize">
+                            {notification.department} department
                           </p>
                         )}
                         <p className="text-xs text-gray-400 mt-1">
@@ -208,7 +220,6 @@ export default function NotificationBell() {
             )}
           </div>
 
-          {/* Footer */}
           {notifications.length > 0 && (
             <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 text-center">
               <button

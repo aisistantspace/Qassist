@@ -10,17 +10,20 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
     const intent = searchParams.get('intent')
+    const department = searchParams.get('department')
+    const escalatedOnly = searchParams.get('escalated') === 'true'
 
     let query = supabaseAdmin
       .from('conversations')
       .select(`
         *,
-        lead:leads(name, email)
+        lead:leads(name, email, policy_number, account_number)
       `)
       .eq('tenant_id', DEFAULT_TENANT_ID)
-      .order('created_at', { ascending: false })
 
-    if (status && status !== 'all') {
+    if (escalatedOnly) {
+      query = query.eq('status', 'escalated')
+    } else if (status && status !== 'all') {
       query = query.eq('status', status)
     }
 
@@ -28,11 +31,23 @@ export async function GET(request: NextRequest) {
       query = query.eq('intent', intent)
     }
 
-    const { data: conversations, error } = await query
+    if (department && department !== 'all') {
+      query = query.eq('department', department)
+    }
+
+    const { data: conversations, error } = await query.order('created_at', { ascending: false })
 
     if (error) throw error
 
-    return NextResponse.json({ conversations: conversations || [] })
+    const priorityOrder: Record<string, number> = { urgent: 0, high: 1, medium: 2, low: 3 }
+    const sorted = (conversations || []).sort((a, b) => {
+      const pa = priorityOrder[a.priority || 'medium'] ?? 2
+      const pb = priorityOrder[b.priority || 'medium'] ?? 2
+      if (pa !== pb) return pa - pb
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    })
+
+    return NextResponse.json({ conversations: sorted })
   } catch (error: any) {
     console.error('Error fetching conversations:', error)
     let errorMessage = 'Failed to fetch conversations'

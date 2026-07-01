@@ -2,42 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { generateEmbedding } from '@/lib/openai'
 import { getTenantFromRequest } from '@/lib/tenant'
+import { chunkText, cleanWebContent, detectLanguageForKbContent } from '@/lib/kb-ingest'
 import * as cheerio from 'cheerio'
-
-// Simple language detection for scraped content
-function detectLanguage(text: string): 'EN' | 'NL' | 'ES' | 'PA' {
-  const lower = text.toLowerCase()
-  // Papiamentu markers
-  const paPatterns = [/bon dia/, /kon ta/, /mi ta /, /bo ta /, /danki/, /por fabor/, /kiko/, /bisa/]
-  if (paPatterns.some(p => p.test(lower))) return 'PA'
-  // Dutch markers
-  const nlPatterns = [/verzekering/, /premie/, /dekking/, /schade/, /aanvraag/, /\b(het|een|van|voor|met|bij|aan|ook|als|maar)\b/g]
-  const nlHits = nlPatterns.reduce((n, p) => n + (lower.match(p)?.length || 0), 0)
-  if (nlHits >= 4) return 'NL'
-  // Spanish markers
-  const esPatterns = [/seguro/, /\bel\b/, /\bla\b/, /\blos\b/, /\blas\b/, /ñ/, /ción/]
-  if (esPatterns.some(p => p.test(lower))) return 'ES'
-  return 'EN'
-}
-
-// Chunk text into smaller pieces
-function chunkText(text: string, maxChunkSize: number = 1000): string[] {
-  const chunks: string[] = []
-  const cleanText = text.replace(/\s+/g, ' ').trim()
-  const paragraphs = cleanText.split(/\n\n+/)
-
-  let currentChunk = ''
-  for (const paragraph of paragraphs) {
-    if (currentChunk.length + paragraph.length > maxChunkSize) {
-      if (currentChunk.trim()) chunks.push(currentChunk.trim())
-      currentChunk = paragraph
-    } else {
-      currentChunk += (currentChunk ? '\n\n' : '') + paragraph
-    }
-  }
-  if (currentChunk.trim()) chunks.push(currentChunk.trim())
-  return chunks.filter(c => c.length > 50)
-}
 
 // Normalize URL: remove fragment, trailing slash, sort query params
 function normalizeUrl(raw: string, baseOrigin: string): string | null {
@@ -73,7 +39,7 @@ function extractContent($: cheerio.CheerioAPI): string {
     }
   }
   if (!content) content = $('body').text()
-  return content.replace(/\s+/g, ' ').replace(/\n{3,}/g, '\n\n').trim()
+  return cleanWebContent(content)
 }
 
 // Extract page title
@@ -193,12 +159,12 @@ export async function POST(request: NextRequest) {
 
         // Chunk and embed
         const chunks = chunkText(content)
+        const pageLanguage = detectLanguageForKbContent(content)
         let chunkCount = 0
 
         for (let i = 0; i < chunks.length; i++) {
           try {
             const embedding = await generateEmbedding(chunks[i])
-            const language = detectLanguage(chunks[i])
 
             const { error: kbError } = await supabaseAdmin
               .from('knowledge_base')
@@ -206,7 +172,7 @@ export async function POST(request: NextRequest) {
                 title: `${pageTitle} - Part ${i + 1}`,
                 content: chunks[i],
                 category: 'Service',
-                language,
+                language: pageLanguage,
                 tags: [startUrl.hostname, 'crawled'],
                 embedding,
                 source_document_id: document.id,

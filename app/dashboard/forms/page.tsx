@@ -137,6 +137,21 @@ export default function FormsPage() {
     }
   }
 
+  const seedInsuranceTemplates = async () => {
+    try {
+      const res = await fetch('/api/forms/seed-insurance', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message || 'Insurance templates seeded.')
+        fetchForms()
+      } else {
+        alert(data.error || 'Failed to seed templates')
+      }
+    } catch {
+      alert('Failed to seed insurance templates')
+    }
+  }
+
   const fetchSubmissions = async () => {
     try {
       const res = await fetch('/api/forms/submissions')
@@ -284,6 +299,14 @@ export default function FormsPage() {
           <p className="text-gray-600 mt-2">Create and manage dynamic AI-driven interviews</p>
         </div>
         <div className="flex gap-3">
+          {!isEditing && activeTab === 'builder' && (
+            <button
+              onClick={seedInsuranceTemplates}
+              className="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+            >
+              Seed Insurance Templates
+            </button>
+          )}
           {!isEditing && activeTab === 'builder' && (
             <button
               onClick={() => {

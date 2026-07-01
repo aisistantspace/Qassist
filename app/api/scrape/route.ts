@@ -2,46 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { generateEmbedding } from '@/lib/openai'
 import { getTenantFromRequest } from '@/lib/tenant'
+import { chunkText, cleanWebContent, detectLanguageForKbContent } from '@/lib/kb-ingest'
 import * as cheerio from 'cheerio'
-
-// Simple language detection
-function detectLanguage(text: string): 'EN' | 'ES' {
-  const lowerText = text.toLowerCase()
-  const spanishPatterns = [
-    /hola/i, /gracias/i, /por favor/i,
-    /el /, /la /, /los /, /las /,
-    /qué/, /cómo/, /cuándo/, /dónde/,
-    /ñ/, /á/, /é/, /í/, /ó/, /ú/,
-  ]
-  const isSpanish = spanishPatterns.some(pattern => pattern.test(lowerText))
-  return isSpanish ? 'ES' : 'EN'
-}
-
-// Chunk text into smaller pieces
-function chunkText(text: string, maxChunkSize: number = 1000): string[] {
-  const chunks: string[] = []
-  const cleanText = text.replace(/\s+/g, ' ').trim()
-  const paragraphs = cleanText.split(/\n\n+/)
-  
-  let currentChunk = ''
-  
-  for (const paragraph of paragraphs) {
-    if (currentChunk.length + paragraph.length > maxChunkSize) {
-      if (currentChunk.trim()) {
-        chunks.push(currentChunk.trim())
-      }
-      currentChunk = paragraph
-    } else {
-      currentChunk += (currentChunk ? '\n\n' : '') + paragraph
-    }
-  }
-  
-  if (currentChunk.trim()) {
-    chunks.push(currentChunk.trim())
-  }
-  
-  return chunks.filter(chunk => chunk.length > 50)
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -57,7 +19,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate URL
     let parsedUrl: URL
     try {
       parsedUrl = new URL(url)
@@ -68,7 +29,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create document record
     const { data: document, error: docError } = await supabaseAdmin
       .from('documents')
       .insert({
@@ -84,7 +44,6 @@ export async function POST(request: NextRequest) {
     if (docError) throw docError
 
     try {
-      // Fetch the webpage
       const response = await fetch(url, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; AstuteWebBot/1.0; +https://astuteweb.agency)',
@@ -96,17 +55,11 @@ export async function POST(request: NextRequest) {
       }
 
       const html = await response.text()
-
-      // Parse HTML and extract text
       const $ = cheerio.load(html)
-      
-      // Remove script, style, and other non-content elements
-      $('script, style, nav, footer, header, aside, noscript, iframe').remove()
-      
-      // Get main content
+
+      $('script, style, nav, footer, header, aside, noscript, iframe, svg').remove()
+
       let content = ''
-      
-      // Try to find main content areas
       const mainSelectors = ['main', 'article', '.content', '#content', '.post', '.entry']
       for (const selector of mainSelectors) {
         if ($(selector).length > 0) {
@@ -114,33 +67,25 @@ export async function POST(request: NextRequest) {
           break
         }
       }
-      
-      // Fallback to body if no main content found
       if (!content) {
         content = $('body').text()
       }
 
-      // Clean up the text
-      content = content
-        .replace(/\s+/g, ' ')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim()
+      content = cleanWebContent(content)
 
       if (!content || content.length < 50) {
         throw new Error('Could not extract meaningful content from the page')
       }
 
-      // Chunk the content
+      const pageLanguage = detectLanguageForKbContent(content)
       const chunks = chunkText(content)
-      
-      // Create knowledge base entries for each chunk
+
       let chunkCount = 0
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i]
-        
+
         try {
           const embedding = await generateEmbedding(chunk)
-          const language = detectLanguage(chunk)
 
           const { error: kbError } = await supabaseAdmin
             .from('knowledge_base')
@@ -148,7 +93,7 @@ export async function POST(request: NextRequest) {
               title: `${parsedUrl.hostname} - Part ${i + 1}`,
               content: chunk,
               category: 'Service',
-              language,
+              language: pageLanguage,
               tags: [parsedUrl.hostname, 'scraped'],
               embedding,
               source_document_id: document.id,
@@ -162,7 +107,6 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Update document status
       await supabaseAdmin
         .from('documents')
         .update({
@@ -177,36 +121,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         document: { ...document, chunk_count: chunkCount, status: 'completed' },
-        message: `Website scraped: ${chunkCount} chunks created`,
+        message: `Website scraped: ${chunkCount} chunks created (${pageLanguage})`,
+        language: pageLanguage,
       })
-    } catch (scrapeError: any) {
-      // Mark document as failed
+    } catch (scrapeError: unknown) {
+      const message = scrapeError instanceof Error ? scrapeError.message : 'Scrape failed'
       await supabaseAdmin
         .from('documents')
         .update({
           status: 'failed',
-          error_message: scrapeError.message,
+          error_message: message,
         })
         .eq('id', document.id)
 
       throw scrapeError
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error scraping website:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to scrape website' },
-      { status: 500 }
-    )
+    const message = error instanceof Error ? error.message : 'Failed to scrape website'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
-
-
-
-
-
-
-
-
-
-
-

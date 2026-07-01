@@ -1,14 +1,16 @@
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { DEFAULT_TENANT_ID } from '@/lib/tenant'
 
-export type NotificationType = 'form_submission' | 'lead_capture' | 'system'
+export type NotificationType = 'form_submission' | 'lead_capture' | 'system' | 'escalation' | 'department_routing'
 
 export interface CreateNotificationParams {
   type: NotificationType
   title: string
   message?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   tenantId?: string
+  department?: string
+  conversationId?: string
 }
 
 /**
@@ -26,6 +28,8 @@ export async function createNotification(params: CreateNotificationParams): Prom
         title: params.title,
         message: params.message || null,
         metadata: params.metadata || {},
+        department: params.department || null,
+        conversation_id: params.conversationId || null,
         is_read: false
       })
 
@@ -101,12 +105,37 @@ export async function createLeadCaptureNotification(
 export async function createSystemNotification(
   title: string,
   message?: string,
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   await createNotification({
     type: 'system',
     title,
     message,
     metadata
+  })
+}
+
+export async function createEscalationNotification(params: {
+  tenantId: string
+  conversationId: string
+  department: string
+  priority: string
+  leadName: string
+  leadEmail: string
+  reason: string
+  metadata?: Record<string, unknown>
+}): Promise<void> {
+  const prefix =
+    params.priority === 'urgent' ? 'URGENT: ' :
+    params.priority === 'high' ? 'HIGH: ' : ''
+
+  await createNotification({
+    type: 'escalation',
+    title: `${prefix}${params.department.charAt(0).toUpperCase() + params.department.slice(1)} — ${params.reason}`,
+    message: `${params.leadName}${params.leadEmail ? ` (${params.leadEmail})` : ''} needs attention.`,
+    metadata: params.metadata,
+    tenantId: params.tenantId,
+    department: params.department,
+    conversationId: params.conversationId,
   })
 }

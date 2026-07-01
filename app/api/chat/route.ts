@@ -3,15 +3,19 @@ import OpenAI from 'openai'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getTenantFromRequest, DEFAULT_TENANT_ID } from '@/lib/tenant'
 import { createChatCompletion, extractLeadMetadata, extractFormData, classifyIntent } from '@/lib/openai'
-import { searchKnowledgeBase, buildContext, generateSystemPrompt, isCaseSpecific, getRelevantFormLinks, isEligibilityQuery, isFormTriggered, detectLanguageFromText } from '@/lib/rag'
+import { searchKnowledgeBaseWithFallback, buildContext, buildActionGuidance, generateSystemPrompt, isCaseSpecific, getRelevantFormLinks, isEligibilityQuery, isFormTriggered, resolveEffectiveLanguage, logUnansweredQuery } from '@/lib/rag'
 import { updateLeadScore } from '@/lib/lead-scoring'
 import { getBrandingConfig } from '@/lib/branding'
-import { notifyHumanContactRequest, sendFormSubmissionEmail, sendFormNotificationEmail } from '@/lib/email'
-import { createFormSubmissionNotification } from '@/lib/notifications'
+import { sendFormSubmissionEmail, sendFormNotificationEmail } from '@/lib/email'
 import { correctPapiamentu } from '@/lib/papiamentu'
 import { sanitizeForPrompt, checkRateLimit, getClientIP } from '@/lib/security'
-import { getRecentConversation, summarizeConversation, isResumable, identifyCustomerMidChat, classifyDepartment, classifyPriority, buildEscalationContext } from '@/lib/customer-matching'
+import { getRecentConversation, summarizeConversation, isResumable, classifyDepartment, classifyPriority } from '@/lib/customer-matching'
 import type { Department, Priority } from '@/lib/customer-matching'
+import { resolveCustomerIdentity, formatCustomerContextForPrompt, syncLeadFromAnswers } from '@/lib/customer-identity'
+import { evaluateRouting, formatFormLinkMessage } from '@/lib/routing'
+import { dispatchEscalation } from '@/lib/escalation'
+import { inferDepartmentFromFormName } from '@/lib/insurance-form-templates'
+import { createFormSubmissionNotification } from '@/lib/notifications'
 import type { ChatRequest, ChatResponse, Message } from '@/lib/types'
 
 // Check if integration is enabled
@@ -32,7 +36,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body: ChatRequest = await request.json()
-    const { message, conversationId, leadId, language, channel = 'web', triggerFormId, tenantId: bodyTenantId, slug: bodySlug } = body
+    const { message, conversationId, leadId, language, languageExplicit, channel = 'web', triggerFormId, tenantId: bodyTenantId, slug: bodySlug } = body
     const tenantContext = bodyTenantId
       ? { tenantId: bodyTenantId, slug: bodySlug ?? null }
       : bodySlug
@@ -83,10 +87,19 @@ export async function POST(request: NextRequest) {
     const rawMessageText = (message || '').trim()
     // Sanitize user message against prompt injection before LLM usage
     const messageText = rawMessageText ? sanitizeForPrompt(rawMessageText) : ''
-    // Detect language from user message; fallback to request language or existing conversation language
-    const effectiveLanguage: 'EN' | 'NL' | 'ES' | 'PA' = messageText
-      ? detectLanguageFromText(messageText)
-      : (existingConversationLanguage ?? (language as 'EN' | 'NL' | 'ES' | 'PA'))
+    // Resolve language: honor explicit flag selection, else auto-detect from message
+    const effectiveLanguage: 'EN' | 'NL' | 'ES' | 'PA' = resolveEffectiveLanguage(
+      messageText,
+      language as 'EN' | 'NL' | 'ES' | 'PA',
+      {
+        languageExplicit: languageExplicit === true,
+        existingConversationLanguage,
+      }
+    )
+
+    const { getAgentSettings } = await import('@/lib/openai')
+    const settings = await getAgentSettings(tenantId)
+    const isEligibilityMode = settings.agent_type === 'eligibility'
 
     // Auto-resume: if no conversationId provided, check for a recent active conversation
     let priorContextSummary: string | null = null
@@ -125,12 +138,21 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const relevantEntries = messageText
-      ? await searchKnowledgeBase(messageText, effectiveLanguage, 10, tenantId)
-      : []
-    const context = buildContext(relevantEntries)
+    // Skip RAG in eligibility mode — no KB needed
+    const kbSearch =
+      !isEligibilityMode && messageText
+        ? await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 10, tenantId)
+        : { entries: [], usedFallback: false }
+    const relevantEntries = kbSearch.entries
+    const context = buildContext(relevantEntries) + buildActionGuidance(relevantEntries)
+    if (relevantEntries.length === 0 && messageText) {
+      logUnansweredQuery(messageText, effectiveLanguage, tenantId).catch(() => {})
+    }
     const isCaseQuery = messageText ? isCaseSpecific(messageText) : false
-    const systemPrompt = await generateSystemPrompt(context, effectiveLanguage, leadId, messageText || undefined, tenantId)
+    const systemPrompt = await generateSystemPrompt(context, effectiveLanguage, leadId, messageText || undefined, tenantId, {
+      contextFromFallbackLanguages: kbSearch.usedFallback,
+      kbEntryCount: relevantEntries.length,
+    })
     const userMessage: Message = {
       role: 'user',
       content: messageText || 'Start form',
@@ -149,13 +171,12 @@ export async function POST(request: NextRequest) {
     let identifiedLeadId = leadId
     if (messageText && currentConversationId) {
       try {
-        const idResult = await identifyCustomerMidChat(tenantId, leadId, currentConversationId, messageText)
+        const idResult = await resolveCustomerIdentity(tenantId, leadId, currentConversationId, messageText)
         if (idResult) {
           customerIdentified = true
           identifiedLeadId = idResult.mergedLeadId
-          const custName = idResult.identifiedLead.name || 'Customer'
-          const custEmail = idResult.identifiedLead.email || ''
-          enrichedSystemPrompt += `\n\n--- CUSTOMER IDENTIFIED ---\nThe customer has been identified as an existing customer: ${custName} (${custEmail}).${idResult.wasAnonymous ? ' The conversation has been linked to their existing account.' : ''}\nAcknowledge them by name. You now have access to their information. If they need help with claims, support, or any urgent matter, reassure them that you will connect them with the right department.`
+          const ctx = formatCustomerContextForPrompt(idResult.identifiedLead)
+          enrichedSystemPrompt += `\n\n--- CUSTOMER IDENTIFIED ---\n${ctx}.${idResult.wasAnonymous ? ' The conversation has been linked to their existing account.' : ''}${idResult.externalEnriched ? ' (Verified via external customer system)' : ''}\nAcknowledge them by name when appropriate. If they need help with claims, support, or registration, guide them to the right next step or department.`
 
           // Log the identification event
           Promise.resolve(supabaseAdmin.from('event_logs').insert({
@@ -171,7 +192,7 @@ export async function POST(request: NextRequest) {
             },
           })).catch(err => console.error('[CUSTOMER_ID] Failed to log event:', err))
 
-          console.log(`[CUSTOMER_ID] Identified existing customer: ${custName} (${custEmail}), match: ${idResult.matchType}`)
+          console.log(`[CUSTOMER_ID] Identified customer, match: ${idResult.matchType}, external: ${idResult.externalEnriched}`)
         }
       } catch (err) {
         console.error('[CUSTOMER_ID] Mid-chat identification failed:', err)
@@ -187,8 +208,6 @@ export async function POST(request: NextRequest) {
       ...(messageText.trim() ? [{ role: 'user' as const, content: messageText }] : []),
     ]
 
-    const { getAgentSettings } = await import('@/lib/openai')
-    const settings = await getAgentSettings(tenantId)
     const defaultFormMode = (settings.default_form_mode || 'conversational') as 'conversational' | 'inline'
 
     // Check if user is agreeing to show an inline form
@@ -271,6 +290,8 @@ export async function POST(request: NextRequest) {
     // 1. Dynamic Form Data Extraction (Moved up to check for active forms)
     let hasActiveFormInThisTurn = false
     let formDataToReturn: ChatResponse['formData'] = undefined
+    let matchedFormForRouting: { id: string; name: string; external_url?: string; use_mode?: string } | undefined
+    let formCompletedForRouting: { formName: string; department?: Department } | undefined
     const conversationHistory: OpenAI.Chat.ChatCompletionMessageParam[] = [...openAIMessages, { role: 'assistant' as const, content: assistantResponse }]
     
     try {
@@ -307,11 +328,18 @@ export async function POST(request: NextRequest) {
           
           // Check if this form matches the user's query
           const isRelatedToQuery = isFormTriggered(message, form.description, form.name)
+          if (isRelatedToQuery) {
+            matchedFormForRouting = {
+              id: form.id,
+              name: form.name,
+              external_url: form.external_url,
+              use_mode: useMode,
+            }
+          }
           
           // Handle link mode: if form matches, add external URL to response
           if (useMode === 'link' && isRelatedToQuery && form.external_url && !hasActiveFormInThisTurn) {
-            // Don't trigger inline form, just note to add link to response later
-            assistantResponse = `You can fill out our ${form.name} form here: ${form.external_url}`
+            assistantResponse = formatFormLinkMessage(effectiveLanguage, form.name, form.external_url)
             hasActiveFormInThisTurn = true // Prevent other forms from triggering
             break
           }
@@ -449,6 +477,11 @@ export async function POST(request: NextRequest) {
               fetch('http://127.0.0.1:7242/ingest/5c5bb0fa-fb92-472b-a2bf-0659b3e563c4',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/api/chat/route.ts:125',message:'Form submission saved',data:{formId:form.id,formName:form.name,status:isCompleted?'completed':'in_progress',saved:!upsertError,error:upsertError?.message||null,upsertResultCount:upsertResult?.length||0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
               // #endregion
               if (isCompleted) {
+                await syncLeadFromAnswers(tenantId, leadId, mergedAnswers)
+                formCompletedForRouting = {
+                  formName: form.name,
+                  department: inferDepartmentFromFormName(form.name),
+                }
                 const { data: leadRow } = await supabaseAdmin.from('leads').select('name, email').eq('tenant_id', tenantId).eq('id', leadId).single()
                 const leadInfo = leadRow ? { name: leadRow.name, email: leadRow.email } : undefined
 
@@ -565,20 +598,52 @@ export async function POST(request: NextRequest) {
     const department: Department = classifyDepartment(allMessages)
     const priority: Priority = classifyPriority(allMessages)
 
-    // Update conversation in database (persist effective language so RAG and next turn use it)
+    const routingEval = await evaluateRouting({
+      tenantId,
+      message: messageText,
+      messages: allMessages,
+      kbEntryCount: relevantEntries.length,
+      isHumanContactRequest,
+      customerVerified: customerIdentified,
+      matchedForm: matchedFormForRouting,
+      formCompleted: formCompletedForRouting,
+    })
+
+    const finalDepartment = routingEval.department || department
+    const finalPriority = routingEval.priority || priority
+    const shouldEscalate = routingEval.shouldRoute
+
+    // Update conversation in database
     const updatedMessages = [...existingMessages, userMessage, assistantMessage]
+
     await supabaseAdmin
       .from('conversations')
       .update({
         messages: updatedMessages,
         turn_count: turnCount,
-        status: (shouldShowBooking || isHumanContactRequest) ? 'escalated' : 'active',
+        status: shouldEscalate ? 'escalated' : 'active',
         language: effectiveLanguage,
-        department,
-        priority,
+        department: finalDepartment,
+        priority: finalPriority,
+        routing_reason: routingEval.reason || undefined,
         customer_verified: customerIdentified || undefined,
+        ...(shouldEscalate ? { routed_at: new Date().toISOString() } : {}),
       })
       .eq('id', currentConversationId)
+
+    if (shouldEscalate && routingEval.reason) {
+      await dispatchEscalation({
+        tenantId,
+        conversationId: currentConversationId!,
+        leadId: identifiedLeadId,
+        department: finalDepartment,
+        priority: finalPriority,
+        reason: routingEval.reason,
+        messages: allMessages,
+        customerVerified: customerIdentified,
+        force: isHumanContactRequest,
+      })
+    }
 
     extractLeadMetadata(conversationHistory)
       .then(metadata => {
@@ -624,120 +689,10 @@ export async function POST(request: NextRequest) {
       }
 
       // Calculate and update lead score (fire and forget)
-      updateLeadScore(leadId).catch(err => console.error('Lead scoring failed:', err))
+      updateLeadScore(identifiedLeadId).catch(err => console.error('Lead scoring failed:', err))
     }
 
-    // Handle human contact requests (always, not just when booking is shown)
-    if (isHumanContactRequest) {
-      const effectiveLeadId = identifiedLeadId
-      console.log('[HUMAN_CONTACT] Processing human contact request for lead:', effectiveLeadId, 'dept:', department, 'priority:', priority)
-      try {
-        // Get lead details for notification
-        const { data: lead, error: leadError } = await supabaseAdmin
-          .from('leads')
-          .select('name, email, phone, lead_score')
-          .eq('tenant_id', tenantId)
-          .eq('id', effectiveLeadId)
-          .single()
-
-        if (leadError) {
-          console.error('[HUMAN_CONTACT] Error fetching lead:', leadError)
-          throw leadError
-        }
-
-        if (lead) {
-          // Mark lead as hot (ensure score >= 70, or 90 for urgent)
-          const oldScore = lead.lead_score || 0
-          const minScore = priority === 'urgent' ? 90 : priority === 'high' ? 80 : 70
-          const newScore = Math.max(minScore, oldScore)
-          
-          const { error: updateError } = await supabaseAdmin
-            .from('leads')
-            .update({ lead_score: newScore })
-            .eq('tenant_id', tenantId)
-            .eq('id', effectiveLeadId)
-
-          if (updateError) {
-            console.error('[HUMAN_CONTACT] Error updating lead score:', updateError)
-          }
-
-          // Build structured escalation context for human agent
-          const escalation = buildEscalationContext(
-            lead,
-            allMessages,
-            department,
-            priority,
-            customerIdentified,
-          )
-
-          // Build conversation context string for email
-          const recentMessages = existingMessages.slice(-5).map(m => 
-            `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
-          ).join('\n')
-          const conversationContext = `Department: ${department.toUpperCase()}\nPriority: ${priority.toUpperCase()}\nCustomer verified: ${customerIdentified ? 'Yes' : 'No'}\n\nRecent conversation:\n${recentMessages}\n\nUser message: ${message}\nAssistant response: ${assistantResponse}`
-
-          // Send email notification to admin with department context
-          const emailResult = await notifyHumanContactRequest(
-            lead.name || 'Unknown',
-            lead.email || '',
-            lead.phone || null,
-            conversationContext,
-            effectiveLeadId
-          )
-          
-          if (emailResult.success) {
-            console.log('[HUMAN_CONTACT] Email notification sent successfully')
-          } else {
-            console.warn('[HUMAN_CONTACT] Email notification failed:', emailResult.error)
-          }
-
-          // Create in-app escalation notification with full context
-          try {
-            await supabaseAdmin.from('notifications').insert({
-              tenant_id: tenantId,
-              type: 'escalation',
-              title: `${priority === 'urgent' ? 'URGENT: ' : priority === 'high' ? 'HIGH: ' : ''}${department.charAt(0).toUpperCase() + department.slice(1)} - Human contact requested`,
-              message: `${lead.name || 'A customer'}${customerIdentified ? ' (verified)' : ''} needs human assistance. Department: ${department}. Priority: ${priority}.`,
-              metadata: {
-                ...escalation,
-                conversationId: currentConversationId,
-                leadId: effectiveLeadId,
-              },
-              is_read: false,
-            })
-          } catch (err) {
-            console.error('[HUMAN_CONTACT] Failed to create notification:', err)
-          }
-
-          // Log the event with department and priority
-          try {
-            await supabaseAdmin.from('event_logs').insert({
-              tenant_id: tenantId,
-              lead_id: effectiveLeadId,
-              event_type: 'human_contact_requested',
-              metadata: {
-                message,
-                department,
-                priority,
-                customerVerified: customerIdentified,
-                conversationId: currentConversationId,
-                timestamp: new Date().toISOString(),
-              },
-            })
-          } catch (err) {
-            console.error('[HUMAN_CONTACT] Failed to log event:', err)
-          }
-          
-          console.log('[HUMAN_CONTACT] Escalation processed:', { leadId: effectiveLeadId, department, priority, customerVerified: customerIdentified })
-        } else {
-          console.warn('[HUMAN_CONTACT] Lead not found:', effectiveLeadId)
-        }
-      } catch (error) {
-        console.error('[HUMAN_CONTACT] Error handling human contact request:', error)
-      }
-    }
-
-    const response: ChatResponse & { customerIdentified?: boolean; department?: string; priority?: string; leadId?: string } = {
+    const response: ChatResponse & { customerIdentified?: boolean; department?: string; priority?: string; leadId?: string; routed?: boolean } = {
       message: assistantResponse,
       conversationId: currentConversationId!,
       shouldShowBooking: Boolean(shouldShowBooking),
@@ -748,8 +703,9 @@ export async function POST(request: NextRequest) {
         customerIdentified: true,
         leadId: identifiedLeadId,
       }),
-      ...(department !== 'general' && { department }),
-      ...(priority !== 'medium' && { priority }),
+      ...(finalDepartment !== 'general' && { department: finalDepartment }),
+      ...(finalPriority !== 'medium' && { priority: finalPriority }),
+      ...(shouldEscalate && { routed: true }),
     }
 
     return NextResponse.json(response)

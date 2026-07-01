@@ -313,3 +313,61 @@ export async function notifyHumanContactRequest(
     body,
   })
 }
+
+const APP_URL = () => process.env.NEXT_PUBLIC_APP_URL || 'https://astute-ai-assistant.vercel.app'
+
+/**
+ * Send department-routed escalation email with conversation deep link.
+ */
+export async function notifyDepartmentRouting(params: {
+  department: string
+  priority: string
+  leadName: string
+  leadEmail: string
+  leadPhone: string | null
+  policyNumber: string | null
+  conversationContext: string
+  conversationId: string
+  leadId: string
+  departmentEmail: string | null
+  reason: string
+}): Promise<{ success: boolean; error?: string }> {
+  const priorityLabel =
+    params.priority === 'urgent' ? 'URGENT' :
+    params.priority === 'high' ? 'HIGH' : params.priority.toUpperCase()
+
+  const subject = `[${priorityLabel}] ${params.department.toUpperCase()}: ${params.leadName} — ${params.reason}`
+
+  const body = `
+    <h2>Department Routing — ${params.department.charAt(0).toUpperCase() + params.department.slice(1)}</h2>
+    <p><strong>Priority:</strong> ${priorityLabel}</p>
+    <p><strong>Reason:</strong> ${params.reason}</p>
+    <p><strong>Customer:</strong> ${params.leadName}</p>
+    <p><strong>Email:</strong> ${params.leadEmail || 'Not provided'}</p>
+    ${params.leadPhone ? `<p><strong>Phone:</strong> ${params.leadPhone}</p>` : ''}
+    ${params.policyNumber ? `<p><strong>Policy #:</strong> ${params.policyNumber}</p>` : ''}
+    <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+    
+    <h3>Conversation Context</h3>
+    <pre style="white-space:pre-wrap;font-family:sans-serif;">${params.conversationContext}</pre>
+    
+    <p>
+      <a href="${APP_URL()}/dashboard/conversations/${params.conversationId}">Open Conversation</a>
+      &nbsp;|&nbsp;
+      <a href="${APP_URL()}/dashboard/leads/${params.leadId}">View Lead</a>
+      &nbsp;|&nbsp;
+      <a href="${APP_URL()}/dashboard/tickets">Tickets Queue</a>
+    </p>
+    
+    <p><em>Pick up this case in the dashboard and contact the customer.</em></p>
+  `
+
+  const recipientEmail = params.departmentEmail || (await getNotificationRecipientEmail())
+
+  if (!recipientEmail) {
+    console.error('[DEPARTMENT_ROUTING] No notification recipient email configured')
+    return { success: false, error: 'No notification recipient email configured' }
+  }
+
+  return sendEmailNotification({ to: recipientEmail, subject, body })
+}

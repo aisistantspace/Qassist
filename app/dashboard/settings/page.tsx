@@ -46,6 +46,53 @@ interface IntegrationConfig {
   smtp_secure: boolean
   smtp_enabled: boolean
   notification_recipient_email: string
+  department_routing?: Record<string, { email: string; auto_route: boolean }>
+  customer_lookup_config?: {
+    enabled: boolean
+    api_url: string
+    method: 'GET' | 'POST'
+    auth_header: string
+    auth_value: string
+    request_field: 'email' | 'policy_number' | 'account_number' | 'phone'
+    response_name_field: string
+    response_policy_field: string
+    response_status_field?: string
+    timeout_ms: number
+  }
+  routing_rules?: {
+    auto_route_claims: boolean
+    auto_route_sales_registration: boolean
+    auto_route_billing_urgent: boolean
+    knowledge_gap_route: boolean
+  }
+}
+
+const defaultDepartmentRouting: Record<string, { email: string; auto_route: boolean }> = {
+  claims: { email: '', auto_route: true },
+  support: { email: '', auto_route: false },
+  sales: { email: '', auto_route: false },
+  billing: { email: '', auto_route: true },
+  general: { email: '', auto_route: false },
+}
+
+const defaultCustomerLookup = {
+  enabled: false,
+  api_url: '',
+  method: 'POST' as const,
+  auth_header: 'Authorization',
+  auth_value: '',
+  request_field: 'email' as const,
+  response_name_field: 'name',
+  response_policy_field: 'policy_number',
+  response_status_field: 'status',
+  timeout_ms: 5000,
+}
+
+const defaultRoutingRules = {
+  auto_route_claims: true,
+  auto_route_sales_registration: false,
+  auto_route_billing_urgent: true,
+  knowledge_gap_route: false,
 }
 
 interface WidgetConfig {
@@ -94,7 +141,7 @@ const defaultLeadScoringConfig: LeadScoringConfig = {
 }
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<'branding' | 'agent' | 'widget' | 'integrations' | 'lead-scoring' | 'papiamentu'>('branding')
+  const [activeTab, setActiveTab] = useState<'branding' | 'agent' | 'widget' | 'integrations' | 'routing' | 'lead-scoring' | 'papiamentu'>('branding')
   const [papiamentuLearning, setPapiamentuLearning] = useState(false)
   const [papiamentuLocale, setPapiamentuLocale] = useState<'pap-CW' | 'pap-AW'>('pap-CW')
   
@@ -156,7 +203,13 @@ export default function SettingsPage() {
     smtp_secure: false,
     smtp_enabled: false,
     notification_recipient_email: '',
+    department_routing: defaultDepartmentRouting,
+    customer_lookup_config: defaultCustomerLookup,
+    routing_rules: defaultRoutingRules,
   })
+  const [lookupTestValue, setLookupTestValue] = useState('')
+  const [lookupTestResult, setLookupTestResult] = useState<string | null>(null)
+  const [lookupTesting, setLookupTesting] = useState(false)
 
   const [leadScoringConfig, setLeadScoringConfig] = useState<LeadScoringConfig>(defaultLeadScoringConfig)
   const [leadScoringWeightsOpen, setLeadScoringWeightsOpen] = useState(false)
@@ -191,7 +244,12 @@ export default function SettingsPage() {
 
       if (integrationsRes.ok) {
         const integrationsData = await integrationsRes.json()
-        setIntegrations(integrationsData)
+        setIntegrations({
+          ...integrationsData,
+          department_routing: { ...defaultDepartmentRouting, ...(integrationsData.department_routing || {}) },
+          customer_lookup_config: { ...defaultCustomerLookup, ...(integrationsData.customer_lookup_config || {}) },
+          routing_rules: { ...defaultRoutingRules, ...(integrationsData.routing_rules || {}) },
+        })
       }
 
       if (agentRes.ok) {
@@ -237,6 +295,53 @@ export default function SettingsPage() {
       showMessage('error', error.message || 'Failed to save branding')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleSaveRouting = async () => {
+    setSaving(true)
+    try {
+      const res = await fetch('/api/settings/integrations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          department_routing: integrations.department_routing,
+          customer_lookup_config: integrations.customer_lookup_config,
+          routing_rules: integrations.routing_rules,
+        }),
+      })
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Failed to save routing settings')
+      }
+      showMessage('success', 'Routing settings saved successfully!')
+    } catch (error: any) {
+      showMessage('error', error.message || 'Failed to save routing settings')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleTestCustomerLookup = async () => {
+    setLookupTesting(true)
+    setLookupTestResult(null)
+    try {
+      const res = await fetch('/api/settings/customer-lookup/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_lookup_config: integrations.customer_lookup_config,
+          test_value: lookupTestValue,
+        }),
+      })
+      const data = await res.json()
+      setLookupTestResult(data.success
+        ? `Success (${data.status}): ${JSON.stringify(data.raw, null, 2)}`
+        : `Failed: ${data.error || 'Unknown error'}`)
+    } catch (error: any) {
+      setLookupTestResult(`Error: ${error.message}`)
+    } finally {
+      setLookupTesting(false)
     }
   }
 
@@ -356,6 +461,7 @@ export default function SettingsPage() {
             { id: 'agent', label: 'Agent Identity' },
             { id: 'widget', label: 'Widget Styles' },
             { id: 'integrations', label: 'Integrations' },
+            { id: 'routing', label: 'Routing' },
             { id: 'lead-scoring', label: 'Lead scoring' },
             { id: 'papiamentu', label: 'Papiamentu' },
           ].map((tab) => (
@@ -1050,6 +1156,200 @@ export default function SettingsPage() {
               {saving ? 'Saving...' : 'Save All Integrations'}
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Routing Tab */}
+      {activeTab === 'routing' && (
+        <div className="bg-white rounded-lg shadow-md p-6 space-y-10">
+          <div>
+            <h2 className="text-xl font-semibold mb-2 text-gray-900">Department Routing</h2>
+            <p className="text-sm text-gray-600 mb-6">Configure email inboxes and auto-route rules per department.</p>
+            <div className="space-y-4">
+              {Object.entries(integrations.department_routing || defaultDepartmentRouting).map(([dept, config]) => (
+                <div key={dept} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end border-b border-gray-100 pb-4">
+                  <div className="font-medium text-gray-900 capitalize">{dept}</div>
+                  <input
+                    type="email"
+                    value={config.email}
+                    onChange={(e) => setIntegrations({
+                      ...integrations,
+                      department_routing: {
+                        ...integrations.department_routing!,
+                        [dept]: { ...config, email: e.target.value },
+                      },
+                    })}
+                    placeholder={`${dept}@company.com`}
+                    className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+                  />
+                  <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={config.auto_route}
+                      onChange={(e) => setIntegrations({
+                        ...integrations,
+                        department_routing: {
+                          ...integrations.department_routing!,
+                          [dept]: { ...config, auto_route: e.target.checked },
+                        },
+                      })}
+                      className="w-4 h-4 text-primary-600 rounded"
+                    />
+                    Auto-route to this department
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold mb-2 text-gray-900">Routing Rules</h2>
+            <div className="space-y-3">
+              {([
+                ['auto_route_claims', 'Auto-escalate claims (accidents, damage, claim keywords)'],
+                ['auto_route_sales_registration', 'Auto-notify sales on registration intent'],
+                ['auto_route_billing_urgent', 'Auto-escalate urgent billing issues'],
+                ['knowledge_gap_route', 'Route to sales when registration intent + KB gap'],
+              ] as const).map(([key, label]) => (
+                <label key={key} className="flex items-center gap-2 text-sm text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={integrations.routing_rules?.[key] ?? false}
+                    onChange={(e) => setIntegrations({
+                      ...integrations,
+                      routing_rules: { ...integrations.routing_rules!, [key]: e.target.checked },
+                    })}
+                    className="w-4 h-4 text-primary-600 rounded"
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold mb-2 text-gray-900">Customer Lookup API</h2>
+            <p className="text-sm text-gray-600 mb-4">On-demand lookup against your core customer system (read-only).</p>
+            <label className="flex items-center gap-2 mb-4 text-sm font-medium text-gray-700">
+              <input
+                type="checkbox"
+                checked={integrations.customer_lookup_config?.enabled ?? false}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: { ...integrations.customer_lookup_config!, enabled: e.target.checked },
+                })}
+                className="w-4 h-4 text-primary-600 rounded"
+              />
+              Enable customer API lookup
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="url"
+                value={integrations.customer_lookup_config?.api_url || ''}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: { ...integrations.customer_lookup_config!, api_url: e.target.value },
+                })}
+                placeholder="https://api.example.com/customers/lookup"
+                className="md:col-span-2 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              />
+              <select
+                value={integrations.customer_lookup_config?.method || 'POST'}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: { ...integrations.customer_lookup_config!, method: e.target.value as 'GET' | 'POST' },
+                })}
+                className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              >
+                <option value="POST">POST</option>
+                <option value="GET">GET</option>
+              </select>
+              <select
+                value={integrations.customer_lookup_config?.request_field || 'email'}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: {
+                    ...integrations.customer_lookup_config!,
+                    request_field: e.target.value as 'email' | 'policy_number' | 'account_number' | 'phone',
+                  },
+                })}
+                className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              >
+                <option value="email">Send email</option>
+                <option value="policy_number">Send policy number</option>
+                <option value="account_number">Send account number</option>
+                <option value="phone">Send phone</option>
+              </select>
+              <input
+                type="text"
+                value={integrations.customer_lookup_config?.auth_header || ''}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: { ...integrations.customer_lookup_config!, auth_header: e.target.value },
+                })}
+                placeholder="Auth header (e.g. Authorization)"
+                className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              />
+              <input
+                type="password"
+                value={integrations.customer_lookup_config?.auth_value || ''}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: { ...integrations.customer_lookup_config!, auth_value: e.target.value },
+                })}
+                placeholder="Auth value / API key"
+                className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              />
+              <input
+                type="text"
+                value={integrations.customer_lookup_config?.response_name_field || 'name'}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: { ...integrations.customer_lookup_config!, response_name_field: e.target.value },
+                })}
+                placeholder="Response name field"
+                className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              />
+              <input
+                type="text"
+                value={integrations.customer_lookup_config?.response_policy_field || 'policy_number'}
+                onChange={(e) => setIntegrations({
+                  ...integrations,
+                  customer_lookup_config: { ...integrations.customer_lookup_config!, response_policy_field: e.target.value },
+                })}
+                placeholder="Response policy field"
+                className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              />
+            </div>
+            <div className="mt-4 flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={lookupTestValue}
+                onChange={(e) => setLookupTestValue(e.target.value)}
+                placeholder="Test value (email or policy#)"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900"
+              />
+              <button
+                type="button"
+                onClick={handleTestCustomerLookup}
+                disabled={lookupTesting}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium"
+              >
+                {lookupTesting ? 'Testing...' : 'Test API'}
+              </button>
+            </div>
+            {lookupTestResult && (
+              <pre className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs overflow-x-auto text-gray-800">{lookupTestResult}</pre>
+            )}
+          </div>
+
+          <button
+            onClick={handleSaveRouting}
+            disabled={saving}
+            className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 disabled:bg-gray-400 font-medium"
+          >
+            {saving ? 'Saving...' : 'Save Routing Settings'}
+          </button>
         </div>
       )}
 

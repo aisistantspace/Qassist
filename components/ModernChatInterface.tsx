@@ -52,6 +52,25 @@ interface Props {
 const DEFAULT_AVATAR = "https://backend.chatbase.co/storage/v1/object/public/chatbots-profile-pictures/82428ef0-b36b-48e1-bf3f-9a94f7fac629/P4HvZfc4t5WKWkbDOEwcm.ico?width=40&height=40&quality=50"
 const DEFAULT_PRIMARY_COLOR = "#3A7D7D"
 
+type ChatLanguage = 'EN' | 'NL' | 'ES' | 'PA'
+
+const LANGUAGES: { code: ChatLanguage; name: string; flag: string }[] = [
+  { code: 'EN', name: 'English', flag: '🇬🇧' },
+  { code: 'NL', name: 'Nederlands', flag: '🇳🇱' },
+  { code: 'ES', name: 'Español', flag: '🇪🇸' },
+  { code: 'PA', name: 'Papiamentu', flag: '🇨🇼' },
+]
+
+const PLACEHOLDERS: Record<ChatLanguage, string> = {
+  EN: 'Type your message...',
+  NL: 'Stel je vraag...',
+  ES: 'Escribe tu pregunta...',
+  PA: 'Skribí bo pregunta...',
+}
+
+const PA_WELCOME = (agentName: string) =>
+  `Bon dia! 👋 Mi ta ${agentName}, bo asistente. Kon mi por yudabo awe?`
+
 // URL regex: do not include trailing ), ], > so links stay clickable
 const URL_SPLIT_REGEX = /(https?:\/\/[^\s)\]\}>]+)/g
 const URL_TEST_REGEX = /^https?:\/\/[^\s)\]\}>]+$/
@@ -98,13 +117,18 @@ export default function ModernChatInterface({
   const searchParams = useSearchParams()
   const tenantSlug = searchParams.get('slug') ?? searchParams.get('tenantSlug')
   const tenantId = searchParams.get('tenant') ?? searchParams.get('tenantId')
+  const langParam = searchParams.get('lang')?.toUpperCase()
+  const initialLang: ChatLanguage = (['EN', 'NL', 'ES', 'PA'] as const).includes(langParam as ChatLanguage)
+    ? (langParam as ChatLanguage)
+    : 'EN'
   const [branding, setBranding] = useState<BrandingConfig | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [leadId, setLeadId] = useState<string | null>(null)
   const [conversationId, setConversationId] = useState<string | null>(null)
-  const [detectedLanguage, setDetectedLanguage] = useState<'EN' | 'NL' | 'ES' | 'PA'>('EN')
+  const [selectedLanguage, setSelectedLanguage] = useState<ChatLanguage>(initialLang)
+  const [languageExplicit, setLanguageExplicit] = useState(initialLang !== 'EN' || !!langParam)
   const [widgetSuggestions, setWidgetSuggestions] = useState<string[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -130,7 +154,14 @@ export default function ModernChatInterface({
         
         // Use branding data for initial message if not already set
         if (messages.length === 0) {
-          const welcome = initialMessages?.[0] || data.welcome_message || `Hi! I'm ${data.agent_name || 'your assistant'}. How can I help you today?`
+          const agent = data.agent_name || 'your assistant'
+          const welcomeByLang: Record<ChatLanguage, string> = {
+            EN: initialMessages?.[0] || data.welcome_message || `Hi! I'm ${agent}. How can I help you today?`,
+            NL: `Hallo! Ik ben ${agent}, je assistent. Hoe kan ik je helpen?`,
+            ES: `¡Hola! Soy ${agent}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
+            PA: PA_WELCOME(agent),
+          }
+          const welcome = welcomeByLang[selectedLanguage] || welcomeByLang.EN
           setMessages([{
             role: 'assistant' as const,
             content: welcome,
@@ -228,6 +259,26 @@ export default function ModernChatInterface({
     }
   }
 
+  const handleLanguageSelect = (lang: ChatLanguage) => {
+    setSelectedLanguage(lang)
+    setLanguageExplicit(true)
+    // Update welcome message when user switches before chatting
+    if (messages.length === 1 && messages[0].role === 'assistant') {
+      const agent = branding?.agent_name || 'Assistant'
+      const welcomeByLang: Record<ChatLanguage, string> = {
+        EN: branding?.welcome_message || `Hi! I'm ${agent}. How can I help you today?`,
+        NL: `Hallo! Ik ben ${agent}, je assistent. Hoe kan ik je helpen?`,
+        ES: `¡Hola! Soy ${agent}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
+        PA: PA_WELCOME(agent),
+      }
+      setMessages([{
+        role: 'assistant',
+        content: welcomeByLang[lang],
+        timestamp: new Date().toISOString(),
+      }])
+    }
+  }
+
   const sendMessage = async (text: string, formId?: string) => {
     // Allow empty message if formId is provided (for auto-triggering forms)
     if (!text.trim() && !formId) return
@@ -257,7 +308,8 @@ export default function ModernChatInterface({
         message: text,
         conversationId,
         leadId: currentLeadId,
-        language: detectedLanguage,
+        language: selectedLanguage,
+        languageExplicit,
         triggerFormId: formId,
       }
       if (tenantSlug) chatBody.slug = tenantSlug
@@ -279,7 +331,9 @@ export default function ModernChatInterface({
         }
         setMessages(prev => [...prev, assistantMessage])
         setConversationId(data.conversationId)
-        if (data.languageUsed) setDetectedLanguage(data.languageUsed)
+        if (data.languageUsed) {
+          setSelectedLanguage(data.languageUsed)
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error)
@@ -314,7 +368,24 @@ export default function ModernChatInterface({
               <h1 className="font-medium text-sm tracking-tight text-gray-900 truncate">{agentName}</h1>
             </div>
           </div>
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                type="button"
+                onClick={() => handleLanguageSelect(lang.code)}
+                className={`flex min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-md text-lg transition-all ${
+                  selectedLanguage === lang.code
+                    ? 'scale-110 bg-gray-100 ring-1 ring-gray-200'
+                    : 'opacity-50 hover:opacity-100 hover:bg-gray-50'
+                }`}
+                title={lang.name}
+                aria-label={`Switch to ${lang.name}`}
+                aria-pressed={selectedLanguage === lang.code}
+              >
+                {lang.flag}
+              </button>
+            ))}
             <button
               className="flex min-w-[44px] min-h-[44px] items-center justify-center rounded-md text-gray-500 opacity-90 hover:opacity-100 hover:bg-gray-100 transition-all"
               title="Open menu"
@@ -468,7 +539,7 @@ export default function ModernChatInterface({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={placeholder || "Type your message..."}
+            placeholder={placeholder || PLACEHOLDERS[selectedLanguage]}
             rows={1}
             disabled={loading}
             className={`flex-1 bg-transparent border-none focus:ring-0 text-sm resize-none py-0.5 max-h-40 overflow-y-auto leading-tight min-w-0 ${

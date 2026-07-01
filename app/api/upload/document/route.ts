@@ -3,26 +3,13 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { processDocument } from '@/lib/file-processing'
 import { generateEmbedding } from '@/lib/openai'
 import { validateUploadedFile } from '@/lib/security'
-
-// Simple language detection
-function detectLanguage(text: string): 'EN' | 'ES' {
-  const lowerText = text.toLowerCase()
-  
-  // Spanish indicators
-  const spanishPatterns = [
-    /hola/i, /gracias/i, /por favor/i,
-    /el /, /la /, /los /, /las /,
-    /qué/, /cómo/, /cuándo/, /dónde/,
-    /ñ/, /á/, /é/, /í/, /ó/, /ú/,
-  ]
-  
-  const isSpanish = spanishPatterns.some(pattern => pattern.test(lowerText))
-  return isSpanish ? 'ES' : 'EN'
-}
+import { getTenantFromRequest } from '@/lib/tenant'
+import { detectLanguageForKbContent } from '@/lib/kb-ingest'
 
 export async function POST(request: NextRequest) {
   try {
     const supabaseAdmin = getSupabaseAdmin()
+    const tenantId = (await getTenantFromRequest(request)).tenantId
     const formData = await request.formData()
     const file = formData.get('file') as File
 
@@ -54,6 +41,7 @@ export async function POST(request: NextRequest) {
         file_type: file.type,
         file_size: file.size,
         status: 'processing',
+        tenant_id: tenantId,
       })
       .select()
       .single()
@@ -63,29 +51,27 @@ export async function POST(request: NextRequest) {
     // Process the file - extract text and chunk it
     try {
       const processed = await processDocument(buffer, file.type, file.name)
+      const docLanguage = detectLanguageForKbContent(processed.text)
       
-      // Create knowledge base entries for each chunk
       let chunkCount = 0
       for (let i = 0; i < processed.chunks.length; i++) {
         const chunk = processed.chunks[i]
         
         try {
-          // Generate embedding
           const embedding = await generateEmbedding(chunk)
-          const language = detectLanguage(chunk)
 
-          // Insert into knowledge base
           const { error: kbError } = await supabaseAdmin
             .from('knowledge_base')
             .insert({
               title: `${file.name} - Part ${i + 1}`,
               content: chunk,
               category: 'Service',
-              language,
-              tags: [file.name.replace(/\.[^/.]+$/, '')], // filename without extension
+              language: docLanguage,
+              tags: [file.name.replace(/\.[^/.]+$/, '')],
               embedding,
               source_document_id: document.id,
               chunk_index: i,
+              tenant_id: tenantId,
             })
 
           if (!kbError) chunkCount++
