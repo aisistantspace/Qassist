@@ -257,3 +257,91 @@ export function formatDepartmentLinkMessage(
     DEPARTMENT_LINK_TEMPLATES.general.EN
   return template.replace('{url}', url)
 }
+
+const DEPARTMENT_TRIGGER_GUIDANCE: Record<
+  string,
+  { triggers: string; aiBehavior: string }
+> = {
+  claims: {
+    triggers: 'claim, accident, damage, emergency, incident, theft, crash, broken',
+    aiBehavior:
+      'Show empathy first. If you do not have their email or policy number yet, ask for it. Share the claims customer link as a raw URL when configured. Reassure them the claims team will follow up.',
+  },
+  sales: {
+    triggers: 'buy, quote, register, sign up, new policy, price, apply, enrollment',
+    aiBehavior:
+      'Guide them to request a quote or apply using the sales customer link. Never invent prices or coverage details not in the knowledge base.',
+  },
+  billing: {
+    triggers: 'payment, invoice, billing, overdue, charge, refund, premium due',
+    aiBehavior:
+      'Acknowledge urgency for payment issues. Share the billing customer link when configured and offer to connect them with billing.',
+  },
+  support: {
+    triggers: 'help, support, question about my policy, contact, speak to someone',
+    aiBehavior:
+      'Answer from the knowledge base when possible. Share the support customer link or offer human follow-up when needed.',
+  },
+  general: {
+    triggers: 'general inquiries not matching other departments',
+    aiBehavior: 'Answer from the knowledge base. Share the general customer link when configured.',
+  },
+}
+
+/** Inject department links + trigger intents into the AI system prompt */
+export function buildRoutingPromptGuidance(config: RoutingConfig): string {
+  const { routing_rules: rules, department_routing: depts } = config
+
+  const globalRules: string[] = []
+  if (rules.auto_route_claims) {
+    globalRules.push(
+      '- **Claims trigger ON**: accidents, damage, claims, emergencies → escalate to claims team'
+    )
+  }
+  if (rules.auto_route_sales_registration) {
+    globalRules.push(
+      '- **Sales trigger ON**: buy, quote, register, new policy → notify sales team'
+    )
+  }
+  if (rules.auto_route_billing_urgent) {
+    globalRules.push(
+      '- **Billing trigger ON**: urgent payment or billing issues → escalate to billing'
+    )
+  }
+  if (rules.knowledge_gap_route) {
+    globalRules.push(
+      '- **KB gap + sales intent**: when you lack KB info but user wants to buy/register → route to sales'
+    )
+  }
+
+  const deptLines: string[] = []
+  for (const [dept, cfg] of Object.entries(depts)) {
+    const guide = DEPARTMENT_TRIGGER_GUIDANCE[dept]
+    const url = cfg.url?.trim()
+    if (!guide && !url && !cfg.auto_route) continue
+
+    const parts: string[] = [
+      `**${dept.charAt(0).toUpperCase() + dept.slice(1)}** (auto-route: ${cfg.auto_route ? 'ON' : 'OFF'})`,
+    ]
+    if (guide) parts.push(`- Watch for: ${guide.triggers}`)
+    if (url) parts.push(`- Customer link (share as raw URL when intent matches): ${url}`)
+    if (guide) parts.push(`- Your behavior: ${guide.aiBehavior}`)
+    deptLines.push(parts.join('\n'))
+  }
+
+  if (!globalRules.length && !deptLines.length) return ''
+
+  return `### DEPARTMENT ROUTING & TRIGGERS (YOU MUST FOLLOW)
+Recognize these intents in the customer's message. Guide them naturally; the system also routes internally to the right team.
+
+**Active system triggers:**
+${globalRules.length ? globalRules.join('\n') : '- No global auto-triggers enabled — still use department links when the customer intent matches.'}
+
+**Per-department:**
+${deptLines.join('\n\n')}
+
+**Rules:**
+- When a customer link is listed, include it in your reply as a raw URL (never in parentheses).
+- Do not say you submitted a claim or form on their behalf — direct them to the link or confirm the team was notified.
+- For urgent claims/emergencies, prioritize empathy and collecting email or policy number before or with the link.`
+}

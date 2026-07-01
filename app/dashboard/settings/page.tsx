@@ -1171,7 +1171,8 @@ export default function SettingsPage() {
             <p className="font-medium mb-1">Links + triggers live here</p>
             <p>
               Set a <strong>customer link</strong> per department (claim page, quote portal, contact form).
-              Use <strong>auto-route</strong> and <strong>routing rules</strong> below to decide when each department fires.
+              Use <strong>auto-route</strong> and <strong>trigger rules</strong> below — these control backend escalation
+              and are also injected into the AI agent so it knows when to share each link.
               Scroll down and click <strong>Save Routing Settings</strong> when done.
             </p>
           </div>

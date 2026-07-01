@@ -2,6 +2,8 @@ import { getSupabaseAdmin } from './supabase'
 import { generateEmbedding, getAgentSettings } from './openai'
 import { getBrandingConfig } from './branding'
 import { getPapiamentuPromptGuide } from './papiamentu/prompt-guide'
+import { buildRoutingPromptGuidance } from './routing'
+import { getRoutingConfig } from './routing-config'
 
 export interface KnowledgeBaseAction {
   action_type?: 'none' | 'link' | 'form'
@@ -550,6 +552,8 @@ export async function generateSystemPrompt(
   const tid = tenantId ?? DEFAULT_TENANT_ID
   const settings = await getAgentSettings(tid)
   const branding = await getBrandingConfig(tid)
+  const routingConfig = await getRoutingConfig(tid)
+  const routingGuidance = buildRoutingPromptGuidance(routingConfig)
   
   const languageMap: Record<string, string> = {
     EN: 'English',
@@ -614,7 +618,8 @@ ${context}
 - If the customer provides an email, phone, or policy number, the system will automatically check if they are an existing customer.
 - If a customer is identified as existing (you will see a CUSTOMER IDENTIFIED note in the conversation), acknowledge them by name and let them know their information has been found.
 - For urgent situations (accidents, emergencies, claims), reassure the customer that you are connecting them with the appropriate department and a team member will follow up.
-- Collect policy or account numbers via forms or when the customer asks about their existing policy — never ask for passwords or SSN.`
+- Collect policy or account numbers via forms or when the customer asks about their existing policy — never ask for passwords or SSN.
+${routingGuidance ? `\n\n${routingGuidance}` : ''}`
 
   const activeForms = await getActiveForms(tid)
   console.log('[FORM DEBUG] Active forms:', activeForms.length, 'leadId:', leadId, 'hasUserMessage:', !!userMessage)
