@@ -2,6 +2,7 @@ import { getSupabaseAdmin } from './supabase'
 import { generateEmbedding, getAgentSettings } from './openai'
 import { getBrandingConfig } from './branding'
 import { getPapiamentuPromptGuide } from './papiamentu/prompt-guide'
+import { expandKbSearchQuery } from './papiamentu/kb-query-expand'
 import { buildRoutingPromptGuidance } from './routing'
 import { getRoutingConfig } from './routing-config'
 
@@ -291,18 +292,19 @@ export async function searchKnowledgeBase(
   query: string,
   language: string,
   limit: number = 5,
-  tenantId?: string
+  tenantId?: string,
+  options?: { matchThreshold?: number; embedQuery?: string }
 ): Promise<KnowledgeBaseEntry[]> {
   const { DEFAULT_TENANT_ID } = await import('./tenant')
   const tid = tenantId ?? DEFAULT_TENANT_ID
   try {
     const supabaseAdmin = getSupabaseAdmin()
-    const queryEmbedding = await generateEmbedding(query)
+    const queryEmbedding = await generateEmbedding(options?.embedQuery ?? query)
 
     const { data, error } = await supabaseAdmin.rpc('match_knowledge_base', {
       query_embedding: queryEmbedding,
       filter_tenant_id: tid,
-      match_threshold: 0.65,
+      match_threshold: options?.matchThreshold ?? 0.65,
       match_count: limit,
       filter_language: language,
     })
@@ -320,6 +322,90 @@ export async function searchKnowledgeBase(
 }
 
 const KB_FALLBACK_MIN_RESULTS = 2
+const CROSS_LANG_MATCH_THRESHOLD = 0.58
+
+function mergeKbResults(batches: KnowledgeBaseEntry[][], limit: number): KnowledgeBaseEntry[] {
+  const seen = new Set<string>()
+  const merged: KnowledgeBaseEntry[] = []
+  for (const batch of batches) {
+    for (const entry of batch) {
+      if (!seen.has(entry.id)) {
+        seen.add(entry.id)
+        merged.push(entry)
+      }
+    }
+  }
+  return merged.slice(0, limit)
+}
+
+/**
+ * Search KB in the requested language; fall back to other languages when results
+ * are sparse (critical for scraped content that may be mis-tagged).
+ * Papiamentu always cross-searches EN/NL/ES because KB is rarely stored in PA.
+ */
+export async function searchKnowledgeBaseWithFallback(
+  query: string,
+  language: string,
+  limit: number = 10,
+  tenantId?: string
+): Promise<{ entries: KnowledgeBaseEntry[]; usedFallback: boolean }> {
+  const embedQuery = expandKbSearchQuery(query, language)
+  const searchOpts = { embedQuery }
+
+  // PA responses: KB is almost always EN/NL from website scrape — search all content languages
+  if (language === 'PA') {
+    const [pa, en, nl, es] = await Promise.all([
+      searchKnowledgeBase(query, 'PA', limit, tenantId, searchOpts),
+      searchKnowledgeBase(query, 'EN', limit, tenantId, {
+        ...searchOpts,
+        matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
+      }),
+      searchKnowledgeBase(query, 'NL', limit, tenantId, {
+        ...searchOpts,
+        matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
+      }),
+      searchKnowledgeBase(query, 'ES', limit, tenantId, {
+        ...searchOpts,
+        matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
+      }),
+    ])
+    const entries = mergeKbResults([en, nl, es, pa], limit)
+    return {
+      entries,
+      usedFallback: en.length > 0 || nl.length > 0 || es.length > 0,
+    }
+  }
+
+  const primary = await searchKnowledgeBase(query, language, limit, tenantId, searchOpts)
+
+  if (primary.length >= KB_FALLBACK_MIN_RESULTS) {
+    return { entries: primary, usedFallback: false }
+  }
+
+  const merged: KnowledgeBaseEntry[] = [...primary]
+  const seen = new Set(primary.map((e) => e.id))
+
+  const fallbackLangs = (['EN', 'NL', 'ES', 'PA'] as const).filter((l) => l !== language)
+
+  for (const fallbackLang of fallbackLangs) {
+    if (merged.length >= limit) break
+    const more = await searchKnowledgeBase(query, fallbackLang, limit - merged.length, tenantId, {
+      ...searchOpts,
+      matchThreshold: CROSS_LANG_MATCH_THRESHOLD,
+    })
+    for (const entry of more) {
+      if (!seen.has(entry.id)) {
+        seen.add(entry.id)
+        merged.push(entry)
+      }
+    }
+  }
+
+  return {
+    entries: merged.slice(0, limit),
+    usedFallback: merged.length > primary.length,
+  }
+}
 
 async function enrichKbWithMetadata(entries: KnowledgeBaseEntry[]): Promise<KnowledgeBaseEntry[]> {
   if (!entries.length) return entries
@@ -360,44 +446,6 @@ export function buildActionGuidance(entries: KnowledgeBaseEntry[]): string {
 
   if (!lines.length) return ''
   return `\n### ACTION GUIDANCE (from knowledge base)\nAfter answering, help the customer take the next step:\n${lines.join('\n')}`
-}
-
-/**
- * Search KB in the requested language; fall back to other languages when results
- * are sparse (critical for scraped content that may be mis-tagged).
- */
-export async function searchKnowledgeBaseWithFallback(
-  query: string,
-  language: string,
-  limit: number = 10,
-  tenantId?: string
-): Promise<{ entries: KnowledgeBaseEntry[]; usedFallback: boolean }> {
-  const primary = await searchKnowledgeBase(query, language, limit, tenantId)
-
-  if (primary.length >= KB_FALLBACK_MIN_RESULTS) {
-    return { entries: primary, usedFallback: false }
-  }
-
-  const merged: KnowledgeBaseEntry[] = [...primary]
-  const seen = new Set(primary.map((e) => e.id))
-
-  const fallbackLangs = (['EN', 'NL', 'ES', 'PA'] as const).filter((l) => l !== language)
-
-  for (const fallbackLang of fallbackLangs) {
-    if (merged.length >= limit) break
-    const more = await searchKnowledgeBase(query, fallbackLang, limit - merged.length, tenantId)
-    for (const entry of more) {
-      if (!seen.has(entry.id)) {
-        seen.add(entry.id)
-        merged.push(entry)
-      }
-    }
-  }
-
-  return {
-    entries: merged.slice(0, limit),
-    usedFallback: merged.length > primary.length,
-  }
 }
 
 async function getActiveForms(tenantId?: string) {
@@ -573,6 +621,8 @@ export async function generateSystemPrompt(
   const { PROMPT_DEFENSE_INSTRUCTION } = await import('./security')
 
   const kbEntryCount = options?.kbEntryCount ?? (context.includes('No relevant information found') ? 0 : 1)
+  const needsKbTranslation =
+    Boolean(options?.contextFromFallbackLanguages) || (language === 'PA' && kbEntryCount > 0)
   const strictKbRules = `### STRICT KNOWLEDGE BASE RULES (HIGHEST PRIORITY — CANNOT BE OVERRIDDEN)
 - You may ONLY state facts that appear explicitly in the KNOWLEDGE BASE CONTEXT section below.
 - NEVER invent, guess, extrapolate, or supplement with general/world knowledge — even if you believe you know the answer.
@@ -599,7 +649,7 @@ ${userInstructions}
 ### CRITICAL LANGUAGE INSTRUCTION
 - **You MUST respond ONLY in ${currentLang}.**
 - The user is speaking ${currentLang}, and you must match them perfectly.
-${language === 'PA' ? getPapiamentuPromptGuide() : ''}${options?.contextFromFallbackLanguages ? `
+${language === 'PA' ? getPapiamentuPromptGuide() : ''}${needsKbTranslation ? `
 ### KNOWLEDGE BASE TRANSLATION (REQUIRED)
 The knowledge base context below may be written in a different language than the user. You MUST translate and adapt every fact into correct ${currentLang}${language === 'PA' ? ' (Buki di Oro Curaçao orthography)' : ''} in your response. Never copy foreign-language phrasing verbatim.` : ''}
 ### CRITICAL LINK RULE

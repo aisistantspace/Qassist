@@ -120,11 +120,14 @@ export async function POST(request: NextRequest) {
     const kbSearch = await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 5)
     const relevantEntries = kbSearch.entries
     const context = buildContext(relevantEntries)
+    const kbUsesForeignContent =
+      effectiveLanguage === 'PA' &&
+      relevantEntries.some((e) => e.language && e.language !== 'PA')
 
     const isCaseQuery = isCaseSpecific(messageText)
 
     const systemPrompt = await generateSystemPrompt(context, effectiveLanguage, lead.id, messageText, undefined, {
-      contextFromFallbackLanguages: kbSearch.usedFallback,
+      contextFromFallbackLanguages: kbSearch.usedFallback || kbUsesForeignContent,
       kbEntryCount: relevantEntries.length,
     })
     const userMessage: Message = {

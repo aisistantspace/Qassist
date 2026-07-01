@@ -145,12 +145,15 @@ export async function POST(request: NextRequest) {
         : { entries: [], usedFallback: false }
     const relevantEntries = kbSearch.entries
     const context = buildContext(relevantEntries) + buildActionGuidance(relevantEntries)
+    const kbUsesForeignContent =
+      effectiveLanguage === 'PA' &&
+      relevantEntries.some((e) => e.language && e.language !== 'PA')
     if (relevantEntries.length === 0 && messageText) {
       logUnansweredQuery(messageText, effectiveLanguage, tenantId).catch(() => {})
     }
     const isCaseQuery = messageText ? isCaseSpecific(messageText) : false
     const systemPrompt = await generateSystemPrompt(context, effectiveLanguage, leadId, messageText || undefined, tenantId, {
-      contextFromFallbackLanguages: kbSearch.usedFallback,
+      contextFromFallbackLanguages: kbSearch.usedFallback || kbUsesForeignContent,
       kbEntryCount: relevantEntries.length,
     })
     const userMessage: Message = {
