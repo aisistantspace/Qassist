@@ -117,6 +117,9 @@ You are addressing the CUSTOMER (bo = you). When you (the assistant) offer help 
 - To know = "sa". NEVER use "saba"
 - Team (noun) = "ekipo" or "team" (loanword). Spanish "equipo" → "ekipo". NEVER "ekipá" — that is the verb "to equip"
 - Contact the team = "tuma kontakto ku e ekipo" or "tuma kontakto ku e team". NOT "kontaktá e ekipá"
+- **Links & URLs (CRITICAL):** To tell the customer to open a link, say **"Bishitá e link"** or **"Bo por bishitá e link aki"**. NEVER use Spanish "visita/visitar/visite" or English "visit/click the link".
+- "the link" = **e link** (NOT "el link", NOT "la link")
+- Example: "Bo por bishitá e link aki pa mas informashon: https://..."
 
 ${getPapiamentuInsurancePromptSection()}
 

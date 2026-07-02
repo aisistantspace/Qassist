@@ -768,6 +768,7 @@ The user speaks ${currentLang}. You MUST translate and adapt every relevant fact
 - Combine facts from multiple sources when they refer to the same topic.` : ''}
 ### CRITICAL LINK RULE
 - **When you include any URL (e.g. booking link, website), NEVER wrap it in parentheses or brackets.** Output the raw URL so it stays clickable (e.g. "Book here: https://..." not "Book here: (https://...)"). Links must work when the user clicks them.
+${language === 'PA' ? `- **PAPIAMENTU LINK CTA:** Tell the customer **"Bishitá e link"** or **"Bo por bishitá e link aki:"** followed by the URL. NEVER use Spanish "visita/visitar" or English "visit/click the link". Use **e link** (not el/la link).` : ''}
 
 ### KNOWLEDGE BASE CONTEXT (Use this to answer questions)
 ${context}

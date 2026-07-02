@@ -176,6 +176,16 @@ const SPANISH_PHRASE_FIXES: [RegExp, string][] = [
   [/\bkontakt[aá]\s+e\s+ekip[aá]\s+pa\s+bo\b/gi, 'tuma kontakto ku e ekipo pa bo'],
   [/\bkontakt[aá]\s+e\s+ekip[aá]\b/gi, 'tuma kontakto ku e ekipo'],
   [/\bmi\s+por\s+kontakt[aá]\s+e\s+team\s+pa\s+bo\b/gi, 'mi por tuma kontakto ku e team pa bo'],
+  // Link CTAs — Spanish "visita" / English "visit" → Papiamentu "bishitá"
+  [/\bvisita(r|ndo)?\s+(el|la|di|e)\s+link\b/gi, 'bishitá e link'],
+  [/\bvisita(r|ndo)?\s+link\b/gi, 'bishitá e link'],
+  [/\bvisite\s+(el|la|di|e)\s+link\b/gi, 'bishitá e link'],
+  [/\bvisit(ing)?\s+(the\s+)?link\b/gi, 'bishitá e link'],
+  [/\bclick\s+(on\s+)?(the\s+)?link\b/gi, 'bishitá e link'],
+  [/\bklik\s+(op\s+)?(de\s+)?link\b/gi, 'bishitá e link'],
+  [/\bvisita(r)?\s+(el|la)\s+/gi, 'bishitá e '],
+  [/\bel\s+link\b/gi, 'e link'],
+  [/\bla\s+link\b/gi, 'e link'],
 ]
 
 // ── Standalone-nan plural merging ────────────────────────────────────

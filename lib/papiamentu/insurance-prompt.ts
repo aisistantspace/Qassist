@@ -16,6 +16,7 @@ export function getPapiamentuInsurancePromptSection(): string {
 - reklamashon / reklamo = filing a claim
 - outo = car | kas = home | bida = life | salú = health
 - "mi por yudabo" = I can help YOU | "mi por tuma kontakto ku e ekipo pa bo" = I can contact the team for you
+- **Links:** "Bo por bishitá e link aki" — NEVER Spanish "visita/visitar el link" or English "visit the link"
 - If KB context is in English/Dutch, translate ALL facts into Papiamentu — never say you lack info when KB has the answer in another language
 - Say "den mi base di konosementu" (in my knowledge base), NOT "na mi konteksto"
 

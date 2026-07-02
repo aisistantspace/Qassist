@@ -23,7 +23,8 @@
     "bagahe", "dokumento", "dokumentonan",
     "wintersport", "watersport", "golfsport",
     "gezin", "famia", "muchanan",
-    "portal", "app", "online"
+    "portal", "app", "online",
+    "bishitá", "bishitando", "link"
   ],
   "spanish_to_pa": {
     "viaje": "biahe",
@@ -82,7 +83,15 @@
     { "pattern": "puedo ayudarte", "replacement": "mi por yudabo" },
     { "pattern": "precio del seguro", "replacement": "prèis di e seguro" },
     { "pattern": "cotización", "replacement": "kotisashon" },
-    { "pattern": "cotizacion", "replacement": "kotisashon" }
+    { "pattern": "cotizacion", "replacement": "kotisashon" },
+    { "pattern": "visita el link", "replacement": "bishitá e link" },
+    { "pattern": "visita e link", "replacement": "bishitá e link" },
+    { "pattern": "visitar el link", "replacement": "bishitá e link" },
+    { "pattern": "visitar e link", "replacement": "bishitá e link" },
+    { "pattern": "visite el link", "replacement": "bishitá e link" },
+    { "pattern": "visit the link", "replacement": "bishitá e link" },
+    { "pattern": "click the link", "replacement": "bishitá e link" },
+    { "pattern": "el link", "replacement": "e link" }
   ],
   "demo_phrases": [
     "Mi ke sa di seguro di biahe",
@@ -107,7 +116,8 @@
     "Mi ke seguro pa tur aña",
     "Seguro di kanselashon di biahe",
     "Doorlopende seguro di biahe",
-    "Mucha bou di 4 aña ta gratis"
+    "Bo por bishitá e link aki pa mas informashon",
+    "Bishitá e link aki pa tuma un kotisashon"
   ],
   "kb_glossary": [
     {
