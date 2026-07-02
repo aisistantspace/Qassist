@@ -24,7 +24,8 @@
     "wintersport", "watersport", "golfsport",
     "gezin", "famia", "muchanan",
     "portal", "app", "online",
-    "bishitá", "bishitando", "link"
+    "karta di garante", "garantia", "siguridat", "nesesidat", "nesesidadnan",
+    "atenshon", "médiko", "proveedor", "mandá", "mensahe", "adaptá"
   ],
   "spanish_to_pa": {
     "viaje": "biahe",
@@ -64,7 +65,22 @@
     "niños": "muchanan",
     "repatriación": "repatriashon",
     "repatriacion": "repatriashon",
-    "contexto": "konteksto"
+    "prestación": "servisio",
+    "prestacion": "servisio",
+    "prestador": "proveedor",
+    "atención": "atenshon",
+    "atencion": "atenshon",
+    "certeza": "siguridat",
+    "sertesa": "siguridat",
+    "mensaje": "mensahe",
+    "adaptado": "adaptá",
+    "garantizado": "garantisá",
+    "específico": "spesífiko",
+    "especifico": "spesífiko",
+    "necesidad": "nesesidat",
+    "necesidades": "nesesidadnan",
+    "libertad": "libertat",
+    "calidad": "kalidat"
   },
   "phrase_fixes": [
     { "pattern": "seguro de viaje", "replacement": "seguro di biahe" },
@@ -91,7 +107,14 @@
     { "pattern": "visite el link", "replacement": "bishitá e link" },
     { "pattern": "visit the link", "replacement": "bishitá e link" },
     { "pattern": "click the link", "replacement": "bishitá e link" },
-    { "pattern": "el link", "replacement": "e link" }
+    { "pattern": "el link", "replacement": "e link" },
+    { "pattern": "atenshon medisina", "replacement": "atenshon médiko" },
+    { "pattern": "atencion medica", "replacement": "atenshon médiko" },
+    { "pattern": "prestacion de salud", "replacement": "servisio di salú" },
+    { "pattern": "prestación de salud", "replacement": "servisio di salú" },
+    { "pattern": "duna mi un mensahe", "replacement": "mandá mi un mensahe" },
+    { "pattern": "Por fabor duna mi", "replacement": "Por fabor, mandá mi" },
+    { "pattern": "karta di garante", "replacement": "karta di garantia" }
   ],
   "demo_phrases": [
     "Mi ke sa di seguro di biahe",
@@ -117,18 +140,20 @@
     "Seguro di kanselashon di biahe",
     "Doorlopende seguro di biahe",
     "Bo por bishitá e link aki pa mas informashon",
-    "Bishitá e link aki pa tuma un kotisashon"
+    "Seguro di biahe ta kubre bo durante un biahe — no ta mesun ku seguro di salú",
+    "Gasto médiko durante biahe ta parte di seguro di biahe",
+    "Por fabor, mandá mi un mensahe si bo ke mas yuda"
   ],
   "kb_glossary": [
     {
       "title": "Seguro di biahe — introdukshon",
       "content": "Seguro di biahe (travel insurance) ta un pòlisa ku ta kubre bo durante un biahe. E por inkluí mediko durante biahe, bagahe perdí, i kanselashon. Pa un solo biahe (single-trip), bo ta kumprá e seguro pa e durashon di e biahe spesífiko. Bo por tuma un kotisashon (quote) pa sa e prèis i kobertura.",
-      "tags": ["seguro", "biahe", "travel", "insurance", "kotisashon"]
+      "tags": ["seguro", "biahe", "travel", "insurance", "kotisashon", "product-travel"]
     },
     {
       "title": "Seguro di biahe — kobertura komun",
       "content": "Kobertura komun di seguro di biahe: gasto médiko durante biahe, emergensia, bagahe, i a veces kanselashon di biahe. Famia: mucha bou di 4 aña hopi biaha ta gratis. Lesa e kondishonnan spesífiko di bo pòlisa pa sa esaktamente kiko ta kubre.",
-      "tags": ["seguro", "biahe", "kobertura", "famia"]
+      "tags": ["seguro", "biahe", "kobertura", "famia", "product-travel"]
     },
     {
       "title": "Kiko ta un klaim?",
@@ -162,8 +187,8 @@
     },
     {
       "title": "Seguro di salú",
-      "content": "Seguro di salú (health insurance) ta kubre gasto médiko. Medimigra i otro plan ta ofresé kobertura di salú ku servisio 24/7.",
-      "tags": ["salú", "health", "mediko", "seguro"]
+      "content": "Seguro di salú (health insurance) ta DIFERENTE di seguro di biahe. E ta kubre gasto médiko lokal na Kòrsou — por ehèmpel Medimigra ku servisio 24/7. NO konfundi ku gasto médiko durante un biahe — esaki ta parte di seguro di biahe, no di seguro di salú.",
+      "tags": ["salú", "health", "mediko", "seguro", "product-health"]
     },
     {
       "title": "Kiko mi mester hasi despues di un aksidente?",
@@ -183,17 +208,17 @@
     {
       "title": "Seguro di biahe — un solo biahe (single-trip)",
       "content": "Seguro di un solo biahe ta kubre bo pa un biahe spesífiko. ENNIA ta ofresé kobertura mundial pa famia: mucha bou di 4 aña hopi biaha ta gratis. Bo por añadí opshon extra manera wintersport, watersport of golfsport. Bo por tuma un kotisashon online promé ku bo biaha.",
-      "tags": ["biahe", "single-trip", "ennia", "famia", "kotisashon"]
+      "tags": ["biahe", "single-trip", "ennia", "famia", "kotisashon", "product-travel"]
     },
     {
       "title": "Seguro di biahe — doorlopend (multi-trip / tur aña)",
       "content": "Seguro doorlopend (multi-trip / annual travel insurance) ta kubre bo tur aña, ideal si bo ta biaha mas di dos biaha pa aña. Gezinsleden por ta meiverzekerd i biaha separá. Kobertura standard inkluí gasto médiko, repatriashon, i pèrdida di dokumento. Premio ta kuminsá bou di f 130 pa aña.",
-      "tags": ["doorlopend", "multi-trip", "annual", "ennia", "famia"]
+      "tags": ["doorlopend", "multi-trip", "annual", "ennia", "famia", "product-travel"]
     },
     {
       "title": "Seguro di kanselashon di biahe",
       "content": "Seguro di kanselashon (trip cancellation insurance) ta protehá bo kontra gasto inesperá si bo mester kanselá un biahe. E ta mundial i por kubre tur biahenan. Bo por añadí opshon promé i despues di salida dependiendo di e pòlisa.",
-      "tags": ["kanselashon", "cancellation", "biahe", "ennia"]
+      "tags": ["kanselashon", "cancellation", "biahe", "ennia", "product-travel"]
     },
     {
       "title": "ENNIA — produktonan i servisio",

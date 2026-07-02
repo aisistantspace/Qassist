@@ -131,6 +131,7 @@ export async function POST(request: NextRequest) {
       contextFromFallbackLanguages: kbSearch.usedFallback || kbUsesForeignContent,
       kbEntryCount: relevantEntries.length,
       kbSourceLanguages: kbSearch.sourceLanguages,
+      insuranceProduct: kbSearch.insuranceProduct,
     })
     const enrichedSystemPrompt =
       containsAbusiveLanguage(messageText)

@@ -18,6 +18,8 @@ export function getPapiamentuInsurancePromptSection(): string {
 - "mi por yudabo" = I can help YOU | "mi por tuma kontakto ku e ekipo pa bo" = I can contact the team for you
 - **Links:** "Bo por bishitá e link aki" — NEVER Spanish "visita/visitar el link" or English "visit the link"
 - If KB context is in English/Dutch, translate ALL facts into Papiamentu — never say you lack info when KB has the answer in another language
+- **NEVER mix insurance products:** seguro di biahe (travel) ≠ seguro di salú (health/Medimigra) ≠ seguro di kas/outo/bida
+- Travel medical = gasto médiko **durante biahe** — NOT local provider choice or garantiekarte on Curaçao
 - Say "den mi base di konosementu" (in my knowledge base), NOT "na mi konteksto"
 
 **EXAMPLE PHRASES YOU MAY USE:**

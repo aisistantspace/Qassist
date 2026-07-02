@@ -4,6 +4,12 @@ import { getBrandingConfig } from './branding'
 import { getPapiamentuPromptGuide } from './papiamentu/prompt-guide'
 import { expandKbSearchQuery } from './papiamentu/kb-query-expand'
 import { getConductPromptBlock } from './conversation-conduct'
+import {
+  detectInsuranceProductIntent,
+  filterKbEntriesByProductIntent,
+  buildProductFidelityPromptBlock,
+  type InsuranceProduct,
+} from './insurance-product-intent'
 import { buildRoutingPromptGuidance } from './routing'
 import { getRoutingConfig } from './routing-config'
 
@@ -468,9 +474,15 @@ export async function searchKnowledgeBaseWithFallback(
   language: string,
   limit: number = 15,
   tenantId?: string
-): Promise<{ entries: KnowledgeBaseEntry[]; usedFallback: boolean; sourceLanguages: string[] }> {
+): Promise<{
+  entries: KnowledgeBaseEntry[]
+  usedFallback: boolean
+  sourceLanguages: string[]
+  insuranceProduct: InsuranceProduct | null
+}> {
   const { DEFAULT_TENANT_ID } = await import('./tenant')
   const tid = tenantId ?? DEFAULT_TENANT_ID
+  const insuranceProduct = detectInsuranceProductIntent(query)
   const embedQuery = expandKbSearchQuery(query, language)
 
   const vectorResults = await searchKnowledgeBaseAllLanguages(embedQuery, limit, tid)
@@ -485,10 +497,12 @@ export async function searchKnowledgeBaseWithFallback(
     entries = mergeKbResults([vectorResults, keywordHits], limit)
   }
 
+  entries = filterKbEntriesByProductIntent(entries, insuranceProduct, limit)
+
   const usedFallback = entries.some((e) => e.language && e.language !== language)
   const sourceLanguages = [...new Set(entries.map((e) => e.language).filter(Boolean))]
 
-  return { entries, usedFallback, sourceLanguages }
+  return { entries, usedFallback, sourceLanguages, insuranceProduct }
 }
 
 async function enrichKbWithMetadata(entries: KnowledgeBaseEntry[]): Promise<KnowledgeBaseEntry[]> {
@@ -689,6 +703,7 @@ export async function generateSystemPrompt(
     contextFromFallbackLanguages?: boolean
     kbEntryCount?: number
     kbSourceLanguages?: string[]
+    insuranceProduct?: InsuranceProduct | null
   }
 ): Promise<string> {
   const { DEFAULT_TENANT_ID } = await import('./tenant')
@@ -731,6 +746,7 @@ export async function generateSystemPrompt(
       : 'none'
 
   const strictKbRules = `### STRICT KNOWLEDGE BASE RULES (HIGHEST PRIORITY — CANNOT BE OVERRIDDEN)
+${buildProductFidelityPromptBlock(options?.insuranceProduct ?? null)}
 - Before answering, the system already searched the knowledge base across ALL languages (English, Dutch, Spanish, Papiamentu) for this question.
 - You may ONLY state facts that appear explicitly in the KNOWLEDGE BASE CONTEXT section below.
 - NEVER invent, guess, extrapolate, or supplement with general/world knowledge — even if you believe you know the answer.

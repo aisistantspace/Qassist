@@ -1,53 +1,124 @@
 /**
  * Expand user queries with insurance/product synonyms so vector search matches
  * KB chunks regardless of response language (EN scrape, PA question, etc.).
+ * Product-aware: travel questions must NOT pull health/auto/home chunks.
  */
 
-const PA_TERM_EXPANSIONS: { pattern: RegExp; terms: string }[] = [
-  { pattern: /\bseguro(nan)?\b/i, terms: 'insurance policy coverage premium' },
-  { pattern: /\bbiahe?(ro)?\b/i, terms: 'travel trip vacation single-trip travel insurance' },
-  { pattern: /\breis(verzekering)?\b/i, terms: 'travel trip travel insurance reis single-trip' },
-  { pattern: /\bpolisa|pòlisa\b/i, terms: 'policy insurance' },
-  { pattern: /\bklaim\b/i, terms: 'claim insurance accident damage' },
-  { pattern: /\bkotisashon\b/i, terms: 'quote price premium calculate' },
-  { pattern: /\bprèis\b/i, terms: 'price premium quote' },
-  { pattern: /\bdekking\b/i, terms: 'coverage insurance' },
-  { pattern: /\bkanselashon\b/i, terms: 'cancellation trip cancel annuleringsverzekering' },
-  { pattern: /\bdoorlopend|tur\s+aña\b/i, terms: 'multi-trip annual travel insurance doorlopende reisverzekering' },
-  { pattern: /\bmediko|salú\b/i, terms: 'medical health care insurance medimigra' },
-  { pattern: /\brepatriashon\b/i, terms: 'repatriation medical evacuation' },
-  { pattern: /\bmi\s+ke\s+sa\b/i, terms: 'information about' },
-  { pattern: /\bkiko\b/i, terms: 'what information' },
-]
+import {
+  detectInsuranceProductIntent,
+  getProductSearchExpansion,
+  type InsuranceProduct,
+} from '../insurance-product-intent'
 
-const UNIVERSAL_INSURANCE_PATTERNS: { pattern: RegExp; terms: string }[] = [
-  { pattern: /\btravel\b/i, terms: 'single-trip travel insurance vacation trip coverage' },
-  { pattern: /\breis\b/i, terms: 'travel insurance reisverzekering trip' },
-  { pattern: /\bviaje\b/i, terms: 'travel insurance trip seguro de viaje' },
-  { pattern: /\binsurance\b/i, terms: 'policy coverage premium seguro' },
-  { pattern: /\bseguro\b/i, terms: 'insurance policy coverage' },
-  { pattern: /\bclaim\b/i, terms: 'claim damage accident report' },
-  { pattern: /\bklaim\b/i, terms: 'claim insurance' },
-  { pattern: /\bquote\b/i, terms: 'premium price calculate policy' },
-  { pattern: /\bhome\b/i, terms: 'home house property insurance woon' },
-  { pattern: /\bcar\b|auto\b/i, terms: 'vehicle car motor insurance' },
-  { pattern: /\blife\b/i, terms: 'life insurance policy' },
-  { pattern: /\bhealth\b|care\b/i, terms: 'health medical care insurance' },
+/** Only expand when the query already signals that product — no cross-product bleed */
+const CONTEXTUAL_EXPANSIONS: {
+  pattern: RegExp
+  terms: string
+  products?: InsuranceProduct[]
+}[] = [
+  {
+    pattern: /\bbiahe?(ro)?\b/i,
+    terms: 'travel trip vacation single-trip travel insurance reis reisverzekering',
+    products: ['travel'],
+  },
+  {
+    pattern: /\breis(verzekering)?\b/i,
+    terms: 'travel trip travel insurance reis single-trip doorlopende',
+    products: ['travel'],
+  },
+  {
+    pattern: /\bpolisa|pòlisa\b/i,
+    terms: 'policy insurance pòlisa',
+  },
+  {
+    pattern: /\bklaim\b/i,
+    terms: 'claim insurance accident damage schade melden',
+    products: ['claim'],
+  },
+  {
+    pattern: /\bkotisashon\b/i,
+    terms: 'quote price premium calculate offerte',
+  },
+  {
+    pattern: /\bprèis\b/i,
+    terms: 'price premium quote prèis',
+  },
+  {
+    pattern: /\bkanselashon\b/i,
+    terms: 'cancellation trip cancel annuleringsverzekering travel',
+    products: ['travel'],
+  },
+  {
+    pattern: /\bdoorlopend|tur\s+aña\b/i,
+    terms: 'multi-trip annual travel insurance doorlopende reisverzekering',
+    products: ['travel'],
+  },
+  {
+    pattern: /\bseguro\s+di\s+sal[uú]\b/i,
+    terms: 'health insurance Medimigra zorgverzekering medical care',
+    products: ['health'],
+  },
+  {
+    pattern: /\bmedimigra\b/i,
+    terms: 'health insurance medical care zorg',
+    products: ['health'],
+  },
+  {
+    pattern: /\bseguro\s+di\s+kas\b/i,
+    terms: 'home insurance woonverzekering Ideal Home property',
+    products: ['home'],
+  },
+  {
+    pattern: /\bseguro\s+di\s+outo\b/i,
+    terms: 'car insurance autoverzekering motor vehicle',
+    products: ['auto'],
+  },
+  {
+    pattern: /\bseguro\s+di\s+bida\b/i,
+    terms: 'life insurance levensverzekering education plan',
+    products: ['life'],
+  },
+  {
+    pattern: /\brepatriashon\b/i,
+    terms: 'repatriation medical evacuation travel',
+    products: ['travel'],
+  },
+  {
+    pattern: /\bmi\s+ke\s+sa\b/i,
+    terms: 'information about',
+  },
+  {
+    pattern: /\bkiko\b/i,
+    terms: 'what information',
+  },
 ]
 
 export function expandKbSearchQuery(query: string, responseLanguage?: string): string {
   const parts: string[] = [query]
+  const product = detectInsuranceProductIntent(query)
 
-  for (const { pattern, terms } of PA_TERM_EXPANSIONS) {
-    if (pattern.test(query)) parts.push(terms)
+  if (product) {
+    parts.push(getProductSearchExpansion(product))
   }
-  for (const { pattern, terms } of UNIVERSAL_INSURANCE_PATTERNS) {
-    if (pattern.test(query)) parts.push(terms)
+
+  for (const { pattern, terms, products } of CONTEXTUAL_EXPANSIONS) {
+    if (!pattern.test(query)) continue
+    if (product && products && !products.includes(product)) continue
+    if (product && products === undefined && product !== 'general') {
+      // Generic expansion — skip if we have a specific product and this isn't tagged for it
+      if (/\bseguro\b/i.test(pattern.source) && product !== 'travel') continue
+    }
+    parts.push(terms)
+  }
+
+  // Bare "seguro" without product — light expansion only (no health/travel mix)
+  if (/\bseguro(nan)?\b/i.test(query) && !product) {
+    parts.push('insurance policy ENNIA')
   }
 
   if (responseLanguage === 'PA' && parts.length === 1) {
-    parts.push('insurance travel seguro biahe policy coverage')
+    parts.push('insurance seguro ENNIA policy')
   }
 
-  return parts.join(' ')
+  return [...new Set(parts.join(' ').split(/\s+/))].join(' ')
 }

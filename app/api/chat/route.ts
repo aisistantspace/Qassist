@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     const kbSearch =
       !isEligibilityMode && messageText
         ? await searchKnowledgeBaseWithFallback(messageText, effectiveLanguage, 15, tenantId)
-        : { entries: [], usedFallback: false, sourceLanguages: [] as string[] }
+        : { entries: [], usedFallback: false, sourceLanguages: [] as string[], insuranceProduct: null }
     const relevantEntries = kbSearch.entries
     const context = buildContext(relevantEntries) + buildActionGuidance(relevantEntries)
     const kbUsesForeignContent =
@@ -157,6 +157,7 @@ export async function POST(request: NextRequest) {
       contextFromFallbackLanguages: kbSearch.usedFallback || kbUsesForeignContent,
       kbEntryCount: relevantEntries.length,
       kbSourceLanguages: kbSearch.sourceLanguages,
+      insuranceProduct: kbSearch.insuranceProduct,
     })
     const userMessage: Message = {
       role: 'user',
