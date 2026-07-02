@@ -49,7 +49,7 @@ export default function LeadsPage() {
     setLoading(true)
     try {
       const params = new URLSearchParams()
-      params.set('intent', 'sales')
+      params.set('acquisition', 'true')
       if (statusFilter !== 'all') params.set('status', statusFilter)
       if (temperatureFilter !== 'all') params.set('temperature', temperatureFilter)
       const url = `/api/dashboard/leads?${params.toString()}`
@@ -134,7 +134,9 @@ export default function LeadsPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Leads</h1>
-        <p className="text-gray-600 mt-2">Sales and marketing pipeline</p>
+        <p className="text-gray-600 mt-2">
+          People interested in acquiring a product or service — quotes, registration, forms, or clear buy intent. General info chats are not listed here.
+        </p>
       </div>
 
       {/* Filters */}

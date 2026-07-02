@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { isAcquisitionLead } from '@/lib/lead-acquisition'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,12 +11,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
     const temperature = searchParams.get('temperature') // hot, warm, cold
-    const intent = searchParams.get('intent') // sales, service, inquiry
+    const intent = searchParams.get('intent') // sales, service, inquiry (legacy)
+    const acquisitionOnly = searchParams.get('acquisition') !== 'false'
 
-    // Fetch leads with their most recent conversation's intent
+    // Fetch leads with conversations + completed form submissions
     let query = supabaseAdmin
       .from('leads')
-      .select('*, conversations(intent, created_at)')
+      .select('*, conversations(intent, created_at), form_submissions(status)')
       .eq('tenant_id', DEFAULT_TENANT_ID)
       .order('created_at', { ascending: false })
 
@@ -35,15 +37,37 @@ export async function GET(request: NextRequest) {
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       )
       const latestIntent = sorted[0]?.intent || null
+      const formSubmissions = lead.form_submissions || []
+      const hasCompletedForm = formSubmissions.some(
+        (f: { status?: string }) => f.status === 'completed'
+      )
 
       // Calculate temperature from lead_score
       const score = lead.lead_score || 0
       const temp = score >= 70 ? 'hot' : score >= 40 ? 'warm' : 'cold'
 
-      // Remove raw conversations from response to keep payload small
-      const { conversations: _, ...leadData } = lead
-      return { ...leadData, latest_intent: latestIntent, temperature: temp }
+      const { conversations: _, form_submissions: __, ...leadData } = lead
+      return {
+        ...leadData,
+        latest_intent: latestIntent,
+        temperature: temp,
+        has_completed_form: hasCompletedForm,
+      }
     })
+
+    // Leads page: acquisition intent only (buy / register / quote / form)
+    if (acquisitionOnly) {
+      leads = leads.filter((l: any) =>
+        isAcquisitionLead({
+          tags: l.tags,
+          latestIntent: l.latest_intent,
+          status: l.status,
+          hasCompletedForm: l.has_completed_form,
+          name: l.name,
+          email: l.email,
+        })
+      )
+    }
 
     // Apply temperature filter
     if (temperature && temperature !== 'all') {

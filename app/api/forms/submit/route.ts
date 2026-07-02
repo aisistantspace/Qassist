@@ -8,6 +8,7 @@ import { syncLeadFromAnswers } from '@/lib/customer-identity'
 import { evaluateRouting } from '@/lib/routing'
 import { dispatchEscalation } from '@/lib/escalation'
 import { inferDepartmentFromFormName } from '@/lib/insurance-form-templates'
+import { markLeadAsAcquisition } from '@/lib/lead-acquisition'
 
 export async function POST(request: NextRequest) {
   // Rate limiting: max 10 requests per minute per IP
@@ -190,6 +191,7 @@ export async function POST(request: NextRequest) {
     if (submitError) throw submitError
 
     await syncLeadFromAnswers(tenantId, leadId, mergedAnswers)
+    await markLeadAsAcquisition(supabaseAdmin, tenantId, leadId, 'form')
 
     // Post-submit routing for claim and service forms
     const formDept = inferDepartmentFromFormName(form.name)
@@ -203,6 +205,11 @@ export async function POST(request: NextRequest) {
       .maybeSingle()
 
     if (conversation?.id) {
+      await supabaseAdmin
+        .from('conversations')
+        .update({ intent: 'sales' })
+        .eq('id', conversation.id)
+
       const messages = (conversation.messages || []) as { role: string; content: string }[]
       const routingEval = await evaluateRouting({
         tenantId,

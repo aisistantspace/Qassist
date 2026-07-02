@@ -15,6 +15,11 @@ import type { Department, Priority } from '@/lib/customer-matching'
 import { resolveCustomerIdentity, formatCustomerContextForPrompt, syncLeadFromAnswers } from '@/lib/customer-identity'
 import { evaluateRouting, formatFormLinkMessage, formatDepartmentLinkMessage } from '@/lib/routing'
 import { dispatchEscalation } from '@/lib/escalation'
+import {
+  detectAcquisitionFromMessages,
+  detectAcquisitionIntentFromText,
+  markLeadAsAcquisition,
+} from '@/lib/lead-acquisition'
 import { inferDepartmentFromFormName } from '@/lib/insurance-form-templates'
 import { createFormSubmissionNotification } from '@/lib/notifications'
 import type { ChatRequest, ChatResponse, Message } from '@/lib/types'
@@ -608,6 +613,20 @@ export async function POST(request: NextRequest) {
     const department: Department = classifyDepartment(allMessages)
     const priority: Priority = classifyPriority(allMessages)
 
+    const hasAcquisitionIntent =
+      Boolean(formCompletedForRouting) ||
+      detectAcquisitionIntentFromText(messageText) ||
+      detectAcquisitionFromMessages(allMessages)
+
+    if (hasAcquisitionIntent && currentConversationId) {
+      markLeadAsAcquisition(supabaseAdmin, tenantId, identifiedLeadId, formCompletedForRouting ? 'form' : 'chat')
+        .catch((err) => console.error('Failed to mark acquisition lead:', err))
+      await supabaseAdmin
+        .from('conversations')
+        .update({ intent: 'sales' })
+        .eq('id', currentConversationId)
+    }
+
     const routingEval = await evaluateRouting({
       tenantId,
       message: messageText,
@@ -679,13 +698,18 @@ export async function POST(request: NextRequest) {
       })
       .catch(err => console.error('Metadata extraction failed:', err))
 
-    // Classify conversation intent (fire and forget)
+    // Classify conversation intent (fire and forget) — promote to sales lead when confident
     classifyIntent(conversationHistory)
-      .then(({ intent }) => {
-        if (intent) {
+      .then(async ({ intent, confidence }) => {
+        if (intent === 'sales' && confidence >= 0.55) {
+          await markLeadAsAcquisition(supabaseAdmin, tenantId, identifiedLeadId, 'chat')
+        }
+        if (intent && currentConversationId) {
+          const updateIntent =
+            intent === 'sales' || hasAcquisitionIntent ? 'sales' : intent
           return supabaseAdmin
             .from('conversations')
-            .update({ intent })
+            .update({ intent: updateIntent })
             .eq('id', currentConversationId)
         }
       })

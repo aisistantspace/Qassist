@@ -111,9 +111,9 @@ export async function classifyIntent(
     Analyze the following conversation between a visitor and an AI assistant.
     Classify the visitor's PRIMARY intent into exactly one of these categories:
 
-    sales - The visitor wants to buy, invest, book, get pricing, schedule a consultation, or explore purchasing a service/product.
-    service - The visitor needs help with an existing issue, has a complaint, wants technical support, or the AI could not adequately help them.
-    inquiry - The visitor is asking general questions, browsing for information, or seeking educational content without clear purchase or support intent.
+    sales - The visitor wants to buy, get a quote, register for, or acquire an insurance product or service (policy, coverage, kotisashon/offerte). Includes: new policy, quote request, registration, purchase intent, pricing for a product they want to buy.
+    service - The visitor needs help with an existing policy, claim, billing issue, or account — not acquiring something new.
+    inquiry - General information only (what is travel insurance, what services exist) with no clear intent to buy, quote, or register.
 
     Return ONLY a JSON object with these fields:
     - intent: one of "sales", "service", or "inquiry"
