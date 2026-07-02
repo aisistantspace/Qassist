@@ -9,6 +9,7 @@ import { getBrandingConfig } from '@/lib/branding'
 import { sendFormSubmissionEmail, sendFormNotificationEmail } from '@/lib/email'
 import { correctPapiamentu } from '@/lib/papiamentu'
 import { sanitizeForPrompt, checkRateLimit, getClientIP } from '@/lib/security'
+import { containsAbusiveLanguage, getAbusiveMessageTurnNote } from '@/lib/conversation-conduct'
 import { getRecentConversation, summarizeConversation, isResumable, classifyDepartment, classifyPriority } from '@/lib/customer-matching'
 import type { Department, Priority } from '@/lib/customer-matching'
 import { resolveCustomerIdentity, formatCustomerContextForPrompt, syncLeadFromAnswers } from '@/lib/customer-identity'
@@ -167,6 +168,10 @@ export async function POST(request: NextRequest) {
     let enrichedSystemPrompt = systemPrompt
     if (priorContextSummary) {
       enrichedSystemPrompt += `\n\n--- RETURNING CUSTOMER CONTEXT ---\nThis is a returning customer. ${priorContextSummary}\nUse this context to provide continuity, but do not repeat previous answers. Greet them as a returning visitor.`
+    }
+
+    if (messageText && containsAbusiveLanguage(messageText)) {
+      enrichedSystemPrompt += `\n\n${getAbusiveMessageTurnNote(effectiveLanguage)}`
     }
 
     // --- Mid-chat customer identification ---

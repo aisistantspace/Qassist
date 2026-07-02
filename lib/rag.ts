@@ -3,6 +3,7 @@ import { generateEmbedding, getAgentSettings } from './openai'
 import { getBrandingConfig } from './branding'
 import { getPapiamentuPromptGuide } from './papiamentu/prompt-guide'
 import { expandKbSearchQuery } from './papiamentu/kb-query-expand'
+import { getConductPromptBlock } from './conversation-conduct'
 import { buildRoutingPromptGuidance } from './routing'
 import { getRoutingConfig } from './routing-config'
 
@@ -744,6 +745,7 @@ export async function generateSystemPrompt(
 The knowledge base returned no matching content. Do NOT answer the factual question from memory. Tell the customer you do not have that specific information in your knowledge base right now, and suggest they speak with the team or leave their contact details.` : ''
 
   let finalPrompt = `${PROMPT_DEFENSE_INSTRUCTION}
+${getConductPromptBlock(language)}
 ${strictKbRules}
 ${noKbMatchBlock}
 ### YOUR PRIMARY IDENTITY

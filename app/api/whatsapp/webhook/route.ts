@@ -3,6 +3,7 @@ import OpenAI from 'openai'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { sendWhatsAppMessage, markWhatsAppMessageRead, formatWhatsAppNumber } from '@/lib/whatsapp'
 import { searchKnowledgeBaseWithFallback, buildContext, generateSystemPrompt, isCaseSpecific, detectLanguageFromText } from '@/lib/rag'
+import { containsAbusiveLanguage, getAbusiveMessageTurnNote } from '@/lib/conversation-conduct'
 import { createChatCompletion } from '@/lib/openai'
 import { updateLeadScore } from '@/lib/lead-scoring'
 import { sanitizeForPrompt, checkRateLimit } from '@/lib/security'
@@ -131,6 +132,10 @@ export async function POST(request: NextRequest) {
       kbEntryCount: relevantEntries.length,
       kbSourceLanguages: kbSearch.sourceLanguages,
     })
+    const enrichedSystemPrompt =
+      containsAbusiveLanguage(messageText)
+        ? `${systemPrompt}\n\n${getAbusiveMessageTurnNote(effectiveLanguage)}`
+        : systemPrompt
     const userMessage: Message = {
       role: 'user',
       content: messageText,
@@ -138,7 +143,7 @@ export async function POST(request: NextRequest) {
     }
 
     const openAIMessages = [
-      { role: 'system' as const, content: systemPrompt },
+      { role: 'system' as const, content: enrichedSystemPrompt },
       ...existingMessages.map(m => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
