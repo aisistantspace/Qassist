@@ -160,11 +160,31 @@ const PRODUCT_SEARCH_EXPANSION: Record<InsuranceProduct, string> = {
   home: 'home insurance woonverzekering Ideal Home property seguro di kas',
   life: 'life insurance levensverzekering education plan seguro di bida',
   claim: 'claim klaim schade melden damage report accident',
-  general: 'insurance policy coverage ENNIA',
+  general: 'ENNIA insurance products services verzekeringen particulieren travel reis health zorg home woon car auto life levensverzekering offerings',
+}
+
+export function detectServicesOverviewQuery(query: string): boolean {
+  if (!query?.trim()) return false
+  return (
+    /\bwelke\s+diensten\b/i.test(query) ||
+    /\bwat\s+bieden\b/i.test(query) ||
+    /\bwelke\s+verzekeringen\b/i.test(query) ||
+    /\bwhat\s+services\b/i.test(query) ||
+    /\bwhat\s+do\s+you\s+offer\b/i.test(query) ||
+    /\bwhich\s+insurance\b/i.test(query) ||
+    /\bqu[eé]\s+servicios\b/i.test(query) ||
+    /\bkiko\s+servisionan\b/i.test(query) ||
+    /\bkiko\s+seguro(nan)?\s+bo\s+tin\b/i.test(query) ||
+    /\bproduct(en)?\s+(bieden|aanbieden)\b/i.test(query) ||
+    /\binsurance\s+products\b/i.test(query) ||
+    /\balle\s+verzekeringen\b/i.test(query)
+  )
 }
 
 export function detectInsuranceProductIntent(query: string): InsuranceProduct | null {
   if (!query?.trim()) return null
+
+  if (detectServicesOverviewQuery(query)) return 'general'
 
   const scores: Record<InsuranceProduct, number> = {
     travel: 0,
@@ -290,7 +310,15 @@ export function filterKbEntriesByProductIntent<T extends KbEntryForProductFilter
 }
 
 export function buildProductFidelityPromptBlock(product: InsuranceProduct | null): string {
-  if (!product || product === 'general') return ''
+  if (!product) return ''
+
+  if (product === 'general') {
+    return `### SERVICES / PRODUCT OVERVIEW (REQUIRED)
+- The customer wants an **overview of services / insurance products**.
+- List the main product lines found in the knowledge base (travel/reis, home/woon, car/auto, health/zorg, life, etc.).
+- Do NOT say you lack information if any source mentions ENNIA products or verzekeringen.
+- Keep the list factual — only products explicitly mentioned in the sources.`
+  }
 
   const label = getProductLabel(product)
 
@@ -304,7 +332,10 @@ export function buildProductFidelityPromptBlock(product: InsuranceProduct | null
     home: `- The customer asked about **home insurance** only. Do not mix travel or health product details.`,
     life: `- The customer asked about **life insurance** only. Do not mix other product lines.`,
     claim: `- Focus on the **claims process**. Use claim-related sources; do not pivot to unrelated product marketing.`,
-    general: '',
+    general: `- The customer wants an **overview of services / insurance products**.
+- List the main product lines found in the knowledge base (travel, home, car, health, life, etc.).
+- Do NOT say you lack information if any source mentions ENNIA products or verzekeringen.
+- Keep the list factual — only products explicitly mentioned in the sources.`,
   }
 
   return `### PRODUCT SCOPE (HIGHEST PRIORITY — DO NOT MIX PRODUCTS)

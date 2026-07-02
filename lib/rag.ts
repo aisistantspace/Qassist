@@ -156,6 +156,12 @@ export function detectLanguageFromText(text: string): 'EN' | 'NL' | 'ES' | 'PA' 
     [/\bwanneer\b/i, 2],
     [/\bwaarom\b/i, 2],
     [/\bwelke\b/i, 2],
+    [/\bjullie\b/i, 3],
+    [/\bbieden\b/i, 3],
+    [/\bdiensten\b/i, 3],
+    [/\bverzekeringen\b/i, 3],
+    [/\baanbieden\b/i, 2],
+    [/\bparticulieren\b/i, 2],
     [/\bmijn\s/i, 2],
     [/\bnaam\b/i, 2],
     [/\bvraag\b/i, 2],
@@ -195,7 +201,8 @@ export function detectLanguageFromText(text: string): 'EN' | 'NL' | 'ES' | 'PA' 
 /**
  * Resolve the language for this turn.
  * When the user explicitly picked a flag (languageExplicit), honor that choice.
- * Otherwise auto-detect from message text.
+ * Curaçao (PA) flag: default Papiamentu, but reply in Dutch/English/Spanish if the
+ * customer clearly writes in that language — common on Curaçao.
  */
 export function resolveEffectiveLanguage(
   messageText: string,
@@ -205,20 +212,30 @@ export function resolveEffectiveLanguage(
     existingConversationLanguage?: 'EN' | 'NL' | 'ES' | 'PA'
   } = {}
 ): 'EN' | 'NL' | 'ES' | 'PA' {
-  if (options.languageExplicit) {
-    return requestedLanguage
-  }
   if (!messageText) {
+    if (options.languageExplicit) return requestedLanguage
     return options.existingConversationLanguage ?? requestedLanguage
   }
-  // Keep Papiamentu session when user already chose PA (demo: full PA conversation)
+
+  const detected = detectLanguageFromText(messageText)
+
+  if (options.languageExplicit) {
+    // Curaçao flag: respond in the language the user actually typed
+    if (requestedLanguage === 'PA' && detected !== 'PA') {
+      return detected
+    }
+    return requestedLanguage
+  }
+
   if (
     requestedLanguage === 'PA' ||
     options.existingConversationLanguage === 'PA'
   ) {
+    if (detected !== 'PA') return detected
     return 'PA'
   }
-  return detectLanguageFromText(messageText)
+
+  return detected
 }
 
 // Restore missing helper functions for API

@@ -6,6 +6,7 @@
 
 import {
   detectInsuranceProductIntent,
+  detectServicesOverviewQuery,
   getProductSearchExpansion,
   type InsuranceProduct,
 } from '../insurance-product-intent'
@@ -91,6 +92,18 @@ const CONTEXTUAL_EXPANSIONS: {
     pattern: /\bkiko\b/i,
     terms: 'what information',
   },
+  {
+    pattern: /\bdiensten\b/i,
+    terms: 'services verzekeringen insurance products ENNIA offerings particulieren',
+  },
+  {
+    pattern: /\bverzekeringen\b/i,
+    terms: 'insurance products ENNIA reis woon auto leven zorg',
+  },
+  {
+    pattern: /\bservicios\b/i,
+    terms: 'services insurance products seguros ENNIA',
+  },
 ]
 
 export function expandKbSearchQuery(query: string, responseLanguage?: string): string {
@@ -99,6 +112,8 @@ export function expandKbSearchQuery(query: string, responseLanguage?: string): s
 
   if (product) {
     parts.push(getProductSearchExpansion(product))
+  } else if (detectServicesOverviewQuery(query)) {
+    parts.push(getProductSearchExpansion('general'))
   }
 
   for (const { pattern, terms, products } of CONTEXTUAL_EXPANSIONS) {
