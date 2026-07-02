@@ -9,10 +9,13 @@ const PA_TERM_EXPANSIONS: { pattern: RegExp; terms: string }[] = [
   { pattern: /\breis(verzekering)?\b/i, terms: 'travel trip travel insurance reis single-trip' },
   { pattern: /\bpolisa|pòlisa\b/i, terms: 'policy insurance' },
   { pattern: /\bklaim\b/i, terms: 'claim insurance accident damage' },
-  { pattern: /\bviahe\b/i, terms: 'travel trip' },
   { pattern: /\bkotisashon\b/i, terms: 'quote price premium calculate' },
   { pattern: /\bprèis\b/i, terms: 'price premium quote' },
   { pattern: /\bdekking\b/i, terms: 'coverage insurance' },
+  { pattern: /\bkanselashon\b/i, terms: 'cancellation trip cancel annuleringsverzekering' },
+  { pattern: /\bdoorlopend|tur\s+aña\b/i, terms: 'multi-trip annual travel insurance doorlopende reisverzekering' },
+  { pattern: /\bmediko|salú\b/i, terms: 'medical health care insurance medimigra' },
+  { pattern: /\brepatriashon\b/i, terms: 'repatriation medical evacuation' },
   { pattern: /\bmi\s+ke\s+sa\b/i, terms: 'information about' },
   { pattern: /\bkiko\b/i, terms: 'what information' },
 ]
@@ -32,7 +35,7 @@ const UNIVERSAL_INSURANCE_PATTERNS: { pattern: RegExp; terms: string }[] = [
   { pattern: /\bhealth\b|care\b/i, terms: 'health medical care insurance' },
 ]
 
-export function expandKbSearchQuery(query: string, _responseLanguage?: string): string {
+export function expandKbSearchQuery(query: string, responseLanguage?: string): string {
   const parts: string[] = [query]
 
   for (const { pattern, terms } of PA_TERM_EXPANSIONS) {
@@ -40,6 +43,10 @@ export function expandKbSearchQuery(query: string, _responseLanguage?: string): 
   }
   for (const { pattern, terms } of UNIVERSAL_INSURANCE_PATTERNS) {
     if (pattern.test(query)) parts.push(terms)
+  }
+
+  if (responseLanguage === 'PA' && parts.length === 1) {
+    parts.push('insurance travel seguro biahe policy coverage')
   }
 
   return parts.join(' ')

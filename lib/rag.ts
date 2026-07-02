@@ -204,6 +204,13 @@ export function resolveEffectiveLanguage(
   if (!messageText) {
     return options.existingConversationLanguage ?? requestedLanguage
   }
+  // Keep Papiamentu session when user already chose PA (demo: full PA conversation)
+  if (
+    requestedLanguage === 'PA' ||
+    options.existingConversationLanguage === 'PA'
+  ) {
+    return 'PA'
+  }
   return detectLanguageFromText(messageText)
 }
 

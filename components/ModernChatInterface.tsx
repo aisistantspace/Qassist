@@ -331,7 +331,7 @@ export default function ModernChatInterface({
         }
         setMessages(prev => [...prev, assistantMessage])
         setConversationId(data.conversationId)
-        if (data.languageUsed) {
+        if (data.languageUsed && !languageExplicit) {
           setSelectedLanguage(data.languageUsed)
         }
       }

@@ -14,6 +14,43 @@ let corePhrases: Record<string, unknown> | null = null
 let translations: Record<string, { nl: string; class: string; [key: string]: unknown }> | null = null
 let canonicalPhrases: string[] | null = null
 let spanishToPa: Record<string, string> | null = null
+let insuranceVocab: {
+  words?: string[]
+  spanish_to_pa?: Record<string, string>
+  phrase_fixes?: { pattern: string; replacement: string }[]
+  demo_phrases?: string[]
+} | null = null
+
+function loadInsuranceVocabFile(): {
+  words?: string[]
+  spanish_to_pa?: Record<string, string>
+  phrase_fixes?: { pattern: string; replacement: string }[]
+  demo_phrases?: string[]
+  kb_glossary?: { title: string; content: string; tags: string[] }[]
+} {
+  if (insuranceVocab) return insuranceVocab
+  try {
+    const filePath = path.join(dataDir(), 'insurance-vocabulary.json')
+    insuranceVocab = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  } catch {
+    insuranceVocab = {}
+  }
+  return insuranceVocab ?? {}
+}
+
+/** Extra accepted words for insurance demo (merged into spell-check). */
+export function getInsuranceWordSet(): Set<string> {
+  const data = loadInsuranceVocabFile()
+  return new Set((data.words || []).map((w) => w.toLowerCase()))
+}
+
+export function getInsurancePhraseFixes(): { pattern: string; replacement: string }[] {
+  return loadInsuranceVocabFile().phrase_fixes || []
+}
+
+export function getInsuranceDemoPhrases(): string[] {
+  return loadInsuranceVocabFile().demo_phrases || []
+}
 
 function dataDir(): string {
   return path.join(process.cwd(), 'lib', 'papiamentu', 'data')
@@ -23,6 +60,9 @@ export function getWordSet(): Set<string> {
   if (wordSet) return wordSet
   const arr = getWordArray()
   wordSet = new Set(arr.map((w) => w.toLowerCase()))
+  for (const w of getInsuranceWordSet()) {
+    wordSet.add(w)
+  }
   return wordSet
 }
 
@@ -88,6 +128,12 @@ export function getSpanishToPaMap(): Record<string, string> {
   } catch {
     spanishToPa = {}
   }
+  const insuranceMap = loadInsuranceVocabFile().spanish_to_pa || {}
+  for (const [k, v] of Object.entries(insuranceMap)) {
+    if (typeof v === 'string') {
+      spanishToPa![k.toLowerCase()] = v
+    }
+  }
   return spanishToPa
 }
 
@@ -146,6 +192,11 @@ export function getCanonicalPhrases(): string[] {
     }
   } catch {
     // palabricks-phrases.json is optional
+  }
+
+  // Insurance demo phrases
+  for (const phrase of getInsuranceDemoPhrases()) {
+    if (phrase.length > 1) phrases.push(phrase)
   }
 
   canonicalPhrases = phrases

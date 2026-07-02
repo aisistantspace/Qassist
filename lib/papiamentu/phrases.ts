@@ -12,7 +12,7 @@
  *   - Contraction patterns: normalize apostrophe usage
  */
 
-import { getCanonicalPhrases, getSpanishToPaMap } from './load-data'
+import { getCanonicalPhrases, getSpanishToPaMap, getInsurancePhraseFixes } from './load-data'
 
 export interface PhraseCorrection {
   from: string
@@ -220,6 +220,23 @@ const VALID_CONTRACTIONS = new Set([
 export function correctPhrases(text: string): PhraseCorrectionResult {
   const corrections: PhraseCorrection[] = []
   let result = text
+
+  // 0. Insurance demo phrase fixes (Spanish bleed → PA)
+  for (const { pattern, replacement } of getInsurancePhraseFixes()) {
+    try {
+      const regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')
+      const match = result.match(regex)
+      if (match) {
+        const original = match[0]
+        result = result.replace(regex, replacement)
+        if (original.toLowerCase() !== replacement.toLowerCase()) {
+          corrections.push({ from: original, to: replacement })
+        }
+      }
+    } catch {
+      /* skip invalid pattern */
+    }
+  }
 
   // 1. Apply greeting/phrase pattern fixes (Spanish → Papiamentu)
   for (const [pattern, replacement] of GREETING_FIXES) {

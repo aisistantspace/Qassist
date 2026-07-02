@@ -197,7 +197,7 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
       setMessages(prev => [...prev, assistantMessage])
       setConversationId(data.conversationId)
       setTurnCount(data.turnCount)
-      if (data.languageUsed) setLanguage(data.languageUsed)
+      if (data.languageUsed && !languageExplicit) setLanguage(data.languageUsed)
       
       if (data.shouldShowBooking) {
         setShowBooking(true)

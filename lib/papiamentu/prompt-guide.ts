@@ -7,7 +7,8 @@
  * correction layer even runs.
  */
 
-import { getCanonicalPhrases, getTranslations } from './load-data'
+import { getCanonicalPhrases, getTranslations, getInsuranceDemoPhrases } from './load-data'
+import { getPapiamentuInsurancePromptSection } from './insurance-prompt'
 
 let cachedGuide: string | null = null
 
@@ -26,7 +27,7 @@ export function getPapiamentuPromptGuide(): string {
   }
 
   // Key phrases
-  const keyPhrases = phrases.slice(0, 15)
+  const keyPhrases = [...phrases.slice(0, 10), ...getInsuranceDemoPhrases().slice(0, 8)]
 
   cachedGuide = `
 ### PAPIAMENTU LANGUAGE GUIDE — Buki di Oro (Official Curaçao Orthography 2009)
@@ -116,6 +117,8 @@ You are addressing the CUSTOMER (bo = you). When you (the assistant) offer help 
 - To know = "sa". NEVER use "saba"
 - Team (noun) = "ekipo" or "team" (loanword). Spanish "equipo" → "ekipo". NEVER "ekipá" — that is the verb "to equip"
 - Contact the team = "tuma kontakto ku e ekipo" or "tuma kontakto ku e team". NOT "kontaktá e ekipá"
+
+${getPapiamentuInsurancePromptSection()}
 
 **COMMON EXPRESSIONS:**
 ${keyPhrases.slice(0, 10).map(p => `- ${p}`).join('\n')}

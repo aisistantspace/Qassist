@@ -24,6 +24,8 @@ export default function PapiamentuPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [filterType, setFilterType] = useState<string>('all')
+  const [seeding, setSeeding] = useState(false)
+  const [seedMessage, setSeedMessage] = useState('')
 
   useEffect(() => {
     fetchCorrections()
@@ -45,6 +47,25 @@ export default function PapiamentuPage() {
       setError('Failed to connect to API')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function seedPaGlossary() {
+    setSeeding(true)
+    setSeedMessage('')
+    try {
+      const res = await fetch('/api/papiamentu/seed-glossary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ replace: true }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Seed failed')
+      setSeedMessage(data.message || `Seeded ${data.created} PA glossary entries`)
+    } catch (err: unknown) {
+      setSeedMessage(err instanceof Error ? err.message : 'Seed failed')
+    } finally {
+      setSeeding(false)
     }
   }
 
@@ -102,6 +123,26 @@ export default function PapiamentuPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Demo: PA insurance glossary for RAG */}
+      <div className="bg-white border border-amber-200 rounded-xl p-6 mb-6 shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Insurance demo — Papiamentu knowledge base</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          Seed {17} Papiamentu insurance glossary entries (seguro di biahe, klaim, pòlisa, etc.) into the KB.
+          Combined with ENNIA crawl data, the bot can answer in Papiamentu using facts from any language.
+        </p>
+        <button
+          type="button"
+          onClick={seedPaGlossary}
+          disabled={seeding}
+          className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 text-sm font-medium"
+        >
+          {seeding ? 'Seeding…' : 'Seed PA insurance glossary'}
+        </button>
+        {seedMessage && (
+          <p className="mt-3 text-sm text-gray-700">{seedMessage}</p>
+        )}
       </div>
 
       {/* Stats */}

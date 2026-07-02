@@ -1,0 +1,199 @@
+{
+  "metadata": {
+    "purpose": "Insurance demo vocabulary for Papiamentu (Curaçao orthography)",
+    "sources": ["Buki di Oro", "common Caribbean insurance usage", "ENNIA product terminology"]
+  },
+  "words": [
+    "klaim", "pòlisa", "polisa", "pòlisanan", "polisanan",
+    "seguro", "seguronan", "segurá", "segurabo",
+    "biahe", "biahenan", "biahero",
+    "kotisashon", "kotisashonnan",
+    "reklamo", "reklamashon", "reklamá",
+    "kobertura", "koberturanan",
+    "premio", "premionan", "prèis",
+    "aksidente", "aksidentenan",
+    "dekking", "franquicia",
+    "ekipo", "ekiponan",
+    "prima", "primanan",
+    "benefisiario", "benefisiarionan",
+    "siniestro", "siniestronan",
+    "kanselashon", "kanselá",
+    "doorlopend", "anual",
+    "repatriashon", "mediko", "medikamentu",
+    "bagahe", "dokumento", "dokumentonan",
+    "wintersport", "watersport", "golfsport",
+    "gezin", "famia", "muchanan",
+    "portal", "app", "online"
+  ],
+  "spanish_to_pa": {
+    "viaje": "biahe",
+    "viajes": "biahenan",
+    "poliza": "pòlisa",
+    "póliza": "pòlisa",
+    "polizas": "pòlisanan",
+    "reclamo": "reklamo",
+    "reclamación": "reklamashon",
+    "reclamacion": "reklamashon",
+    "accidente": "aksidente",
+    "accidentes": "aksidentenan",
+    "cobertura": "kobertura",
+    "prima": "premio",
+    "siniestro": "siniestro",
+    "equipo": "ekipo",
+    "aseguradora": "aseguradó",
+    "viajero": "biahero",
+    "hogar": "kas",
+    "vehículo": "outo",
+    "vehiculo": "outo",
+    "automóvil": "outo",
+    "automovil": "outo",
+    "salud": "salú",
+    "vida": "bida",
+    "emergencia": "emergensia",
+    "información": "informashon",
+    "informacion": "informashon",
+    "cancelación": "kanselashon",
+    "cancelacion": "kanselashon",
+    "anulación": "kanselashon",
+    "anulacion": "kanselashon",
+    "equipaje": "bagahe",
+    "documento": "dokumento",
+    "documentos": "dokumentonan",
+    "familia": "famia",
+    "niños": "muchanan",
+    "repatriación": "repatriashon",
+    "repatriacion": "repatriashon",
+    "contexto": "konteksto"
+  },
+  "phrase_fixes": [
+    { "pattern": "seguro de viaje", "replacement": "seguro di biahe" },
+    { "pattern": "seguro de biahe", "replacement": "seguro di biahe" },
+    { "pattern": "número de póliza", "replacement": "nòmber di pòlisa" },
+    { "pattern": "numero de poliza", "replacement": "nòmber di pòlisa" },
+    { "pattern": "nueva póliza", "replacement": "pòlisa nobo" },
+    { "pattern": "nueva poliza", "replacement": "pòlisa nobo" },
+    { "pattern": "hacer un reclamo", "replacement": "hasi un reklamo" },
+    { "pattern": "presentar un reclamo", "replacement": "entregá un reklamo" },
+    { "pattern": "no tengo información", "replacement": "mi no tin informashon" },
+    { "pattern": "no tengo informacion", "replacement": "mi no tin informashon" },
+    { "pattern": "en mi contexto", "replacement": "den mi base di konosementu" },
+    { "pattern": "na mi konteksto", "replacement": "den mi base di konosementu" },
+    { "pattern": "puedo contactar", "replacement": "mi por tuma kontakto" },
+    { "pattern": "puedo ayudarte", "replacement": "mi por yudabo" },
+    { "pattern": "precio del seguro", "replacement": "prèis di e seguro" },
+    { "pattern": "cotización", "replacement": "kotisashon" },
+    { "pattern": "cotizacion", "replacement": "kotisashon" }
+  ],
+  "demo_phrases": [
+    "Mi ke sa di seguro di biahe",
+    "Kiko ta e seguro di biahe?",
+    "Mi ke un kotisashon pa seguro di kas",
+    "Mi ke hasi un klaim",
+    "Mi tin un aksidente",
+    "Kua ta mi nòmber di pòlisa?",
+    "Mi ke kumprá un seguro nobo",
+    "Kiko ta e kobertura?",
+    "Kiko ta e prèis?",
+    "Mi ke papia ku e ekipo",
+    "Bo por yudabo?",
+    "Mi no tin informashon spesífiko tokante esaki den mi base di konosementu",
+    "Mi por tuma kontakto ku e ekipo pa bo",
+    "Seguro di outo",
+    "Seguro di bida",
+    "Seguro di salú",
+    "Seguro di kas",
+    "Reisverzekering ta seguro di biahe",
+    "Un solo biahe",
+    "Mi ke seguro pa tur aña",
+    "Seguro di kanselashon di biahe",
+    "Doorlopende seguro di biahe",
+    "Mucha bou di 4 aña ta gratis"
+  ],
+  "kb_glossary": [
+    {
+      "title": "Seguro di biahe — introdukshon",
+      "content": "Seguro di biahe (travel insurance) ta un pòlisa ku ta kubre bo durante un biahe. E por inkluí mediko durante biahe, bagahe perdí, i kanselashon. Pa un solo biahe (single-trip), bo ta kumprá e seguro pa e durashon di e biahe spesífiko. Bo por tuma un kotisashon (quote) pa sa e prèis i kobertura.",
+      "tags": ["seguro", "biahe", "travel", "insurance", "kotisashon"]
+    },
+    {
+      "title": "Seguro di biahe — kobertura komun",
+      "content": "Kobertura komun di seguro di biahe: gasto médiko durante biahe, emergensia, bagahe, i a veces kanselashon di biahe. Famia: mucha bou di 4 aña hopi biaha ta gratis. Lesa e kondishonnan spesífiko di bo pòlisa pa sa esaktamente kiko ta kubre.",
+      "tags": ["seguro", "biahe", "kobertura", "famia"]
+    },
+    {
+      "title": "Kiko ta un klaim?",
+      "content": "Un klaim (claim) ta cuando bo ta informá e kompania di seguro tokante un aksidente, daño, of pérdida ku ta kubi bou di bo pòlisa. Bo mester duna detaye, fecha, i dokumento si ta nesesario. E ekipo di klaim por yudabo ku e proseso.",
+      "tags": ["klaim", "claim", "reklamo", "aksidente"]
+    },
+    {
+      "title": "Kotisashon i prèis",
+      "content": "Un kotisashon (quote) ta un kalkulashon di e prèis (premio) di un seguro promé ku bo kumprá. E prèis ta dependé di tipo di seguro, durashon, edat, i kobertura. Bo por pidi un kotisashon online of via e ekipo di benta.",
+      "tags": ["kotisashon", "prèis", "premio", "quote"]
+    },
+    {
+      "title": "Pòlisa i nòmber di pòlisa",
+      "content": "Un pòlisa (policy) ta e kontrato entre bo i e aseguradó. Bo nòmber di pòlisa (policy number) ta úniko i bo mester tin'é ora bo hasi un klaim of kambia algo. NO konfundi pòlisa (policy) ku polis (police).",
+      "tags": ["pòlisa", "policy", "nòmber"]
+    },
+    {
+      "title": "Seguro di kas",
+      "content": "Seguro di kas (home insurance) ta kubre bo kas i a veces inboedel kontra daño, robo, of desastre. E ta diferente di seguro di biahe. Bo por pidi informashon tokante Ideal Home of otro produktonan di kas.",
+      "tags": ["kas", "home", "seguro", "inboedel"]
+    },
+    {
+      "title": "Seguro di outo",
+      "content": "Seguro di outo (car insurance) ta obligatorio i ta kubre daño na outo, tersero, of lesa dependiendo di e pòlisa. Bonus malo (no-claim) por baha e prèis si bo no tin klaim.",
+      "tags": ["outo", "car", "auto", "seguro"]
+    },
+    {
+      "title": "Seguro di bida",
+      "content": "Seguro di bida (life insurance) ta proveé protekshon finansiero pa famia si algo ta pasá. Edukashon plan i otro produktonan ta relacioná ku planifikashon di futuro.",
+      "tags": ["bida", "life", "seguro"]
+    },
+    {
+      "title": "Seguro di salú",
+      "content": "Seguro di salú (health insurance) ta kubre gasto médiko. Medimigra i otro plan ta ofresé kobertura di salú ku servisio 24/7.",
+      "tags": ["salú", "health", "mediko", "seguro"]
+    },
+    {
+      "title": "Kiko mi mester hasi despues di un aksidente?",
+      "content": "Despues di un aksidente: 1) Asegurá bo ta sigur, 2) Tuma kontakto ku polis si ta nesesario, 3) Informá nos via klaim ku fecha, lugá, i descripción, 4) Tin bo nòmber di pòlisa i email listo. Nos ekipo lo yudabo.",
+      "tags": ["aksidente", "klaim", "emergensia"]
+    },
+    {
+      "title": "Papiamentu — termino di seguro",
+      "content": "Terminonan importante: seguro = insurance; biahe = travel; klaim = claim; pòlisa = policy; kotisashon = quote; prèis/premio = price/premium; kobertura = coverage; reklamashon = claim filing; aseguradó = insurer; benefisiario = beneficiary.",
+      "tags": ["papiamentu", "termino", "glosario"]
+    },
+    {
+      "title": "Kon hasi un klaim online",
+      "content": "Bo por entregá un klaim online via e portal di klaim. Bo mester login of duna bo nòmber di pòlisa i email. Si bo no sa kómo, nos ekipo por tuma kontakto ku bo i guia bo paso pa paso.",
+      "tags": ["klaim", "online", "portal"]
+    },
+    {
+      "title": "Seguro di biahe — un solo biahe (single-trip)",
+      "content": "Seguro di un solo biahe ta kubre bo pa un biahe spesífiko. ENNIA ta ofresé kobertura mundial pa famia: mucha bou di 4 aña hopi biaha ta gratis. Bo por añadí opshon extra manera wintersport, watersport of golfsport. Bo por tuma un kotisashon online promé ku bo biaha.",
+      "tags": ["biahe", "single-trip", "ennia", "famia", "kotisashon"]
+    },
+    {
+      "title": "Seguro di biahe — doorlopend (multi-trip / tur aña)",
+      "content": "Seguro doorlopend (multi-trip / annual travel insurance) ta kubre bo tur aña, ideal si bo ta biaha mas di dos biaha pa aña. Gezinsleden por ta meiverzekerd i biaha separá. Kobertura standard inkluí gasto médiko, repatriashon, i pèrdida di dokumento. Premio ta kuminsá bou di f 130 pa aña.",
+      "tags": ["doorlopend", "multi-trip", "annual", "ennia", "famia"]
+    },
+    {
+      "title": "Seguro di kanselashon di biahe",
+      "content": "Seguro di kanselashon (trip cancellation insurance) ta protehá bo kontra gasto inesperá si bo mester kanselá un biahe. E ta mundial i por kubre tur biahenan. Bo por añadí opshon promé i despues di salida dependiendo di e pòlisa.",
+      "tags": ["kanselashon", "cancellation", "biahe", "ennia"]
+    },
+    {
+      "title": "ENNIA — produktonan i servisio",
+      "content": "ENNIA Feel Secure ta e aseguradó na Kòrsou. Produktonan inkluí: seguro di biahe (un solo biahe, doorlopend, kanselashon), seguro di kas (Ideal Home), seguro di outo, seguro di bida, i seguro di salú (Medimigra). Bo por tuma kotisashon online, hasi klaim via portal, of tuma kontakto ku e ekipo via chat, telefon, email, of kantor.",
+      "tags": ["ennia", "seguro", "servisio", "kotisashon", "klaim"]
+    },
+    {
+      "title": "Schade melden / informá un daño",
+      "content": "Pa informá schade (daño) of hasi un klaim: duna fecha, lugá, descripción, i bo nòmber di pòlisa. E proseso ta rápido i online posibel. Nos ekipo ta yudabo pa un flujo suave. Tin bo email i dokumento listo si ta nesesario.",
+      "tags": ["schade", "klaim", "daño", "reklamo"]
+    }
+  ]
+}
