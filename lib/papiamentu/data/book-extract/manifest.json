@@ -1,0 +1,3709 @@
+{
+  "started_at": "2026-07-08T19:32:39.217Z",
+  "updated_at": "2026-07-08T22:30:05.044Z",
+  "total_images": 370,
+  "processed": 370,
+  "pages": [
+    {
+      "index": 2,
+      "source_file": "IMG20260707201851.jpg",
+      "output_file": "0002_IMG20260707201851.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 4,
+      "source_file": "IMG20260707201911.jpg",
+      "output_file": "0004_IMG20260707201911.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 8,
+      "phrase_count": 4
+    },
+    {
+      "index": 5,
+      "source_file": "IMG20260707201918.jpg",
+      "output_file": "0005_IMG20260707201918.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 6,
+      "source_file": "IMG20260707201926.jpg",
+      "output_file": "0006_IMG20260707201926.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 7,
+      "source_file": "IMG20260707201933.jpg",
+      "output_file": "0007_IMG20260707201933.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 8,
+      "source_file": "IMG20260707201938.jpg",
+      "output_file": "0008_IMG20260707201938.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 9,
+      "source_file": "IMG20260707201943.jpg",
+      "output_file": "0009_IMG20260707201943.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 10,
+      "source_file": "IMG20260707201947.jpg",
+      "output_file": "0010_IMG20260707201947.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 11,
+      "source_file": "IMG20260707201955.jpg",
+      "output_file": "0011_IMG20260707201955.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 13,
+      "source_file": "IMG20260707202003.jpg",
+      "output_file": "0013_IMG20260707202003.json",
+      "page_type": "vocabulary_list",
+      "grade": "6",
+      "section": "vocabulary",
+      "word_count": 7,
+      "phrase_count": 8
+    },
+    {
+      "index": 14,
+      "source_file": "IMG20260707202007.jpg",
+      "output_file": "0014_IMG20260707202007.json",
+      "page_type": "other",
+      "grade": "6",
+      "section": null,
+      "word_count": 10,
+      "phrase_count": 6
+    },
+    {
+      "index": 15,
+      "source_file": "IMG20260707202011.jpg",
+      "output_file": "0015_IMG20260707202011.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "null",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 16,
+      "source_file": "IMG20260707202019.jpg",
+      "output_file": "0016_IMG20260707202019.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 1,
+      "source_file": "IMG20260707201836.jpg",
+      "output_file": "0001_IMG20260707201836.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 3,
+      "source_file": "IMG20260707201900.jpg",
+      "output_file": "0003_IMG20260707201900.json",
+      "page_type": "vocabulary_list",
+      "grade": "6",
+      "section": "vocabulary",
+      "word_count": 17,
+      "phrase_count": 5
+    },
+    {
+      "index": 12,
+      "source_file": "IMG20260707201959.jpg",
+      "output_file": "0012_IMG20260707201959.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 17,
+      "source_file": "IMG20260707202032.jpg",
+      "output_file": "0017_IMG20260707202032.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 18,
+      "source_file": "IMG20260707202036.jpg",
+      "output_file": "0018_IMG20260707202036.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 19,
+      "source_file": "IMG20260707202039.jpg",
+      "output_file": "0019_IMG20260707202039.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 20,
+      "source_file": "IMG20260707202043.jpg",
+      "output_file": "0020_IMG20260707202043.json",
+      "page_type": "other",
+      "grade": "6",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 21,
+      "source_file": "IMG20260707202046.jpg",
+      "output_file": "0021_IMG20260707202046.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 22,
+      "source_file": "IMG20260707202048.jpg",
+      "output_file": "0022_IMG20260707202048.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 23,
+      "source_file": "IMG20260707202050.jpg",
+      "output_file": "0023_IMG20260707202050.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 24,
+      "source_file": "IMG20260707202054.jpg",
+      "output_file": "0024_IMG20260707202054.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 25,
+      "source_file": "IMG20260707202057.jpg",
+      "output_file": "0025_IMG20260707202057.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 14,
+      "phrase_count": 0
+    },
+    {
+      "index": 26,
+      "source_file": "IMG20260707202100.jpg",
+      "output_file": "0026_IMG20260707202100.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 27,
+      "source_file": "IMG20260707202102.jpg",
+      "output_file": "0027_IMG20260707202102.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 28,
+      "source_file": "IMG20260707202105.jpg",
+      "output_file": "0028_IMG20260707202105.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 29,
+      "source_file": "IMG20260707202126.jpg",
+      "output_file": "0029_IMG20260707202126.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 9
+    },
+    {
+      "index": 30,
+      "source_file": "IMG20260707202148.jpg",
+      "output_file": "0030_IMG20260707202148.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 18,
+      "phrase_count": 5
+    },
+    {
+      "index": 31,
+      "source_file": "IMG20260707202150.jpg",
+      "output_file": "0031_IMG20260707202150.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 18,
+      "phrase_count": 13
+    },
+    {
+      "index": 32,
+      "source_file": "IMG20260707202154.jpg",
+      "output_file": "0032_IMG20260707202154.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 33,
+      "source_file": "IMG20260707202200.jpg",
+      "output_file": "0033_IMG20260707202200.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 13
+    },
+    {
+      "index": 34,
+      "source_file": "IMG20260707202204.jpg",
+      "output_file": "0034_IMG20260707202204.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 35,
+      "source_file": "IMG20260707202208.jpg",
+      "output_file": "0035_IMG20260707202208.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 36,
+      "source_file": "IMG20260707202211.jpg",
+      "output_file": "0036_IMG20260707202211.json",
+      "page_type": "vocabulary_list|reading|conversation|grammar|exercise|comprehension|cover|index|other",
+      "grade": "3",
+      "section": "Skucha i papia|Mi por lesa|Bo a komprendé|vocabulary|Regla di kòmbersashon|null",
+      "word_count": 17,
+      "phrase_count": 8
+    },
+    {
+      "index": 37,
+      "source_file": "IMG20260707202214.jpg",
+      "output_file": "0037_IMG20260707202214.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 38,
+      "source_file": "IMG20260707202217.jpg",
+      "output_file": "0038_IMG20260707202217.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 9
+    },
+    {
+      "index": 39,
+      "source_file": "IMG20260707202220.jpg",
+      "output_file": "0039_IMG20260707202220.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 40,
+      "source_file": "IMG20260707202223.jpg",
+      "output_file": "0040_IMG20260707202223.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 41,
+      "source_file": "IMG20260707202227.jpg",
+      "output_file": "0041_IMG20260707202227.json",
+      "page_type": "exercise",
+      "grade": "3",
+      "section": "other",
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 42,
+      "source_file": "IMG20260707202237.jpg",
+      "output_file": "0042_IMG20260707202237.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 6
+    },
+    {
+      "index": 43,
+      "source_file": "IMG20260707202239.jpg",
+      "output_file": "0043_IMG20260707202239.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 12
+    },
+    {
+      "index": 44,
+      "source_file": "IMG20260707202242.jpg",
+      "output_file": "0044_IMG20260707202242.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 45,
+      "source_file": "IMG20260707202245.jpg",
+      "output_file": "0045_IMG20260707202245.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 5,
+      "phrase_count": 5
+    },
+    {
+      "index": 46,
+      "source_file": "IMG20260707202247.jpg",
+      "output_file": "0046_IMG20260707202247.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 47,
+      "source_file": "IMG20260707202250.jpg",
+      "output_file": "0047_IMG20260707202250.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 48,
+      "source_file": "IMG20260707202337.jpg",
+      "output_file": "0048_IMG20260707202337.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 49,
+      "source_file": "IMG20260707202341.jpg",
+      "output_file": "0049_IMG20260707202341.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 50,
+      "source_file": "IMG20260707202345.jpg",
+      "output_file": "0050_IMG20260707202345.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 5,
+      "phrase_count": 5
+    },
+    {
+      "index": 51,
+      "source_file": "IMG20260707202348.jpg",
+      "output_file": "0051_IMG20260707202348.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "other",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 52,
+      "source_file": "IMG20260707202350.jpg",
+      "output_file": "0052_IMG20260707202350.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 53,
+      "source_file": "IMG20260707202354.jpg",
+      "output_file": "0053_IMG20260707202354.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 54,
+      "source_file": "IMG20260707202357.jpg",
+      "output_file": "0054_IMG20260707202357.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 55,
+      "source_file": "IMG20260707202359.jpg",
+      "output_file": "0055_IMG20260707202359.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 6
+    },
+    {
+      "index": 56,
+      "source_file": "IMG20260707202402.jpg",
+      "output_file": "0056_IMG20260707202402.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 2,
+      "phrase_count": 4
+    },
+    {
+      "index": 57,
+      "source_file": "IMG20260707202405.jpg",
+      "output_file": "0057_IMG20260707202405.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 58,
+      "source_file": "IMG20260707202407.jpg",
+      "output_file": "0058_IMG20260707202407.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 59,
+      "source_file": "IMG20260707202410.jpg",
+      "output_file": "0059_IMG20260707202410.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 60,
+      "source_file": "IMG20260707202412.jpg",
+      "output_file": "0060_IMG20260707202412.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 7,
+      "phrase_count": 4
+    },
+    {
+      "index": 61,
+      "source_file": "IMG20260707202416.jpg",
+      "output_file": "0061_IMG20260707202416.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 62,
+      "source_file": "IMG20260707202419.jpg",
+      "output_file": "0062_IMG20260707202419.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 63,
+      "source_file": "IMG20260707202423.jpg",
+      "output_file": "0063_IMG20260707202423.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Regla di kòmbersashon",
+      "word_count": 0,
+      "phrase_count": 6
+    },
+    {
+      "index": 64,
+      "source_file": "IMG20260707202432.jpg",
+      "output_file": "0064_IMG20260707202432.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 65,
+      "source_file": "IMG20260707202444.jpg",
+      "output_file": "0065_IMG20260707202444.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 66,
+      "source_file": "IMG20260707202448.jpg",
+      "output_file": "0066_IMG20260707202448.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 20,
+      "phrase_count": 5
+    },
+    {
+      "index": 67,
+      "source_file": "IMG20260707202453.jpg",
+      "output_file": "0067_IMG20260707202453.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 68,
+      "source_file": "IMG20260707202458.jpg",
+      "output_file": "0068_IMG20260707202458.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 69,
+      "source_file": "IMG20260707202502.jpg",
+      "output_file": "0069_IMG20260707202502.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 70,
+      "source_file": "IMG20260707202506.jpg",
+      "output_file": "0070_IMG20260707202506.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 71,
+      "source_file": "IMG20260707202510.jpg",
+      "output_file": "0071_IMG20260707202510.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 72,
+      "source_file": "IMG20260707202515.jpg",
+      "output_file": "0072_IMG20260707202515.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 7,
+      "phrase_count": 4
+    },
+    {
+      "index": 73,
+      "source_file": "IMG20260707202519.jpg",
+      "output_file": "0073_IMG20260707202519.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 74,
+      "source_file": "IMG20260707202523.jpg",
+      "output_file": "0074_IMG20260707202523.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 75,
+      "source_file": "IMG20260707202527.jpg",
+      "output_file": "0075_IMG20260707202527.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 76,
+      "source_file": "IMG20260707202533.jpg",
+      "output_file": "0076_IMG20260707202533.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 77,
+      "source_file": "IMG20260707202539.jpg",
+      "output_file": "0077_IMG20260707202539.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 7,
+      "phrase_count": 8
+    },
+    {
+      "index": 78,
+      "source_file": "IMG20260707202542.jpg",
+      "output_file": "0078_IMG20260707202542.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 79,
+      "source_file": "IMG20260707202548.jpg",
+      "output_file": "0079_IMG20260707202548.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 80,
+      "source_file": "IMG20260707202552.jpg",
+      "output_file": "0080_IMG20260707202552.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 81,
+      "source_file": "IMG20260707202555.jpg",
+      "output_file": "0081_IMG20260707202555.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 82,
+      "source_file": "IMG20260707202558.jpg",
+      "output_file": "0082_IMG20260707202558.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 3,
+      "phrase_count": 5
+    },
+    {
+      "index": 83,
+      "source_file": "IMG20260707202603.jpg",
+      "output_file": "0083_IMG20260707202603.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 84,
+      "source_file": "IMG20260707202622.jpg",
+      "output_file": "0084_IMG20260707202622.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 85,
+      "source_file": "IMG20260707202626.jpg",
+      "output_file": "0085_IMG20260707202626.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 86,
+      "source_file": "IMG20260707202634.jpg",
+      "output_file": "0086_IMG20260707202634.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 87,
+      "source_file": "IMG20260707202637.jpg",
+      "output_file": "0087_IMG20260707202637.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 88,
+      "source_file": "IMG20260707202643.jpg",
+      "output_file": "0088_IMG20260707202643.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 89,
+      "source_file": "IMG20260707202648.jpg",
+      "output_file": "0089_IMG20260707202648.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 90,
+      "source_file": "IMG20260707202652.jpg",
+      "output_file": "0090_IMG20260707202652.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 91,
+      "source_file": "IMG20260707202700.jpg",
+      "output_file": "0091_IMG20260707202700.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 92,
+      "source_file": "IMG20260707202706.jpg",
+      "output_file": "0092_IMG20260707202706.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 10,
+      "phrase_count": 4
+    },
+    {
+      "index": 93,
+      "source_file": "IMG20260707202715.jpg",
+      "output_file": "0093_IMG20260707202715.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 94,
+      "source_file": "IMG20260707202722.jpg",
+      "output_file": "0094_IMG20260707202722.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 95,
+      "source_file": "IMG20260707202728.jpg",
+      "output_file": "0095_IMG20260707202728.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 96,
+      "source_file": "IMG20260707203559.jpg",
+      "output_file": "0096_IMG20260707203559.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 97,
+      "source_file": "IMG20260707203604.jpg",
+      "output_file": "0097_IMG20260707203604.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 98,
+      "source_file": "IMG20260707203612.jpg",
+      "output_file": "0098_IMG20260707203612.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 99,
+      "source_file": "IMG20260707203616.jpg",
+      "output_file": "0099_IMG20260707203616.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 100,
+      "source_file": "IMG20260707203621.jpg",
+      "output_file": "0100_IMG20260707203621.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 101,
+      "source_file": "IMG20260707203627.jpg",
+      "output_file": "0101_IMG20260707203627.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 102,
+      "source_file": "IMG20260707203631.jpg",
+      "output_file": "0102_IMG20260707203631.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 103,
+      "source_file": "IMG20260707203636.jpg",
+      "output_file": "0103_IMG20260707203636.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 104,
+      "source_file": "IMG20260707203640.jpg",
+      "output_file": "0104_IMG20260707203640.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 105,
+      "source_file": "IMG20260707203647.jpg",
+      "output_file": "0105_IMG20260707203647.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 106,
+      "source_file": "IMG20260707203655.jpg",
+      "output_file": "0106_IMG20260707203655.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 107,
+      "source_file": "IMG20260707203703.jpg",
+      "output_file": "0107_IMG20260707203703.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 108,
+      "source_file": "IMG20260707203708.jpg",
+      "output_file": "0108_IMG20260707203708.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 109,
+      "source_file": "IMG20260707203746.jpg",
+      "output_file": "0109_IMG20260707203746.json",
+      "page_type": "vocabulary_list",
+      "grade": "6",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 110,
+      "source_file": "IMG20260707203750.jpg",
+      "output_file": "0110_IMG20260707203750.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 111,
+      "source_file": "IMG20260707203755.jpg",
+      "output_file": "0111_IMG20260707203755.json",
+      "page_type": "vocabulary_list",
+      "grade": "6",
+      "section": "vocabulary",
+      "word_count": 11,
+      "phrase_count": 18
+    },
+    {
+      "index": 112,
+      "source_file": "IMG20260707203757.jpg",
+      "output_file": "0112_IMG20260707203757.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 14,
+      "phrase_count": 12
+    },
+    {
+      "index": 113,
+      "source_file": "IMG20260707203809.jpg",
+      "output_file": "0113_IMG20260707203809.json",
+      "page_type": "exercise",
+      "grade": "6",
+      "section": "other",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 114,
+      "source_file": "IMG20260707203814.jpg",
+      "output_file": "0114_IMG20260707203814.json",
+      "page_type": "other",
+      "grade": "6",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 115,
+      "source_file": "IMG20260707203818.jpg",
+      "output_file": "0115_IMG20260707203818.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 116,
+      "source_file": "IMG20260707203822.jpg",
+      "output_file": "0116_IMG20260707203822.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 117,
+      "source_file": "IMG20260707203828.jpg",
+      "output_file": "0117_IMG20260707203828.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 4,
+      "phrase_count": 11
+    },
+    {
+      "index": 118,
+      "source_file": "IMG20260707203829.jpg",
+      "output_file": "0118_IMG20260707203829.json",
+      "page_type": "vocabulary_list",
+      "grade": "6",
+      "section": null,
+      "word_count": 8,
+      "phrase_count": 7
+    },
+    {
+      "index": 119,
+      "source_file": "IMG20260707203833.jpg",
+      "output_file": "0119_IMG20260707203833.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 8,
+      "phrase_count": 5
+    },
+    {
+      "index": 120,
+      "source_file": "IMG20260707203855.jpg",
+      "output_file": "0120_IMG20260707203855.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 121,
+      "source_file": "IMG20260707203909.jpg",
+      "output_file": "0121_IMG20260707203909.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 9
+    },
+    {
+      "index": 122,
+      "source_file": "IMG20260707203911.jpg",
+      "output_file": "0122_IMG20260707203911.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 123,
+      "source_file": "IMG20260707203916.jpg",
+      "output_file": "0123_IMG20260707203916.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 124,
+      "source_file": "IMG20260707203920.jpg",
+      "output_file": "0124_IMG20260707203920.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 125,
+      "source_file": "IMG20260707203924.jpg",
+      "output_file": "0125_IMG20260707203924.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 126,
+      "source_file": "IMG20260707203930.jpg",
+      "output_file": "0126_IMG20260707203930.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 127,
+      "source_file": "IMG20260707203936.jpg",
+      "output_file": "0127_IMG20260707203936.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 6
+    },
+    {
+      "index": 128,
+      "source_file": "IMG20260707203943.jpg",
+      "output_file": "0128_IMG20260707203943.json",
+      "page_type": "other",
+      "grade": "6",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 129,
+      "source_file": "IMG20260707203949.jpg",
+      "output_file": "0129_IMG20260707203949.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 130,
+      "source_file": "IMG20260707203957.jpg",
+      "output_file": "0130_IMG20260707203957.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 131,
+      "source_file": "IMG20260707204014.jpg",
+      "output_file": "0131_IMG20260707204014.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 132,
+      "source_file": "IMG20260707204019.jpg",
+      "output_file": "0132_IMG20260707204019.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 6,
+      "phrase_count": 6
+    },
+    {
+      "index": 133,
+      "source_file": "IMG20260707204024.jpg",
+      "output_file": "0133_IMG20260707204024.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 134,
+      "source_file": "IMG20260707204030.jpg",
+      "output_file": "0134_IMG20260707204030.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 135,
+      "source_file": "IMG20260707204036.jpg",
+      "output_file": "0135_IMG20260707204036.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 14
+    },
+    {
+      "index": 136,
+      "source_file": "IMG20260707204049.jpg",
+      "output_file": "0136_IMG20260707204049.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 137,
+      "source_file": "IMG20260707204055.jpg",
+      "output_file": "0137_IMG20260707204055.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 8,
+      "phrase_count": 8
+    },
+    {
+      "index": 138,
+      "source_file": "IMG20260707204100.jpg",
+      "output_file": "0138_IMG20260707204100.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 139,
+      "source_file": "IMG20260707204104.jpg",
+      "output_file": "0139_IMG20260707204104.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 140,
+      "source_file": "IMG20260707204111.jpg",
+      "output_file": "0140_IMG20260707204111.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 141,
+      "source_file": "IMG20260707204119.jpg",
+      "output_file": "0141_IMG20260707204119.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 142,
+      "source_file": "IMG20260707204125.jpg",
+      "output_file": "0142_IMG20260707204125.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 1,
+      "phrase_count": 5
+    },
+    {
+      "index": 143,
+      "source_file": "IMG20260707204144.jpg",
+      "output_file": "0143_IMG20260707204144.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 144,
+      "source_file": "IMG20260707204153.jpg",
+      "output_file": "0144_IMG20260707204153.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 15,
+      "phrase_count": 11
+    },
+    {
+      "index": 145,
+      "source_file": "IMG20260707204201.jpg",
+      "output_file": "0145_IMG20260707204201.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 146,
+      "source_file": "IMG20260707204209.jpg",
+      "output_file": "0146_IMG20260707204209.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 147,
+      "source_file": "IMG20260707204216.jpg",
+      "output_file": "0147_IMG20260707204216.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 20,
+      "phrase_count": 7
+    },
+    {
+      "index": 148,
+      "source_file": "IMG20260707204226.jpg",
+      "output_file": "0148_IMG20260707204226.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 149,
+      "source_file": "IMG20260707204234.jpg",
+      "output_file": "0149_IMG20260707204234.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 150,
+      "source_file": "IMG20260707204241.jpg",
+      "output_file": "0150_IMG20260707204241.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 151,
+      "source_file": "IMG20260707204248.jpg",
+      "output_file": "0151_IMG20260707204248.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 152,
+      "source_file": "IMG20260707204253.jpg",
+      "output_file": "0152_IMG20260707204253.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 153,
+      "source_file": "IMG20260707204259.jpg",
+      "output_file": "0153_IMG20260707204259.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 154,
+      "source_file": "IMG20260707204306.jpg",
+      "output_file": "0154_IMG20260707204306.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 155,
+      "source_file": "IMG20260707204323.jpg",
+      "output_file": "0155_IMG20260707204323.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 3,
+      "phrase_count": 7
+    },
+    {
+      "index": 156,
+      "source_file": "IMG20260707204328.jpg",
+      "output_file": "0156_IMG20260707204328.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 157,
+      "source_file": "IMG20260707204335.jpg",
+      "output_file": "0157_IMG20260707204335.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 158,
+      "source_file": "IMG20260707204343.jpg",
+      "output_file": "0158_IMG20260707204343.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 159,
+      "source_file": "IMG20260707204349.jpg",
+      "output_file": "0159_IMG20260707204349.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 160,
+      "source_file": "IMG20260707204355.jpg",
+      "output_file": "0160_IMG20260707204355.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 24,
+      "phrase_count": 6
+    },
+    {
+      "index": 161,
+      "source_file": "IMG20260707204403.jpg",
+      "output_file": "0161_IMG20260707204403.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 162,
+      "source_file": "IMG20260707204410.jpg",
+      "output_file": "0162_IMG20260707204410.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 163,
+      "source_file": "IMG20260707204415.jpg",
+      "output_file": "0163_IMG20260707204415.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 164,
+      "source_file": "IMG20260707204422.jpg",
+      "output_file": "0164_IMG20260707204422.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 165,
+      "source_file": "IMG20260707204428.jpg",
+      "output_file": "0165_IMG20260707204428.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 8,
+      "phrase_count": 12
+    },
+    {
+      "index": 166,
+      "source_file": "IMG20260707204434.jpg",
+      "output_file": "0166_IMG20260707204434.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 167,
+      "source_file": "IMG20260707204503.jpg",
+      "output_file": "0167_IMG20260707204503.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 168,
+      "source_file": "IMG20260707204511.jpg",
+      "output_file": "0168_IMG20260707204511.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 169,
+      "source_file": "IMG20260707204519.jpg",
+      "output_file": "0169_IMG20260707204519.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 170,
+      "source_file": "IMG20260707204527.jpg",
+      "output_file": "0170_IMG20260707204527.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 6,
+      "phrase_count": 4
+    },
+    {
+      "index": 171,
+      "source_file": "IMG20260707204532.jpg",
+      "output_file": "0171_IMG20260707204532.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 172,
+      "source_file": "IMG20260707204538.jpg",
+      "output_file": "0172_IMG20260707204538.json",
+      "page_type": "other",
+      "grade": "4",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 173,
+      "source_file": "IMG20260707204544.jpg",
+      "output_file": "0173_IMG20260707204544.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 174,
+      "source_file": "IMG20260707204548.jpg",
+      "output_file": "0174_IMG20260707204548.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 175,
+      "source_file": "IMG20260707205314.jpg",
+      "output_file": "0175_IMG20260707205314.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 176,
+      "source_file": "IMG20260707205328.jpg",
+      "output_file": "0176_IMG20260707205328.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 7,
+      "phrase_count": 6
+    },
+    {
+      "index": 177,
+      "source_file": "IMG20260707205338.jpg",
+      "output_file": "0177_IMG20260707205338.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 18,
+      "phrase_count": 12
+    },
+    {
+      "index": 178,
+      "source_file": "IMG20260707205341.jpg",
+      "output_file": "0178_IMG20260707205341.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 31,
+      "phrase_count": 10
+    },
+    {
+      "index": 179,
+      "source_file": "IMG20260707205347.jpg",
+      "output_file": "0179_IMG20260707205347.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 14,
+      "phrase_count": 15
+    },
+    {
+      "index": 180,
+      "source_file": "IMG20260707205351.jpg",
+      "output_file": "0180_IMG20260707205351.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 181,
+      "source_file": "IMG20260707205358.jpg",
+      "output_file": "0181_IMG20260707205358.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 182,
+      "source_file": "IMG20260707205406.jpg",
+      "output_file": "0182_IMG20260707205406.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 183,
+      "source_file": "IMG20260707205412.jpg",
+      "output_file": "0183_IMG20260707205412.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 184,
+      "source_file": "IMG20260707205417.jpg",
+      "output_file": "0184_IMG20260707205417.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 8,
+      "phrase_count": 8
+    },
+    {
+      "index": 185,
+      "source_file": "IMG20260707205430.jpg",
+      "output_file": "0185_IMG20260707205430.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 186,
+      "source_file": "IMG20260707205441.jpg",
+      "output_file": "0186_IMG20260707205441.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 13
+    },
+    {
+      "index": 187,
+      "source_file": "IMG20260707205447.jpg",
+      "output_file": "0187_IMG20260707205447.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 188,
+      "source_file": "IMG20260707205500.jpg",
+      "output_file": "0188_IMG20260707205500.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 189,
+      "source_file": "IMG20260707205506.jpg",
+      "output_file": "0189_IMG20260707205506.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 6,
+      "phrase_count": 9
+    },
+    {
+      "index": 190,
+      "source_file": "IMG20260707205516.jpg",
+      "output_file": "0190_IMG20260707205516.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 191,
+      "source_file": "IMG20260707205524.jpg",
+      "output_file": "0191_IMG20260707205524.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 13
+    },
+    {
+      "index": 192,
+      "source_file": "IMG20260707205532.jpg",
+      "output_file": "0192_IMG20260707205532.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 16
+    },
+    {
+      "index": 193,
+      "source_file": "IMG20260707205540.jpg",
+      "output_file": "0193_IMG20260707205540.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 11
+    },
+    {
+      "index": 194,
+      "source_file": "IMG20260707205549.jpg",
+      "output_file": "0194_IMG20260707205549.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 10,
+      "phrase_count": 13
+    },
+    {
+      "index": 195,
+      "source_file": "IMG20260707205555.jpg",
+      "output_file": "0195_IMG20260707205555.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 196,
+      "source_file": "IMG20260707205602.jpg",
+      "output_file": "0196_IMG20260707205602.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 197,
+      "source_file": "IMG20260707205615.jpg",
+      "output_file": "0197_IMG20260707205615.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 12
+    },
+    {
+      "index": 198,
+      "source_file": "IMG20260707205620.jpg",
+      "output_file": "0198_IMG20260707205620.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 199,
+      "source_file": "IMG20260707205626.jpg",
+      "output_file": "0199_IMG20260707205626.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 200,
+      "source_file": "IMG20260707205631.jpg",
+      "output_file": "0200_IMG20260707205631.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 201,
+      "source_file": "IMG20260707205636.jpg",
+      "output_file": "0201_IMG20260707205636.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 202,
+      "source_file": "IMG20260707205643.jpg",
+      "output_file": "0202_IMG20260707205643.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 203,
+      "source_file": "IMG20260707205648.jpg",
+      "output_file": "0203_IMG20260707205648.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 204,
+      "source_file": "IMG20260707205653.jpg",
+      "output_file": "0204_IMG20260707205653.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 7,
+      "phrase_count": 5
+    },
+    {
+      "index": 205,
+      "source_file": "IMG20260707205659.jpg",
+      "output_file": "0205_IMG20260707205659.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 206,
+      "source_file": "IMG20260707205705.jpg",
+      "output_file": "0206_IMG20260707205705.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 8,
+      "phrase_count": 10
+    },
+    {
+      "index": 207,
+      "source_file": "IMG20260707205711.jpg",
+      "output_file": "0207_IMG20260707205711.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 12
+    },
+    {
+      "index": 208,
+      "source_file": "IMG20260707205718.jpg",
+      "output_file": "0208_IMG20260707205718.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 21
+    },
+    {
+      "index": 209,
+      "source_file": "IMG20260707205726.jpg",
+      "output_file": "0209_IMG20260707205726.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 210,
+      "source_file": "IMG20260707205731.jpg",
+      "output_file": "0210_IMG20260707205731.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 211,
+      "source_file": "IMG20260707205736.jpg",
+      "output_file": "0211_IMG20260707205736.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 212,
+      "source_file": "IMG20260707205742.jpg",
+      "output_file": "0212_IMG20260707205742.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 6
+    },
+    {
+      "index": 213,
+      "source_file": "IMG20260707205746.jpg",
+      "output_file": "0213_IMG20260707205746.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 214,
+      "source_file": "IMG20260707205754.jpg",
+      "output_file": "0214_IMG20260707205754.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 215,
+      "source_file": "IMG20260707205759.jpg",
+      "output_file": "0215_IMG20260707205759.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 9
+    },
+    {
+      "index": 216,
+      "source_file": "IMG20260707205804.jpg",
+      "output_file": "0216_IMG20260707205804.json",
+      "page_type": "exercise",
+      "grade": "3",
+      "section": "other",
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 217,
+      "source_file": "IMG20260707205830.jpg",
+      "output_file": "0217_IMG20260707205830.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 218,
+      "source_file": "IMG20260707205838.jpg",
+      "output_file": "0218_IMG20260707205838.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 219,
+      "source_file": "IMG20260707205845.jpg",
+      "output_file": "0219_IMG20260707205845.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 17
+    },
+    {
+      "index": 220,
+      "source_file": "IMG20260707205851.jpg",
+      "output_file": "0220_IMG20260707205851.json",
+      "page_type": "other",
+      "grade": "6",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 221,
+      "source_file": "IMG20260707205903.jpg",
+      "output_file": "0221_IMG20260707205903.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 222,
+      "source_file": "IMG20260707205915.jpg",
+      "output_file": "0222_IMG20260707205915.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 223,
+      "source_file": "IMG20260707205920.jpg",
+      "output_file": "0223_IMG20260707205920.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 224,
+      "source_file": "IMG20260707205925.jpg",
+      "output_file": "0224_IMG20260707205925.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 225,
+      "source_file": "IMG20260707205930.jpg",
+      "output_file": "0225_IMG20260707205930.json",
+      "page_type": "vocabulary_list",
+      "grade": "6",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 226,
+      "source_file": "IMG20260707205934.jpg",
+      "output_file": "0226_IMG20260707205934.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 1,
+      "phrase_count": 6
+    },
+    {
+      "index": 227,
+      "source_file": "IMG20260707205938.jpg",
+      "output_file": "0227_IMG20260707205938.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 228,
+      "source_file": "IMG20260707205954.jpg",
+      "output_file": "0228_IMG20260707205954.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 13
+    },
+    {
+      "index": 229,
+      "source_file": "IMG20260707210000.jpg",
+      "output_file": "0229_IMG20260707210000.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 230,
+      "source_file": "IMG20260707210006.jpg",
+      "output_file": "0230_IMG20260707210006.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 5,
+      "phrase_count": 7
+    },
+    {
+      "index": 231,
+      "source_file": "IMG20260707210024.jpg",
+      "output_file": "0231_IMG20260707210024.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 232,
+      "source_file": "IMG20260707210031.jpg",
+      "output_file": "0232_IMG20260707210031.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 233,
+      "source_file": "IMG20260707210037.jpg",
+      "output_file": "0233_IMG20260707210037.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 234,
+      "source_file": "IMG20260707210044.jpg",
+      "output_file": "0234_IMG20260707210044.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 235,
+      "source_file": "IMG20260707210053.jpg",
+      "output_file": "0235_IMG20260707210053.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 236,
+      "source_file": "IMG20260707210059.jpg",
+      "output_file": "0236_IMG20260707210059.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 237,
+      "source_file": "IMG20260707210104.jpg",
+      "output_file": "0237_IMG20260707210104.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 238,
+      "source_file": "IMG20260707210109.jpg",
+      "output_file": "0238_IMG20260707210109.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 239,
+      "source_file": "IMG20260707210115.jpg",
+      "output_file": "0239_IMG20260707210115.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 240,
+      "source_file": "IMG20260707210121.jpg",
+      "output_file": "0240_IMG20260707210121.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 12
+    },
+    {
+      "index": 241,
+      "source_file": "IMG20260707210132.jpg",
+      "output_file": "0241_IMG20260707210132.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 7,
+      "phrase_count": 9
+    },
+    {
+      "index": 242,
+      "source_file": "IMG20260707210141.jpg",
+      "output_file": "0242_IMG20260707210141.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 243,
+      "source_file": "IMG20260707210146.jpg",
+      "output_file": "0243_IMG20260707210146.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 244,
+      "source_file": "IMG20260707210152.jpg",
+      "output_file": "0244_IMG20260707210152.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 245,
+      "source_file": "IMG20260707210156.jpg",
+      "output_file": "0245_IMG20260707210156.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 246,
+      "source_file": "IMG20260707210200.jpg",
+      "output_file": "0246_IMG20260707210200.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 5,
+      "phrase_count": 8
+    },
+    {
+      "index": 247,
+      "source_file": "IMG20260707210206.jpg",
+      "output_file": "0247_IMG20260707210206.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 12
+    },
+    {
+      "index": 248,
+      "source_file": "IMG20260707210214.jpg",
+      "output_file": "0248_IMG20260707210214.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 249,
+      "source_file": "IMG20260707210220.jpg",
+      "output_file": "0249_IMG20260707210220.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 14
+    },
+    {
+      "index": 250,
+      "source_file": "IMG20260707210228.jpg",
+      "output_file": "0250_IMG20260707210228.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 251,
+      "source_file": "IMG20260707210235.jpg",
+      "output_file": "0251_IMG20260707210235.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 252,
+      "source_file": "IMG20260707210239.jpg",
+      "output_file": "0252_IMG20260707210239.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 6
+    },
+    {
+      "index": 253,
+      "source_file": "IMG20260707210245.jpg",
+      "output_file": "0253_IMG20260707210245.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 254,
+      "source_file": "IMG20260707210250.jpg",
+      "output_file": "0254_IMG20260707210250.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 255,
+      "source_file": "IMG20260707210253.jpg",
+      "output_file": "0255_IMG20260707210253.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 256,
+      "source_file": "IMG20260707210257.jpg",
+      "output_file": "0256_IMG20260707210257.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 7
+    },
+    {
+      "index": 257,
+      "source_file": "IMG20260707210301.jpg",
+      "output_file": "0257_IMG20260707210301.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 258,
+      "source_file": "IMG20260707210305.jpg",
+      "output_file": "0258_IMG20260707210305.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "other",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 259,
+      "source_file": "IMG20260707210310.jpg",
+      "output_file": "0259_IMG20260707210310.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 260,
+      "source_file": "IMG20260707210315.jpg",
+      "output_file": "0260_IMG20260707210315.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 261,
+      "source_file": "IMG20260707210320.jpg",
+      "output_file": "0261_IMG20260707210320.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 1
+    },
+    {
+      "index": 262,
+      "source_file": "IMG20260707210324.jpg",
+      "output_file": "0262_IMG20260707210324.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 263,
+      "source_file": "IMG20260707210328.jpg",
+      "output_file": "0263_IMG20260707210328.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 264,
+      "source_file": "IMG20260707210332.jpg",
+      "output_file": "0264_IMG20260707210332.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 265,
+      "source_file": "IMG20260707210408.jpg",
+      "output_file": "0265_IMG20260707210408.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 266,
+      "source_file": "IMG20260707210411.jpg",
+      "output_file": "0266_IMG20260707210411.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 267,
+      "source_file": "IMG20260707210415.jpg",
+      "output_file": "0267_IMG20260707210415.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 268,
+      "source_file": "IMG20260707210418.jpg",
+      "output_file": "0268_IMG20260707210418.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 269,
+      "source_file": "IMG20260707210423.jpg",
+      "output_file": "0269_IMG20260707210423.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 270,
+      "source_file": "IMG20260707210427.jpg",
+      "output_file": "0270_IMG20260707210427.json",
+      "page_type": "conversation",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 271,
+      "source_file": "IMG20260707210434.jpg",
+      "output_file": "0271_IMG20260707210434.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 6
+    },
+    {
+      "index": 272,
+      "source_file": "IMG20260707210439.jpg",
+      "output_file": "0272_IMG20260707210439.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 5
+    },
+    {
+      "index": 273,
+      "source_file": "IMG20260707210443.jpg",
+      "output_file": "0273_IMG20260707210443.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 274,
+      "source_file": "IMG20260707210447.jpg",
+      "output_file": "0274_IMG20260707210447.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 275,
+      "source_file": "IMG20260707210457.jpg",
+      "output_file": "0275_IMG20260707210457.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 276,
+      "source_file": "IMG20260707210504.jpg",
+      "output_file": "0276_IMG20260707210504.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 277,
+      "source_file": "IMG20260707210508.jpg",
+      "output_file": "0277_IMG20260707210508.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 278,
+      "source_file": "IMG20260707210512.jpg",
+      "output_file": "0278_IMG20260707210512.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 34
+    },
+    {
+      "index": 279,
+      "source_file": "IMG20260707210514.jpg",
+      "output_file": "0279_IMG20260707210514.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 280,
+      "source_file": "IMG20260707210517.jpg",
+      "output_file": "0280_IMG20260707210517.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 281,
+      "source_file": "IMG20260707210521.jpg",
+      "output_file": "0281_IMG20260707210521.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 282,
+      "source_file": "IMG20260707210525.jpg",
+      "output_file": "0282_IMG20260707210525.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 283,
+      "source_file": "IMG20260707210528.jpg",
+      "output_file": "0283_IMG20260707210528.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 284,
+      "source_file": "IMG20260707210532.jpg",
+      "output_file": "0284_IMG20260707210532.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 285,
+      "source_file": "IMG20260707210535.jpg",
+      "output_file": "0285_IMG20260707210535.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 286,
+      "source_file": "IMG20260707210538.jpg",
+      "output_file": "0286_IMG20260707210538.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": "Bo a komprendé",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 287,
+      "source_file": "IMG20260707210540.jpg",
+      "output_file": "0287_IMG20260707210540.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 4,
+      "phrase_count": 5
+    },
+    {
+      "index": 288,
+      "source_file": "IMG20260707210543.jpg",
+      "output_file": "0288_IMG20260707210543.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 289,
+      "source_file": "IMG20260707210546.jpg",
+      "output_file": "0289_IMG20260707210546.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 290,
+      "source_file": "IMG20260707210549.jpg",
+      "output_file": "0290_IMG20260707210549.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 291,
+      "source_file": "IMG20260707210553.jpg",
+      "output_file": "0291_IMG20260707210553.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 292,
+      "source_file": "IMG20260707210556.jpg",
+      "output_file": "0292_IMG20260707210556.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 293,
+      "source_file": "IMG20260707210559.jpg",
+      "output_file": "0293_IMG20260707210559.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 294,
+      "source_file": "IMG20260707210601.jpg",
+      "output_file": "0294_IMG20260707210601.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 295,
+      "source_file": "IMG20260707210604.jpg",
+      "output_file": "0295_IMG20260707210604.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 2
+    },
+    {
+      "index": 296,
+      "source_file": "IMG20260707210607.jpg",
+      "output_file": "0296_IMG20260707210607.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 297,
+      "source_file": "IMG20260707210610.jpg",
+      "output_file": "0297_IMG20260707210610.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 298,
+      "source_file": "IMG20260707210613.jpg",
+      "output_file": "0298_IMG20260707210613.json",
+      "page_type": "vocabulary_list",
+      "grade": "4",
+      "section": "vocabulary",
+      "word_count": 10,
+      "phrase_count": 9
+    },
+    {
+      "index": 299,
+      "source_file": "IMG20260707210616.jpg",
+      "output_file": "0299_IMG20260707210616.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 300,
+      "source_file": "IMG20260707210619.jpg",
+      "output_file": "0300_IMG20260707210619.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 301,
+      "source_file": "IMG20260707210622.jpg",
+      "output_file": "0301_IMG20260707210622.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 302,
+      "source_file": "IMG20260707210626.jpg",
+      "output_file": "0302_IMG20260707210626.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 303,
+      "source_file": "IMG20260707210632.jpg",
+      "output_file": "0303_IMG20260707210632.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 304,
+      "source_file": "IMG20260707210637.jpg",
+      "output_file": "0304_IMG20260707210637.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 305,
+      "source_file": "IMG20260707210640.jpg",
+      "output_file": "0305_IMG20260707210640.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 306,
+      "source_file": "IMG20260707210643.jpg",
+      "output_file": "0306_IMG20260707210643.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 307,
+      "source_file": "IMG20260707210647.jpg",
+      "output_file": "0307_IMG20260707210647.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 308,
+      "source_file": "IMG20260707210652.jpg",
+      "output_file": "0308_IMG20260707210652.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 9
+    },
+    {
+      "index": 309,
+      "source_file": "IMG20260707210656.jpg",
+      "output_file": "0309_IMG20260707210656.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 7,
+      "phrase_count": 4
+    },
+    {
+      "index": 310,
+      "source_file": "IMG20260707210659.jpg",
+      "output_file": "0310_IMG20260707210659.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 311,
+      "source_file": "IMG20260707210702.jpg",
+      "output_file": "0311_IMG20260707210702.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 312,
+      "source_file": "IMG20260707210708.jpg",
+      "output_file": "0312_IMG20260707210708.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 313,
+      "source_file": "IMG20260707210712.jpg",
+      "output_file": "0313_IMG20260707210712.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 3
+    },
+    {
+      "index": 314,
+      "source_file": "IMG20260707210717.jpg",
+      "output_file": "0314_IMG20260707210717.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 315,
+      "source_file": "IMG20260707210721.jpg",
+      "output_file": "0315_IMG20260707210721.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 316,
+      "source_file": "IMG20260707210725.jpg",
+      "output_file": "0316_IMG20260707210725.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 317,
+      "source_file": "IMG20260707210729.jpg",
+      "output_file": "0317_IMG20260707210729.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 318,
+      "source_file": "IMG20260707210734.jpg",
+      "output_file": "0318_IMG20260707210734.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 319,
+      "source_file": "IMG20260707210738.jpg",
+      "output_file": "0319_IMG20260707210738.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 10
+    },
+    {
+      "index": 320,
+      "source_file": "IMG20260707210746.jpg",
+      "output_file": "0320_IMG20260707210746.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 0,
+      "phrase_count": 4
+    },
+    {
+      "index": 321,
+      "source_file": "IMG20260707210751.jpg",
+      "output_file": "0321_IMG20260707210751.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 8
+    },
+    {
+      "index": 322,
+      "source_file": "IMG20260707210757.jpg",
+      "output_file": "0322_IMG20260707210757.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 323,
+      "source_file": "IMG20260707210850.jpg",
+      "output_file": "0323_IMG20260707210850.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 324,
+      "source_file": "IMG20260707210901.jpg",
+      "output_file": "0324_IMG20260707210901.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 325,
+      "source_file": "IMG20260707210910.jpg",
+      "output_file": "0325_IMG20260707210910.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 326,
+      "source_file": "IMG20260707210915.jpg",
+      "output_file": "0326_IMG20260707210915.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 327,
+      "source_file": "IMG20260707210920.jpg",
+      "output_file": "0327_IMG20260707210920.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 328,
+      "source_file": "IMG20260707210926.jpg",
+      "output_file": "0328_IMG20260707210926.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 329,
+      "source_file": "IMG20260707210930.jpg",
+      "output_file": "0329_IMG20260707210930.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 330,
+      "source_file": "IMG20260707210933.jpg",
+      "output_file": "0330_IMG20260707210933.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 331,
+      "source_file": "IMG20260707210936.jpg",
+      "output_file": "0331_IMG20260707210936.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 332,
+      "source_file": "IMG20260707210939.jpg",
+      "output_file": "0332_IMG20260707210939.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 333,
+      "source_file": "IMG20260707210942.jpg",
+      "output_file": "0333_IMG20260707210942.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 334,
+      "source_file": "IMG20260707210945.jpg",
+      "output_file": "0334_IMG20260707210945.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 335,
+      "source_file": "IMG20260707210949.jpg",
+      "output_file": "0335_IMG20260707210949.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 336,
+      "source_file": "IMG20260707210952.jpg",
+      "output_file": "0336_IMG20260707210952.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 337,
+      "source_file": "IMG20260707210954.jpg",
+      "output_file": "0337_IMG20260707210954.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 338,
+      "source_file": "IMG20260707210957.jpg",
+      "output_file": "0338_IMG20260707210957.json",
+      "page_type": "other",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 339,
+      "source_file": "IMG20260707210959.jpg",
+      "output_file": "0339_IMG20260707210959.json",
+      "page_type": "reading",
+      "grade": "6",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 340,
+      "source_file": "IMG20260707211003.jpg",
+      "output_file": "0340_IMG20260707211003.json",
+      "page_type": "exercise",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 341,
+      "source_file": "IMG20260707211005.jpg",
+      "output_file": "0341_IMG20260707211005.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 342,
+      "source_file": "IMG20260707211008.jpg",
+      "output_file": "0342_IMG20260707211008.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 343,
+      "source_file": "IMG20260707211012.jpg",
+      "output_file": "0343_IMG20260707211012.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 344,
+      "source_file": "IMG20260707211015.jpg",
+      "output_file": "0344_IMG20260707211015.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 345,
+      "source_file": "IMG20260707211018.jpg",
+      "output_file": "0345_IMG20260707211018.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 346,
+      "source_file": "IMG20260707211022.jpg",
+      "output_file": "0346_IMG20260707211022.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 347,
+      "source_file": "IMG20260707211025.jpg",
+      "output_file": "0347_IMG20260707211025.json",
+      "page_type": "other",
+      "grade": null,
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 348,
+      "source_file": "IMG20260707211029.jpg",
+      "output_file": "0348_IMG20260707211029.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 349,
+      "source_file": "IMG20260707211033.jpg",
+      "output_file": "0349_IMG20260707211033.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 350,
+      "source_file": "IMG20260707211036.jpg",
+      "output_file": "0350_IMG20260707211036.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 351,
+      "source_file": "IMG20260707211039.jpg",
+      "output_file": "0351_IMG20260707211039.json",
+      "page_type": "comprehension",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 352,
+      "source_file": "IMG20260707211045.jpg",
+      "output_file": "0352_IMG20260707211045.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 353,
+      "source_file": "IMG20260707211049.jpg",
+      "output_file": "0353_IMG20260707211049.json",
+      "page_type": "exercise",
+      "grade": "3",
+      "section": null,
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 354,
+      "source_file": "IMG20260707211052.jpg",
+      "output_file": "0354_IMG20260707211052.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 355,
+      "source_file": "IMG20260707211054.jpg",
+      "output_file": "0355_IMG20260707211054.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 356,
+      "source_file": "IMG20260707211057.jpg",
+      "output_file": "0356_IMG20260707211057.json",
+      "page_type": "reading",
+      "grade": "3",
+      "section": "Mi por lesa",
+      "word_count": 0,
+      "phrase_count": 0
+    },
+    {
+      "index": 357,
+      "source_file": "IMG20260707211101.jpg",
+      "output_file": "0357_IMG20260707211101.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 69,
+      "phrase_count": 0
+    },
+    {
+      "index": 358,
+      "source_file": "IMG20260707211104.jpg",
+      "output_file": "0358_IMG20260707211104.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 71,
+      "phrase_count": 0
+    },
+    {
+      "index": 359,
+      "source_file": "IMG20260707211108.jpg",
+      "output_file": "0359_IMG20260707211108.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 49,
+      "phrase_count": 0
+    },
+    {
+      "index": 360,
+      "source_file": "IMG20260707211113.jpg",
+      "output_file": "0360_IMG20260707211113.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 63,
+      "phrase_count": 0
+    },
+    {
+      "index": 361,
+      "source_file": "IMG20260707211119.jpg",
+      "output_file": "0361_IMG20260707211119.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 80,
+      "phrase_count": 0
+    },
+    {
+      "index": 362,
+      "source_file": "IMG20260707211125.jpg",
+      "output_file": "0362_IMG20260707211125.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 76,
+      "phrase_count": 0
+    },
+    {
+      "index": 363,
+      "source_file": "IMG20260707211130.jpg",
+      "output_file": "0363_IMG20260707211130.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 71,
+      "phrase_count": 0
+    },
+    {
+      "index": 364,
+      "source_file": "IMG20260707211134.jpg",
+      "output_file": "0364_IMG20260707211134.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 62,
+      "phrase_count": 0
+    },
+    {
+      "index": 365,
+      "source_file": "IMG20260707211139.jpg",
+      "output_file": "0365_IMG20260707211139.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 59,
+      "phrase_count": 0
+    },
+    {
+      "index": 366,
+      "source_file": "IMG20260707211146.jpg",
+      "output_file": "0366_IMG20260707211146.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 68,
+      "phrase_count": 0
+    },
+    {
+      "index": 367,
+      "source_file": "IMG20260707211153.jpg",
+      "output_file": "0367_IMG20260707211153.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 68,
+      "phrase_count": 0
+    },
+    {
+      "index": 368,
+      "source_file": "IMG20260707211200.jpg",
+      "output_file": "0368_IMG20260707211200.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 58,
+      "phrase_count": 0
+    },
+    {
+      "index": 369,
+      "source_file": "IMG20260707211207.jpg",
+      "output_file": "0369_IMG20260707211207.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 54,
+      "phrase_count": 0
+    },
+    {
+      "index": 370,
+      "source_file": "IMG20260707211214.jpg",
+      "output_file": "0370_IMG20260707211214.json",
+      "page_type": "vocabulary_list",
+      "grade": "3",
+      "section": "vocabulary",
+      "word_count": 74,
+      "phrase_count": 0
+    }
+  ],
+  "source": "Fiesta di idioma — Grande 3-6 school books"
+}

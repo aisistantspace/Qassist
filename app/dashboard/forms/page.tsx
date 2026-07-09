@@ -18,6 +18,8 @@ import {
   CheckIcon,
 } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
+import ConfirmModal from '@/components/dashboard/ConfirmModal'
+import ToastBanner from '@/components/dashboard/ToastBanner'
 
 interface FormField {
   key: string
@@ -98,12 +100,22 @@ export default function FormsPage() {
   })
   const [showLinkModal, setShowLinkModal] = useState<string | null>(null)
   const [copiedFormId, setCopiedFormId] = useState<string | null>(null)
+  const [deleteFormId, setDeleteFormId] = useState<string | null>(null)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     fetchForms()
     fetchSubmissions()
     fetchDefaultFormMode()
   }, [])
+
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(null), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [toast])
 
   const fetchDefaultFormMode = async () => {
     try {
@@ -212,13 +224,22 @@ export default function FormsPage() {
     }
   }
 
-  const handleDeleteForm = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this form?')) return
+  const handleDeleteForm = async () => {
+    if (!deleteFormId) return
+    setDeleteLoading(true)
     try {
-      const res = await fetch(`/api/forms/${id}`, { method: 'DELETE' })
-      if (res.ok) fetchForms()
-    } catch (error) {
-      console.error('Error deleting form:', error)
+      const res = await fetch(`/api/forms/${deleteFormId}`, { method: 'DELETE' })
+      if (res.ok) {
+        setToast({ type: 'success', message: 'Form deleted.' })
+        fetchForms()
+      } else {
+        setToast({ type: 'error', message: 'Failed to delete form.' })
+      }
+    } catch {
+      setToast({ type: 'error', message: 'Something went wrong while deleting.' })
+    } finally {
+      setDeleteLoading(false)
+      setDeleteFormId(null)
     }
   }
 
@@ -333,6 +354,8 @@ export default function FormsPage() {
           )}
         </div>
       </div>
+
+      {toast && <ToastBanner type={toast.type} message={toast.message} onDismiss={() => setToast(null)} />}
 
       {/* Default Form Mode Setting */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -994,7 +1017,7 @@ export default function FormsPage() {
                   <PencilIcon className="w-5 h-5" />
                 </button>
                 <button
-                  onClick={() => handleDeleteForm(form.id)}
+                  onClick={() => setDeleteFormId(form.id)}
                   className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                 >
                   <TrashIcon className="w-5 h-5" />
@@ -1166,6 +1189,16 @@ export default function FormsPage() {
           )}
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={!!deleteFormId}
+        title="Delete form"
+        message="This permanently removes the form and its configuration. Submissions may still exist in your database."
+        confirmLabel="Delete form"
+        loading={deleteLoading}
+        onConfirm={handleDeleteForm}
+        onCancel={() => !deleteLoading && setDeleteFormId(null)}
+      />
     </div>
   )
 }

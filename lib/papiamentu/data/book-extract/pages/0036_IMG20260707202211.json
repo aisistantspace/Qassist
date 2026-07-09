@@ -1,0 +1,114 @@
+{
+  "index": 36,
+  "source_file": "IMG20260707202211.jpg",
+  "extracted_at": "2026-07-08T19:56:34.562Z",
+  "page_type": "vocabulary_list|reading|conversation|grammar|exercise|comprehension|cover|index|other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 7 Ban museo",
+  "week": "Siman 3",
+  "section": "Skucha i papia|Mi por lesa|Bo a komprendé|vocabulary|Regla di kòmbersashon|null",
+  "page_numbers": [
+    "70",
+    "71"
+  ],
+  "words": [
+    {
+      "word": "barku ku ta maneha nobo",
+      "level": "null"
+    },
+    {
+      "word": "barku ku ta transportá kos",
+      "level": "null"
+    },
+    {
+      "word": "barku di guera",
+      "level": "null"
+    },
+    {
+      "word": "barku di pisahero",
+      "level": "null"
+    },
+    {
+      "word": "barku krusero",
+      "level": "null"
+    },
+    {
+      "word": "barku di hospital",
+      "level": "null"
+    },
+    {
+      "word": "barku di kontéiner",
+      "level": "null"
+    },
+    {
+      "word": "boto di piskadó",
+      "level": "null"
+    },
+    {
+      "word": "karabela",
+      "level": "null"
+    },
+    {
+      "word": "tankeru",
+      "level": "null"
+    },
+    {
+      "word": "yate",
+      "level": "null"
+    },
+    {
+      "word": "draga",
+      "level": "null"
+    },
+    {
+      "word": "feri",
+      "level": "null"
+    },
+    {
+      "word": "bapor di sinti",
+      "level": "null"
+    },
+    {
+      "word": "boto salbabida",
+      "level": "null"
+    },
+    {
+      "word": "torpedero",
+      "level": "null"
+    },
+    {
+      "word": "supamino",
+      "level": "null"
+    }
+  ],
+  "phrases": [
+    "Lesa e espikashon i buska e palabra ku ta kuadra kuné.",
+    "E parti den un edifisio",
+    "Un barku ku ta yuda den nabegashon",
+    "Un barku ku ta transportá e yelo",
+    "Un barku kòtur ku ta pida un punto pa bisi",
+    "Un modelo chiki di algo",
+    "Un bapor ku ta transportá algu",
+    "Un bapor ku ta bahi for di un barku"
+  ],
+  "conversation_rules": [
+    "Singular: un — ku — kas.",
+    "Plural: dos — den dos — separá den dos."
+  ],
+  "grammar_rules": [],
+  "paragraphs": [
+    "1. E guáman di e museo marítimo ta konta e kos kuentanan aki.",
+    "2. E promé historia ta di mener Leonard B. Smith.",
+    "3. E ta konstruí e buki di e nòmber di Emma.",
+    "4. E ta pidi pa e di un otro pais.",
+    "5. E mes ta nobo di di a tèkna.",
+    "6. E ta bini di un otro bisi di konstruksion aki.",
+    "7. E ta eksplorá un bisi di barku di guera.",
+    "8. E ta bini pa bisi di un otro bapor.",
+    "9. Un bapor di e mar ta bini pa bisi di un otro bapor.",
+    "10. E ta bini di un otro bapor di e tempunan aki."
+  ],
+  "questions": [],
+  "raw_text": "5 Pensa bon\n5. Ki tipo di barku bo ta mira?\n\nAki ta plachi un barku. Ki tipo di barku den e relashon ku.\nAki ta di diferente kategoriá. Pone kada barku den e kategoriá promé.\n\nTraha e tareh den bo strek.\n\nBarku ku ta maneha nobo\nBarku ku ta transportá kos\nBarku di guera\n\nkulala\n\nsupamino\nbarku di pisahero\ndraga\nbarku krusero\nferi\n\nkulala\ntorpedero\nbapor di sinti\nboto salbabida\nbarku di kontéiner\nbarku di hospital\nboto di piskadó\ntankeru\nyate\nkarabela\n\n5. Un óf mas?\n\n5j Kua palabra ta kuadra kuné?\n1. Lese e espikashon i buska e palabra ku ta kuadra kuné.\n2. E parti den un edifisio\n3. Un barku ku ta yuda den nabegashon\n4. Un barku ku ta transportá e yelo\n5. Un barku kòtur ku ta pida un punto pa bisi\n6. Un modelo chiki di algo\n7. Un bapor ku ta transportá algu\n8. Un bapor ku ta bahi for di un barku"
+}

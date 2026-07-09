@@ -26,9 +26,19 @@ export default function PapiamentuPage() {
   const [filterType, setFilterType] = useState<string>('all')
   const [seeding, setSeeding] = useState(false)
   const [seedMessage, setSeedMessage] = useState('')
+  const [bookStatus, setBookStatus] = useState<{
+    imageCount: number
+    extractedPages: number
+    bookVocabulary: { word_count: number; merged_at: string | null; grades?: string[] }
+    schoolPhrases: { phrase_count: number; conversation_rules: number; merged_at: string | null }
+    schoolGrammar: { rule_count: number; merged_at: string | null }
+  } | null>(null)
+  const [mergingBook, setMergingBook] = useState(false)
+  const [bookMessage, setBookMessage] = useState('')
 
   useEffect(() => {
     fetchCorrections()
+    fetchBookStatus()
   }, [])
 
   async function fetchCorrections() {
@@ -47,6 +57,39 @@ export default function PapiamentuPage() {
       setError('Failed to connect to API')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function fetchBookStatus() {
+    try {
+      const res = await fetch('/api/papiamentu/book-extract')
+      if (res.ok) setBookStatus(await res.json())
+    } catch {
+      // optional status
+    }
+  }
+
+  async function mergeBookExtract() {
+    setMergingBook(true)
+    setBookMessage('')
+    try {
+      const res = await fetch('/api/papiamentu/book-extract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'merge' }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Merge failed')
+      setBookMessage(
+        data.mergeReport
+          ? `Merged ${data.mergeReport.vocabulary_entries} words, ${data.mergeReport.canonical_phrases} phrases, ${data.mergeReport.conversation_rules} conversation rules (+${data.mergeReport.wordlist_new_words} in wordlist)`
+          : data.message
+      )
+      fetchBookStatus()
+    } catch (err: unknown) {
+      setBookMessage(err instanceof Error ? err.message : 'Merge failed')
+    } finally {
+      setMergingBook(false)
     }
   }
 
@@ -123,6 +166,67 @@ export default function PapiamentuPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Grande 3–6 school books → Papiamentu layer */}
+      <div className="bg-white border border-teal-200 rounded-xl p-6 mb-6 shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Fiesta di idioma — Grande 3–6 school books</h3>
+        <p className="text-sm text-gray-600 mb-4">
+          Official Curaçao primary-school Papiamentu (Grande 3, 4, 5, 6). Photos in{' '}
+          <code className="text-xs bg-gray-100 px-1 rounded">Papiamentu book images/</code> are OCR&apos;d and merged into
+          vocabulary, phrases, conversation rules, and grammar — exactly where the correction layer reads them.
+        </p>
+        {bookStatus && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-4 text-sm">
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-gray-500">Photos</div>
+              <div className="font-bold text-gray-900">{bookStatus.imageCount}</div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-gray-500">OCR pages</div>
+              <div className="font-bold text-gray-900">{bookStatus.extractedPages}</div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-gray-500">School words</div>
+              <div className="font-bold text-teal-700">{bookStatus.bookVocabulary.word_count}</div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-gray-500">Phrases</div>
+              <div className="font-bold text-teal-700">{bookStatus.schoolPhrases.phrase_count}</div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-gray-500">Conv. rules</div>
+              <div className="font-bold text-teal-700">{bookStatus.schoolPhrases.conversation_rules}</div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-3">
+              <div className="text-gray-500">Grammar</div>
+              <div className="font-bold text-teal-700">{bookStatus.schoolGrammar.rule_count}</div>
+            </div>
+          </div>
+        )}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            type="button"
+            onClick={mergeBookExtract}
+            disabled={mergingBook || !bookStatus?.extractedPages}
+            className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 text-sm font-medium"
+          >
+            {mergingBook ? 'Merging…' : 'Merge school books into layer'}
+          </button>
+        </div>
+        <div className="mt-4 text-xs text-gray-600 space-y-1">
+          <p><strong>Where data goes:</strong></p>
+          <ul className="list-disc list-inside space-y-0.5 ml-1">
+            <li><code className="bg-gray-100 px-1 rounded">school-grande-vocabulary.json</code> + <code className="bg-gray-100 px-1 rounded">wordlist.json</code> → spell-check</li>
+            <li><code className="bg-gray-100 px-1 rounded">school-grande-phrases.json</code> + <code className="bg-gray-100 px-1 rounded">palabricks-phrases.json</code> → phrase correction</li>
+            <li><code className="bg-gray-100 px-1 rounded">school-grande-grammar.json</code> → AI prompt guide</li>
+          </ul>
+          <p className="pt-2">
+            <strong>Step 1</strong> (local): <code className="bg-gray-100 px-1 rounded">npm run pa:extract-book</code> — OCR ~370 pages (resumable).
+            <strong> Step 2</strong>: merge above or <code className="bg-gray-100 px-1 rounded">npm run pa:merge-book</code>.
+          </p>
+        </div>
+        {bookMessage && <p className="mt-3 text-sm text-gray-700">{bookMessage}</p>}
       </div>
 
       {/* Demo: PA insurance glossary for RAG */}

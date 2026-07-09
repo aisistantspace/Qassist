@@ -84,3 +84,44 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin()
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    const clearResolved = searchParams.get('clear_resolved') === 'true'
+
+    if (id) {
+      const { error } = await supabaseAdmin
+        .from('unanswered_queries')
+        .delete()
+        .eq('id', id)
+        .eq('tenant_id', DEFAULT_TENANT_ID)
+
+      if (error) throw error
+      return NextResponse.json({ success: true, deleted: 1 })
+    }
+
+    if (clearResolved) {
+      const { data, error } = await supabaseAdmin
+        .from('unanswered_queries')
+        .delete()
+        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('resolved', true)
+        .select('id')
+
+      if (error) throw error
+      return NextResponse.json({ success: true, deleted: data?.length || 0 })
+    }
+
+    return NextResponse.json(
+      { error: 'Provide id or clear_resolved=true' },
+      { status: 400 }
+    )
+  } catch (error: unknown) {
+    console.error('Error deleting unanswered query:', error)
+    const message = error instanceof Error ? error.message : 'Failed to delete query'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}

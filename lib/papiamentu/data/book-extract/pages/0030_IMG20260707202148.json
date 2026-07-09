@@ -1,0 +1,112 @@
+{
+  "index": 30,
+  "source_file": "IMG20260707202148.jpg",
+  "extracted_at": "2026-07-08T19:52:04.525Z",
+  "page_type": "vocabulary_list",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 7 Ban museo",
+  "week": "Siman 2",
+  "section": "vocabulary",
+  "page_numbers": [
+    "4"
+  ],
+  "words": [
+    {
+      "word": "Museo Kurá Hulanda",
+      "level": "null"
+    },
+    {
+      "word": "María",
+      "level": "null"
+    },
+    {
+      "word": "Sheila",
+      "level": "null"
+    },
+    {
+      "word": "piedra",
+      "level": "A1"
+    },
+    {
+      "word": "simbolo",
+      "level": "A1"
+    },
+    {
+      "word": "barku",
+      "level": "A2"
+    },
+    {
+      "word": "katibunan",
+      "level": "A2"
+    },
+    {
+      "word": "kultura",
+      "level": "A2"
+    },
+    {
+      "word": "diferente",
+      "level": "A1"
+    },
+    {
+      "word": "páís",
+      "level": "A1"
+    },
+    {
+      "word": "bókan",
+      "level": "A1"
+    },
+    {
+      "word": "kamin",
+      "level": "A1"
+    },
+    {
+      "word": "bóu",
+      "level": "A1"
+    },
+    {
+      "word": "kumpra",
+      "level": "A2"
+    },
+    {
+      "word": "pintura",
+      "level": "A1"
+    },
+    {
+      "word": "skribí",
+      "level": "A1"
+    },
+    {
+      "word": "palabra",
+      "level": "A1"
+    },
+    {
+      "word": "eskrif",
+      "level": "A1"
+    }
+  ],
+  "phrases": [
+    "E katibunan mester a traha den ...",
+    "Den ... Maria i Sheila ta mira diferente piedra ... ku simbolo grabá den nan.",
+    "E katibunan mester a traha den ...",
+    "Den ... e barku tabata stima ...",
+    "Danki Dios avor, e tabata prohibí ku kaminda na mundu!"
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [
+    "Museo Kurá Hulanda ta un museo ku Maria i Sheila ta bòlbe pa mira. E ta un museo ku masha di historia di laber. Huntu ku e ta, e ta un museo di Drobada. E ta un museo ku ta mira pa diferente. E ta un museo ku ta mira pa diferente. E ta un museo ku ta mira pa diferente.",
+    "E katibunan mester a traha den ...",
+    "Den e dos kastinan ta mira ...",
+    "E katibunan mester a traha den ...",
+    "Den ... e barku tabata stima ...",
+    "Danki Dios avor, e tabata prohibí ku kaminda na mundu!"
+  ],
+  "questions": [
+    "Kiko ta bô yena?",
+    "Lesa e frase bôu di kada pintura.",
+    "Buska e palabra ku ta eskrif akí bôu.",
+    "Skibí e palabra den bo skref."
+  ],
+  "raw_text": "Museo Kurá Hulanda ta un museo ku Maria i Sheila ta bòlbe pa mira. E ta un museo ku masha di historia di laber. Huntu ku e ta, e ta un museo di Drobada. E ta un museo ku ta mira pa diferente. E ta un museo ku ta mira pa diferente. E ta un museo ku ta mira pa diferente.\n\nE katibunan mester a traha den ...\n\nDen e dos kastinan ta mira ...\n\nE katibunan mester a traha den ...\n\nDen ... e barku tabata stima ...\n\nDanki Dios avor, e tabata prohibí ku kaminda na mundu!\n\nTarea 1\nKiko ta bô yena?\nLesa e frase bôu di kada pintura.\nBuska e palabra ku ta eskrif akí bôu.\nSkibí e palabra den bo skref."
+}

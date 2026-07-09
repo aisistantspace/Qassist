@@ -1,0 +1,33 @@
+{
+  "index": 148,
+  "source_file": "IMG20260707204226.jpg",
+  "extracted_at": "2026-07-08T20:42:29.210Z",
+  "page_type": "other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 7 Poesia",
+  "week": "Siman 3",
+  "section": null,
+  "page_numbers": [
+    "70",
+    "71"
+  ],
+  "words": [],
+  "phrases": [
+    "Aki bou in kuater palabra.",
+    "Ki forma e poema tin?",
+    "Algún palabra ta kuadra mihó ku kada poema?",
+    "Pone e kuater palabra ku falta, na nan lugá.",
+    "Buska e palabra ku falta den kada frase."
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [
+    "Si Kua palabra ta kuadra?",
+    "Aki bou in kuater palabra. Despues ta sigui kuater poema.",
+    "Si Pone e palabranan na lugá.",
+    "Si Yena e palabra korekto."
+  ],
+  "questions": [],
+  "raw_text": "5 Pensa bon\n\nSi Kua palabra ta kuadra?\nAki bou in kuater palabra. Despues ta sigui kuater poema.\n\nSi Pone e palabranan na lugá\n\nKi forma e poema tin?\nAlgún palabra ta kuadra mihó ku kada poema?\nPone e kuater palabra ku falta, na nan lugá.\n\nSi Yena e palabra korekto\nBuska e palabra ku falta den kada frase."
+}

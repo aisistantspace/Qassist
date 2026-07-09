@@ -20,6 +20,28 @@ let insuranceVocab: {
   phrase_fixes?: { pattern: string; replacement: string }[]
   demo_phrases?: string[]
 } | null = null
+let bookVocabulary: { words?: { word: string; levels?: string[]; grades?: string[] }[] } | null = null
+let schoolPhrases: {
+  phrases?: { pa: string; type?: string; grade?: string }[]
+  conversation_rules?: { text: string }[]
+} | null = null
+let schoolGrammar: { rules?: { text: string; grade?: string }[] } | null = null
+
+function schoolVocabPath(): string {
+  const primary = path.join(dataDir(), 'school-grande-vocabulary.json')
+  if (fs.existsSync(primary)) return primary
+  return path.join(dataDir(), 'book-vocabulary.json')
+}
+
+function schoolPhrasesPath(): string {
+  const primary = path.join(dataDir(), 'school-grande-phrases.json')
+  if (fs.existsSync(primary)) return primary
+  return path.join(dataDir(), 'fiesta-phrases.json')
+}
+
+function schoolGrammarPath(): string {
+  return path.join(dataDir(), 'school-grande-grammar.json')
+}
 
 function loadInsuranceVocabFile(): {
   words?: string[]
@@ -52,6 +74,98 @@ export function getInsuranceDemoPhrases(): string[] {
   return loadInsuranceVocabFile().demo_phrases || []
 }
 
+function loadSchoolVocabularyFile(): { words?: { word: string; levels?: string[]; grades?: string[] }[] } {
+  if (bookVocabulary) return bookVocabulary
+  try {
+    bookVocabulary = JSON.parse(fs.readFileSync(schoolVocabPath(), 'utf8'))
+  } catch {
+    bookVocabulary = { words: [] }
+  }
+  return bookVocabulary ?? { words: [] }
+}
+
+function loadSchoolPhrasesFile(): {
+  phrases?: { pa: string; type?: string; grade?: string }[]
+  conversation_rules?: { text: string }[]
+} {
+  if (schoolPhrases) return schoolPhrases
+  try {
+    schoolPhrases = JSON.parse(fs.readFileSync(schoolPhrasesPath(), 'utf8'))
+  } catch {
+    schoolPhrases = { phrases: [], conversation_rules: [] }
+  }
+  return schoolPhrases ?? { phrases: [], conversation_rules: [] }
+}
+
+function loadSchoolGrammarFile(): { rules?: { text: string; grade?: string }[] } {
+  if (schoolGrammar) return schoolGrammar
+  try {
+    schoolGrammar = JSON.parse(fs.readFileSync(schoolGrammarPath(), 'utf8'))
+  } catch {
+    schoolGrammar = { rules: [] }
+  }
+  return schoolGrammar ?? { rules: [] }
+}
+
+/** Words from Fiesta di idioma Grande 3–6 vocabulary lists. */
+export function getBookVocabularyWords(): string[] {
+  const data = loadSchoolVocabularyFile()
+  return (data.words || []).map((w) => w.word).filter(Boolean)
+}
+
+/** Alias — school Grande 3–6 vocabulary. */
+export function getSchoolGrandeVocabularyWords(): string[] {
+  return getBookVocabularyWords()
+}
+
+/** Canonical phrases from school reading + conversation (Grande 3–6). */
+export function getFiestaPhrases(): string[] {
+  return getSchoolGrandePhrases()
+}
+
+export function getSchoolGrandePhrases(): string[] {
+  const data = loadSchoolPhrasesFile()
+  const fromPhrases = (data.phrases || [])
+    .map((p) => (typeof p === 'string' ? p : p.pa))
+    .filter((s): s is string => typeof s === 'string' && s.length > 1)
+  const fromRules = (data.conversation_rules || [])
+    .map((r) => r.text)
+    .filter((s) => typeof s === 'string' && s.length > 1)
+  return [...fromPhrases, ...fromRules]
+}
+
+/** Conversation rules from school books (Regla di kòmbersashon). */
+export function getSchoolConversationRules(): string[] {
+  const data = loadSchoolPhrasesFile()
+  return (data.conversation_rules || [])
+    .map((r) => r.text)
+    .filter((s) => typeof s === 'string' && s.length > 5)
+}
+
+/** Grammar notes from school books for prompt injection. */
+export function getSchoolGrammarRules(): string[] {
+  const data = loadSchoolGrammarFile()
+  return (data.rules || [])
+    .map((r) => r.text)
+    .filter((s) => typeof s === 'string' && s.length > 10)
+    .slice(0, 40)
+}
+
+/** Sample school phrases for AI prompt (diverse, natural PA). */
+export function getSchoolGrandePromptSamples(): string[] {
+  const data = loadSchoolPhrasesFile()
+  const phrases = (data.phrases || [])
+    .map((p) => (typeof p === 'string' ? p : p.pa))
+    .filter((s): s is string => typeof s === 'string' && s.length >= 10 && s.length <= 120)
+  // Prefer reading + conversation over questions
+  const typed = (data.phrases || []).filter(
+    (p) => typeof p !== 'string' && (p.type === 'reading' || p.type === 'conversation')
+  ) as { pa: string }[]
+  const preferred = typed.map((p) => p.pa)
+  const pool = preferred.length >= 8 ? preferred : phrases
+  return pool.slice(0, 15)
+}
+
 function dataDir(): string {
   return path.join(process.cwd(), 'lib', 'papiamentu', 'data')
 }
@@ -62,6 +176,12 @@ export function getWordSet(): Set<string> {
   wordSet = new Set(arr.map((w) => w.toLowerCase()))
   for (const w of getInsuranceWordSet()) {
     wordSet.add(w)
+  }
+  for (const w of getBookVocabularyWords()) {
+    wordSet.add(w.toLowerCase())
+    for (const part of w.split(/\s+/)) {
+      if (part.length > 2) wordSet.add(part.toLowerCase())
+    }
   }
   return wordSet
 }
@@ -196,6 +316,11 @@ export function getCanonicalPhrases(): string[] {
 
   // Insurance demo phrases
   for (const phrase of getInsuranceDemoPhrases()) {
+    if (phrase.length > 1) phrases.push(phrase)
+  }
+
+  // Fiesta di idioma Grande 3–6 school book phrases
+  for (const phrase of getSchoolGrandePhrases()) {
     if (phrase.length > 1) phrases.push(phrase)
   }
 

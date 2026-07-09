@@ -1,0 +1,70 @@
+{
+  "index": 118,
+  "source_file": "IMG20260707203829.jpg",
+  "extracted_at": "2026-07-08T20:33:01.524Z",
+  "page_type": "vocabulary_list",
+  "book_series": "Fiesta di idioma",
+  "grade": "6",
+  "theme": "Tema 6 Invento",
+  "week": "Siman 2",
+  "section": null,
+  "page_numbers": [
+    "18",
+    "19"
+  ],
+  "words": [
+    {
+      "word": "asistente di dentista",
+      "level": "null"
+    },
+    {
+      "word": "dentista",
+      "level": "null"
+    },
+    {
+      "word": "djent di lechi",
+      "level": "null"
+    },
+    {
+      "word": "karni di djente",
+      "level": "null"
+    },
+    {
+      "word": "korekto",
+      "level": "null"
+    },
+    {
+      "word": "plancha",
+      "level": "null"
+    },
+    {
+      "word": "sonda",
+      "level": "null"
+    },
+    {
+      "word": "spil di boka",
+      "level": "null"
+    }
+  ],
+  "phrases": [
+    "Kiko bo ta yena?",
+    "Lese a frase bou di kada pintura.",
+    "Buska e palabra ku falta, den e rei bou.",
+    "Skibi e palabra den bo skref.",
+    "Bo sa kontesta?",
+    "Kuántu aña mucha tin ora nan haña djente nobo?",
+    "Kon bo mester kuida bo djentenan?"
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [
+    "Luki, bo por sa ku bo djenten ta afia?",
+    "E ta usa un ... pa chèk si bo tin buraku den bo djente.",
+    "Dos biahá pa aña bo tin ku laga ... kontrolá bo djentenan.",
+    "E ta wak den bo boku ku ...",
+    "Djent di mucha chiki bo ta ...",
+    "Si bo djentenan krese di banda, bo ta haña un ..."
+  ],
+  "questions": [],
+  "raw_text": "Vokabulario\nDentista\nKiko bo ta yena?\nLese a frase bou di kada pintura.\nBuska e palabra ku falta, den e rei bou.\nSkibi e palabra den bo skref.\n\nBo sa kontesta?\nKuántu aña mucha tin ora nan haña djente nobo?\nKon bo mester kuida bo djentenan?\n\nLuki, bo por sa ku bo djenten ta afia?\nE ta usa un ... pa chèk si bo tin buraku den bo djente.\nDos biahá pa aña bo tin ku laga ... kontrolá bo djentenan.\nE ta wak den bo boku ku ...\nDjent di mucha chiki bo ta ...\nSi bo djentenan krese di banda, bo ta haña un ..."
+}

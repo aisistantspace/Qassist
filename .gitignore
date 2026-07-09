@@ -36,4 +36,7 @@ next-env.d.ts
 # exclude all markdown documentation files (keep local only)
 *.md
 
+# local source photos for OCR (multi-GB; keep merged JSON in repo)
+/Papiamentu book images/
+
 

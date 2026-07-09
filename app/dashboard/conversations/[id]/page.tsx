@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { format } from 'date-fns'
-import { HandThumbUpIcon, HandThumbDownIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { HandThumbUpIcon, HandThumbDownIcon, UserGroupIcon, TrashIcon } from '@heroicons/react/24/outline'
+import ConfirmModal from '@/components/dashboard/ConfirmModal'
+import ToastBanner from '@/components/dashboard/ToastBanner'
 
 // Component to render text with clickable links
 const MessageContent = ({ content, isUser }: { content: string, isUser: boolean }) => {
@@ -89,6 +91,9 @@ export default function ConversationDetailPage() {
   const [rating, setRating] = useState<number | null>(null)
   const [staffEmail, setStaffEmail] = useState('')
   const [actionLoading, setActionLoading] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     if (params.id) {
@@ -173,6 +178,25 @@ export default function ConversationDetailPage() {
     }
   }
 
+  async function handleDeleteConversation() {
+    if (!conversation) return
+    setDeleteLoading(true)
+    try {
+      const response = await fetch(`/api/dashboard/conversations/${conversation.id}`, { method: 'DELETE' })
+      if (response.ok) {
+        router.push('/dashboard/conversations')
+      } else {
+        setToast({ type: 'error', message: 'Could not delete this conversation.' })
+        setDeleteModalOpen(false)
+      }
+    } catch {
+      setToast({ type: 'error', message: 'Something went wrong while deleting.' })
+      setDeleteModalOpen(false)
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
+
   async function handleMarkHumanContact() {
     if (!conversation) return
     if (!confirm('Mark this conversation as a human contact request? This will mark the lead as hot and send a notification.')) return
@@ -230,15 +254,27 @@ export default function ConversationDetailPage() {
 
   return (
     <div>
-      <div className="mb-6">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <button
+            onClick={() => router.back()}
+            className="text-primary-600 hover:text-primary-700 mb-4"
+          >
+            ← Back to Conversations
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">Conversation Details</h1>
+        </div>
         <button
-          onClick={() => router.back()}
-          className="text-primary-600 hover:text-primary-700 mb-4"
+          type="button"
+          onClick={() => setDeleteModalOpen(true)}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors shrink-0"
         >
-          ← Back to Conversations
+          <TrashIcon className="w-4 h-4" />
+          Delete conversation
         </button>
-        <h1 className="text-3xl font-bold text-gray-900">Conversation Details</h1>
       </div>
+
+      {toast && <ToastBanner type={toast.type} message={toast.message} onDismiss={() => setToast(null)} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Conversation */}
@@ -510,6 +546,16 @@ export default function ConversationDetailPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        title="Delete conversation"
+        message="This permanently removes all messages in this chat. The linked lead record stays unless you delete it from Leads."
+        confirmLabel="Delete conversation"
+        loading={deleteLoading}
+        onConfirm={handleDeleteConversation}
+        onCancel={() => !deleteLoading && setDeleteModalOpen(false)}
+      />
     </div>
   )
 }

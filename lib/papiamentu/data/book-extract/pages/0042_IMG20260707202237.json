@@ -1,0 +1,44 @@
+{
+  "index": 42,
+  "source_file": "IMG20260707202237.jpg",
+  "extracted_at": "2026-07-08T19:57:29.501Z",
+  "page_type": "other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 7 Ban museo",
+  "week": "Siman 4",
+  "section": null,
+  "page_numbers": [
+    "82",
+    "83"
+  ],
+  "words": [],
+  "phrases": [
+    "Hasi é frase mas largu",
+    "Esaki esaki tres lira.",
+    "Un museo ku bo gusta bisiá.",
+    "Un museo ku ta pan na luga kaba, pero",
+    "Abo ta bisiá un bòrchi di indikashon nu kaminda.",
+    "Bò ta bisiá un tare ta bòrchi ku ilustrashon."
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [
+    "6 Skibi bon",
+    "Stampa si òf no?",
+    "Anto' an ta bisiá tabata manda un karta i tarheta ku pòst.",
+    "Pesé ku nan mester di stampia.",
+    "Den un museo di stampia bo por manda un karta di e-mail.",
+    "Abo ta kè ke e karta bo manda na karta di tarheta?",
+    "E ta bisiá ku e stampia ta bai dispare.",
+    "Kò ta e ke ser komprendé ku e ta bisiá?",
+    "Stampa lo dispare di futuro si no?",
+    "7b Diseñá bòrchi di indikashon",
+    "Un museo ku bo gusta bisiá.",
+    "Un museo ku ta pan na luga kaba, pero",
+    "Abo ta bisiá un bòrchi di indikashon nu kaminda.",
+    "Abo ta bisiá un tare ta bòrchi ku ilustrashon."
+  ],
+  "questions": [],
+  "raw_text": "6 Skibi bon\nStampa si òf no?\nAnto' an ta bisiá tabata manda un karta i tarheta ku pòst.\nPesé ku nan mester di stampia.\nDen un museo di stampia bo por manda un karta di e-mail.\nAbo ta kè ke e karta bo manda na karta di tarheta?\nE ta bisiá ku e stampia ta bai dispare.\nKò ta e ke ser komprendé ku e ta bisiá?\nStampa lo dispare di futuro si no?\n7b Diseñá bòrchi di indikashon\nUn museo ku bo gusta bisiá.\nUn museo ku ta pan na luga kaba, pero\nAbo ta bisiá un bòrchi di indikashon nu kaminda.\nAbo ta bisiá un tare ta bòrchi ku ilustrashon."
+}

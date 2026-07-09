@@ -1,0 +1,40 @@
+{
+  "index": 161,
+  "source_file": "IMG20260707204403.jpg",
+  "extracted_at": "2026-07-08T20:46:18.053Z",
+  "page_type": "other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 8 Bida den kueba i den seru",
+  "week": "Siman 2",
+  "section": null,
+  "page_numbers": [
+    "100",
+    "101"
+  ],
+  "words": [],
+  "phrases": [
+    "Den kada palabra falta un palabra.",
+    "Buska e palabra ku falta.",
+    "Skibi e palabra korekto den bo skrèf.",
+    "Bo por skibe for di.",
+    "Bo ta bisa ku ta biba algo ku kome.",
+    "Bo ta bisa ku ta biba algo ku fruta.",
+    "Raton gusta kome keshi.",
+    "Raton djanchon gusta kome fruta."
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [
+    "Den kada frase falta un palabra.",
+    "Buska e palabra ku falta den kada frase.",
+    "Skibi e palabra korekto den bo skrèf.",
+    "Bo por skibe for di.",
+    "Bo ta bisa ku ta biba algo ku kome.",
+    "Bo ta bisa ku ta biba algo ku fruta.",
+    "Raton gusta kome keshi.",
+    "Raton djanchon gusta kome fruta."
+  ],
+  "questions": [],
+  "raw_text": "5 Pensa bon\n\n5 Kua palabra pa yena?\nDen kada frase falta un palabra.\nBuska e palabra ku falta.\nSkibi e palabra korekto den bo skrèf.\nBo por skibe for di.\n\n5g Buska e palabra ku falta\nBuska e palabra ku falta den kada frase.\n\n5f Dos frase kòrtiku\nBo ta bisa ku ta biba algo ku kome.\nBo ta bisa ku ta biba algo ku fruta.\nRaton gusta kome keshi.\nRaton djanchon gusta kome fruta.\n\n5h Bèrdat of nò?\nKada frase ta bisa algu ku bèrdat of no bèrdat.\nSkibi e frasnan ku ta bisa ku nos ta bèrdat den bo skrèf."
+}

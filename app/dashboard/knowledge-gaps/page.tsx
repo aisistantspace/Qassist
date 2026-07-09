@@ -8,7 +8,10 @@ import {
   CheckCircleIcon,
   ArrowPathIcon,
   PlusIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline'
+import ConfirmModal from '@/components/dashboard/ConfirmModal'
+import ToastBanner from '@/components/dashboard/ToastBanner'
 
 interface UnansweredQuery {
   id: string
@@ -33,10 +36,25 @@ export default function KnowledgeGapsPage() {
   const [loading, setLoading] = useState(true)
   const [resolvedFilter, setResolvedFilter] = useState<'open' | 'resolved' | 'all'>('open')
   const [languageFilter, setLanguageFilter] = useState('all')
+  const [confirmModal, setConfirmModal] = useState<{
+    title: string
+    message: string
+    confirmLabel: string
+    onConfirm: () => Promise<void>
+  } | null>(null)
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     fetchQueries()
   }, [resolvedFilter, languageFilter])
+
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(null), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [toast])
 
   async function fetchQueries() {
     setLoading(true)
@@ -74,6 +92,46 @@ export default function KnowledgeGapsPage() {
     }
   }
 
+  async function deleteGap(id: string) {
+    setConfirmLoading(true)
+    try {
+      const res = await fetch(`/api/dashboard/unanswered-queries?id=${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setToast({ type: 'success', message: 'Knowledge gap removed.' })
+        fetchQueries()
+      } else {
+        setToast({ type: 'error', message: 'Could not delete this gap.' })
+      }
+    } catch {
+      setToast({ type: 'error', message: 'Something went wrong while deleting.' })
+    } finally {
+      setConfirmLoading(false)
+      setConfirmModal(null)
+    }
+  }
+
+  async function clearResolvedGaps() {
+    setConfirmLoading(true)
+    try {
+      const res = await fetch('/api/dashboard/unanswered-queries?clear_resolved=true', { method: 'DELETE' })
+      if (res.ok) {
+        const data = await res.json()
+        setToast({
+          type: 'success',
+          message: `Cleared ${data.deleted || 0} resolved gap${data.deleted !== 1 ? 's' : ''}.`,
+        })
+        fetchQueries()
+      } else {
+        setToast({ type: 'error', message: 'Could not clear resolved gaps.' })
+      }
+    } catch {
+      setToast({ type: 'error', message: 'Something went wrong while clearing.' })
+    } finally {
+      setConfirmLoading(false)
+      setConfirmModal(null)
+    }
+  }
+
   function prefillKbEntry(query: string, language: string | null) {
     const params = new URLSearchParams({
       prefill: query,
@@ -82,17 +140,40 @@ export default function KnowledgeGapsPage() {
     window.location.href = `/dashboard/knowledge-base?${params}`
   }
 
+  const resolvedVisibleCount = queries.filter((q) => q.resolved).length
+
   return (
     <div>
-      <div className="mb-8">
-        <Link href="/dashboard/knowledge-base" className="text-primary-600 hover:text-primary-700 text-sm mb-2 inline-block">
-          ← Back to Knowledge Base
-        </Link>
-        <h1 className="text-3xl font-bold text-gray-900">Knowledge Gaps</h1>
-        <p className="text-gray-600 mt-2">
-          Questions customers asked that your knowledge base could not answer. Add content to close these gaps.
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <Link href="/dashboard/knowledge-base" className="text-primary-600 hover:text-primary-700 text-sm mb-2 inline-block">
+            ← Back to Knowledge Base
+          </Link>
+          <h1 className="text-3xl font-bold text-gray-900">Knowledge Gaps</h1>
+          <p className="text-gray-600 mt-2">
+            Questions customers asked that your knowledge base could not answer. Add content to close these gaps.
+          </p>
+        </div>
+        {(resolvedFilter === 'resolved' || resolvedFilter === 'all') && resolvedVisibleCount > 0 && (
+          <button
+            type="button"
+            onClick={() =>
+              setConfirmModal({
+                title: 'Clear resolved gaps',
+                message: `Remove ${resolvedVisibleCount} resolved gap${resolvedVisibleCount !== 1 ? 's' : ''} from the list? Open gaps are kept.`,
+                confirmLabel: 'Clear resolved',
+                onConfirm: clearResolvedGaps,
+              })
+            }
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors shrink-0"
+          >
+            <TrashIcon className="w-4 h-4" />
+            Clear resolved
+          </button>
+        )}
       </div>
+
+      {toast && <ToastBanner type={toast.type} message={toast.message} onDismiss={() => setToast(null)} />}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow p-4">
@@ -177,9 +258,7 @@ export default function KnowledgeGapsPage() {
                     )}
                     <span>Asked {q.frequency}×</span>
                     <span>Last: {format(new Date(q.last_asked), 'MMM d, yyyy HH:mm')}</span>
-                    {q.resolved && (
-                      <span className="text-green-600 font-medium">Resolved</span>
-                    )}
+                    {q.resolved && <span className="text-green-600 font-medium">Resolved</span>}
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2 shrink-0">
@@ -203,6 +282,21 @@ export default function KnowledgeGapsPage() {
                     <CheckCircleIcon className="w-4 h-4" />
                     {q.resolved ? 'Reopen' : 'Mark resolved'}
                   </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setConfirmModal({
+                        title: 'Delete knowledge gap',
+                        message: 'Remove this gap from the list? You can always add KB content manually later.',
+                        confirmLabel: 'Delete',
+                        onConfirm: () => deleteGap(q.id),
+                      })
+                    }
+                    className="inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border border-red-200 text-red-700 hover:bg-red-50"
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
@@ -215,6 +309,16 @@ export default function KnowledgeGapsPage() {
         (EN, NL, ES, or PA). Add KB content in that language — or in English/Dutch/Spanish for Papiamentu, which can
         fall back and be translated.
       </div>
+
+      <ConfirmModal
+        isOpen={!!confirmModal}
+        title={confirmModal?.title || ''}
+        message={confirmModal?.message || ''}
+        confirmLabel={confirmModal?.confirmLabel}
+        loading={confirmLoading}
+        onConfirm={() => confirmModal?.onConfirm()}
+        onCancel={() => !confirmLoading && setConfirmModal(null)}
+      />
     </div>
   )
 }

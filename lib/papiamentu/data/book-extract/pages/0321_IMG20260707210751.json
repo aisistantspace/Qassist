@@ -1,0 +1,44 @@
+{
+  "index": 321,
+  "source_file": "IMG20260707210751.jpg",
+  "extracted_at": "2026-07-08T22:00:11.167Z",
+  "page_type": "other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 10 Un biahè den mundo di moda",
+  "week": "Siman 4",
+  "section": null,
+  "page_numbers": [
+    "200",
+    "201"
+  ],
+  "words": [],
+  "phrases": [
+    "Skohe pa kada splikashon e palabra korekto.",
+    "E ta lombar",
+    "E ta fabriká den fábrika",
+    "E ta bisti e",
+    "E ta nobo",
+    "E ta nobo",
+    "E ta nobo",
+    "E ta nobo"
+  ],
+  "conversation_rules": [
+    "Lese e frasen akí bon i ta pregunta di kada frase. Hasi asina.",
+    "Hende ke gusta bista asina. Kiko hende ke gusta bisti?"
+  ],
+  "grammar_rules": [],
+  "paragraphs": [
+    "5. Mira i wak",
+    "1. Mi ta mira un djis di moda ku ta bista aki ku atenshon?",
+    "2. Pa e djis ku ta bista pa baiskel.",
+    "3. Mi ta mira un djis di moda ku ta bista.",
+    "4. E ta bista un djis di moda.",
+    "5. E ta bista un djis di moda ku ta bista.",
+    "6. E ta bista un djis di moda ku ta bista.",
+    "7. E ta bista un djis di moda ku ta bista.",
+    "8. E ta bista un djis di moda ku ta bista."
+  ],
+  "questions": [],
+  "raw_text": "5. Mira i wak\n1. Mi ta mira un djis di moda ku ta bista aki ku atenshon?\n2. Pa e djis ku ta bista pa baiskel.\n3. Mi ta mira un djis di moda ku ta bista.\n4. E ta bista un djis di moda.\n5. E ta bista un djis di moda ku ta bista.\n6. E ta bista un djis di moda ku ta bista.\n7. E ta bista un djis di moda ku ta bista.\n8. E ta bista un djis di moda ku ta bista.\n\nSkohe pa kada splikashon e palabra korekto.\nE ta lombar\nE ta fabriká den fábrika\nE ta bisti e\nE ta nobo\nE ta nobo\nE ta nobo\nE ta nobo\n\nLese e frasen akí bon i ta pregunta di kada frase. Hasi asina.\nHende ke gusta bista asina. Kiko hende ke gusta bisti?"
+}

@@ -95,3 +95,23 @@ export async function PATCH(
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const supabaseAdmin = getSupabaseAdmin()
+
+    const { error } = await supabaseAdmin.from('conversations').delete().eq('id', id)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true })
+  } catch (error: unknown) {
+    console.error('Error deleting conversation:', error)
+    const message = error instanceof Error ? error.message : 'Failed to delete conversation'
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}

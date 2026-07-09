@@ -9,7 +9,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pa:extract-book": "node scripts/extract-papiamentu-book-images.mjs --resume",
+    "pa:merge-book": "node scripts/merge-papiamentu-book-extract.mjs",
+    "pa:import-book": "npm run pa:extract-book && npm run pa:merge-book"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
@@ -30,6 +33,7 @@
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.2.3",
     "recharts": "^2.10.0",
+    "sharp": "^0.33.5",
     "supports-color": "^10.2.2"
   },
   "devDependencies": {

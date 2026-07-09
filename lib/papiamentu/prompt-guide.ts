@@ -7,7 +7,7 @@
  * correction layer even runs.
  */
 
-import { getCanonicalPhrases, getTranslations, getInsuranceDemoPhrases } from './load-data'
+import { getCanonicalPhrases, getTranslations, getInsuranceDemoPhrases, getSchoolGrandePromptSamples, getSchoolConversationRules, getSchoolGrammarRules } from './load-data'
 import { getPapiamentuInsurancePromptSection } from './insurance-prompt'
 
 let cachedGuide: string | null = null
@@ -26,8 +26,16 @@ export function getPapiamentuPromptGuide(): string {
     vocabExamples.push(`  ${pa} (${info.class}) = ${info.nl}`)
   }
 
-  // Key phrases
-  const keyPhrases = [...phrases.slice(0, 10), ...getInsuranceDemoPhrases().slice(0, 8)]
+  // Key phrases: Buki di Oro + insurance demo + school Grande 3–6 samples
+  const schoolSamples = getSchoolGrandePromptSamples()
+  const keyPhrases = [
+    ...phrases.slice(0, 6),
+    ...getInsuranceDemoPhrases().slice(0, 6),
+    ...schoolSamples.slice(0, 12),
+  ]
+
+  const schoolRules = getSchoolConversationRules().slice(0, 5)
+  const schoolGrammar = getSchoolGrammarRules().slice(0, 8)
 
   cachedGuide = `
 ### PAPIAMENTU LANGUAGE GUIDE — Buki di Oro (Official Curaçao Orthography 2009)
@@ -123,8 +131,13 @@ You are addressing the CUSTOMER (bo = you). When you (the assistant) offer help 
 
 ${getPapiamentuInsurancePromptSection()}
 
-**COMMON EXPRESSIONS:**
-${keyPhrases.slice(0, 10).map(p => `- ${p}`).join('\n')}
+**SCHOOL PAPIAMENTU — Fiesta di idioma (Grande 3–6, official Curaçao curriculum):**
+Your Papiamentu should match the quality of these school books — natural, correct orthography, child-friendly but professional.
+${schoolRules.length > 0 ? `\nConversation norms (Regla di kòmbersashon):\n${schoolRules.map((r) => `- ${r}`).join('\n')}` : ''}
+${schoolGrammar.length > 0 ? `\nGrammar from school books:\n${schoolGrammar.map((r) => `- ${r}`).join('\n')}` : ''}
+
+**COMMON EXPRESSIONS (school-validated + official):**
+${keyPhrases.slice(0, 18).map((p) => `- ${p}`).join('\n')}
 
 **VOCABULARY:**
 ${vocabExamples.join('\n')}

@@ -63,6 +63,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'All notifications marked as read' })
     }
 
+    if (body.action === 'clear_all') {
+      const { data, error } = await supabaseAdmin
+        .from('notifications')
+        .delete()
+        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .select('id')
+
+      if (error) throw error
+
+      return NextResponse.json({
+        success: true,
+        message: 'All notifications cleared',
+        deleted: data?.length || 0,
+      })
+    }
+
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   } catch (error: any) {
     console.error('Error updating notifications:', error)

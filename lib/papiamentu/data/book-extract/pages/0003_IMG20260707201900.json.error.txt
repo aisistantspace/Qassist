@@ -1,0 +1,5 @@
+SyntaxError: Unterminated string in JSON at position 10394 (line 277 column 34)
+    at JSON.parse (<anonymous>)
+    at extractPage (file:///C:/Users/qpdi/Dropbox/Astute%20AIsistant/scripts/extract-papiamentu-book-images.mjs:131:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (file:///C:/Users/qpdi/Dropbox/Astute%20AIsistant/scripts/extract-papiamentu-book-images.mjs:185:25)

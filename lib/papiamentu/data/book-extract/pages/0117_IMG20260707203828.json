@@ -1,0 +1,50 @@
+{
+  "index": 117,
+  "source_file": "IMG20260707203828.jpg",
+  "extracted_at": "2026-07-08T20:32:53.635Z",
+  "page_type": "other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 6 Invento",
+  "week": "Siman 2",
+  "section": null,
+  "page_numbers": [
+    "19"
+  ],
+  "words": [
+    {
+      "word": "korekto",
+      "level": null
+    },
+    {
+      "word": "plancha",
+      "level": null
+    },
+    {
+      "word": "sonda",
+      "level": null
+    },
+    {
+      "word": "spí di boka",
+      "level": null
+    }
+  ],
+  "phrases": [
+    "Kiko bo ta yena?",
+    "Lese a frase bou di kada pintura.",
+    "Buska e palabra ku falta, den e rei aki bou.",
+    "Skibi e palabra den bo skref.",
+    "Kuantu aná mucha tin ora n'haña djente nobo?",
+    "Kon bo mester kuida bo djentenan?",
+    "Dos biahá pa aná bo tin ku laga ... kontrolá bo djentenan.",
+    "E ta usa un ... pa chèk si bo tin buraku den bo djente.",
+    "Tambe e ta wak si bo salú.",
+    "Djenté di mucha chiki nos ta yama ...",
+    "Si bo djentenan krese di banda, bo ta haña un ..."
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [],
+  "questions": [],
+  "raw_text": "Kiko bo ta yena?\nLese a frase bou di kada pintura.\nBuska e palabra ku falta, den e rei aki bou.\nSkibi e palabra den bo skref.\nKuantu aná mucha tin ora n'haña djente nobo?\nKon bo mester kuida bo djentenan?\nDos biahá pa aná bo tin ku laga ... kontrolá bo djentenan.\nE ta usa un ... pa chèk si bo tin buraku den bo djente.\nTambe e ta wak si bo salú.\nDjenté di mucha chiki nos ta yama ...\nSi bo djentenan krese di banda, bo ta haña un ..."
+}

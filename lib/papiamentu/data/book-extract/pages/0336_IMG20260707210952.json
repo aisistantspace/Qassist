@@ -1,0 +1,38 @@
+{
+  "index": 336,
+  "source_file": "IMG20260707210952.jpg",
+  "extracted_at": "2026-07-08T22:05:27.517Z",
+  "page_type": "comprehension",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": null,
+  "week": null,
+  "section": null,
+  "page_numbers": [
+    "null"
+  ],
+  "words": [],
+  "phrases": [],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [],
+  "questions": [
+    "Kiko Liliana ta puntra Urvin?",
+    "Kiko Urvin ta bai kumpra drein tok?",
+    "Kiko Urvin ta reaskhon drein like Liliana ta bisi?",
+    "Dikon Liliana a keda wa Urvin strafa?",
+    "Non enkuentra Yanko sa bisi ora bo puntra di e bisi ku e wega mesora ku bo?",
+    "A e bai kumpra e informashon pa bo?",
+    "A e bisi ku bo di bo dilan bo haña e?",
+    "Kon Liliana ta hiba Urvin awe?",
+    "A e hiba ku Urvin ta trankil?",
+    "A e hiba ku Urvin ta trankil?",
+    "A e hiba ku Urvin ta pare trankil?",
+    "Kon Urvin ta hiba ku e ta simi Yanko ora e nan konversá?",
+    "Dikon Yanko ta gradisido ku Urvin a den serka dre?",
+    "Dikon Urvin ta lora bai kasi?",
+    "Kiko Urvin ta grita ora e mira Liliana?",
+    "Dikon Urvin ke spikla Liliana kiko a pasa?"
+  ],
+  "raw_text": "Pregunta\n1. Kiko Liliana ta puntra Urvin?\n2. Kiko Urvin ta bai kumpra drein tok?\n3. Kiko Urvin ta reaskhon drein like Liliana ta bisi?\n4. Dikon Liliana a keda wa Urvin strafa?\n5. Non enkuentra Yanko sa bisi ora bo puntra di e bisi ku e wega mesora ku bo?\n   A. E e bai kumpra e informashon pa bo.\n   B. E a bisi ku bo di bo dilan bo haña e?\n6. Kon Liliana ta hiba Urvin awe?\n   A. A e hiba ku Urvin ta trankil.\n   B. A e hiba ku Urvin ta trankil.\n   C. A e hiba ku Urvin ta pare trankil.\n7. Kon Urvin ta hiba ku e ta simi Yanko ora e nan konversá?\n8. Dikon Yanko ta gradisido ku Urvin a den serka dre?\n9. Dikon Urvin ta lora bai kasi?\n10. Kiko Urvin ta grita ora e mira Liliana?\n11. Dikon Urvin ke spikla Liliana kiko a pasa?"
+}

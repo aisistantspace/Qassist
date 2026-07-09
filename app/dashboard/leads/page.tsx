@@ -4,6 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { EllipsisVerticalIcon, PhoneIcon, EnvelopeIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline'
+import ConfirmModal from '@/components/dashboard/ConfirmModal'
+import BulkActionBar from '@/components/dashboard/BulkActionBar'
+import ToastBanner from '@/components/dashboard/ToastBanner'
 
 interface Lead {
   id: string
@@ -40,10 +43,26 @@ export default function LeadsPage() {
   const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set())
   const [selectAll, setSelectAll] = useState(false)
+  const [confirmModal, setConfirmModal] = useState<{
+    title: string
+    message: string
+    confirmLabel: string
+    variant?: 'danger' | 'warning' | 'primary'
+    onConfirm: () => Promise<void>
+  } | null>(null)
+  const [confirmLoading, setConfirmLoading] = useState(false)
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     fetchLeads()
   }, [statusFilter, temperatureFilter])
+
+  useEffect(() => {
+    if (toast) {
+      const t = setTimeout(() => setToast(null), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [toast])
 
   async function fetchLeads() {
     setLoading(true)
@@ -83,20 +102,91 @@ export default function LeadsPage() {
   }
 
   async function deleteLead(leadId: string) {
-    if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) return
-    
-    try {
-      const response = await fetch(`/api/dashboard/leads/${leadId}`, {
-        method: 'DELETE',
-      })
+    setConfirmModal({
+      title: 'Delete lead',
+      message: 'This permanently removes the lead and cannot be undone.',
+      confirmLabel: 'Delete lead',
+      onConfirm: async () => {
+        setConfirmLoading(true)
+        try {
+          const response = await fetch(`/api/dashboard/leads/${leadId}`, { method: 'DELETE' })
+          if (response.ok) {
+            setToast({ type: 'success', message: 'Lead deleted.' })
+            fetchLeads()
+            setOpenDropdown(null)
+          } else {
+            setToast({ type: 'error', message: 'Failed to delete lead.' })
+          }
+        } catch {
+          setToast({ type: 'error', message: 'Something went wrong while deleting.' })
+        } finally {
+          setConfirmLoading(false)
+          setConfirmModal(null)
+        }
+      },
+    })
+  }
 
-      if (response.ok) {
-        fetchLeads()
-        setOpenDropdown(null)
-      }
-    } catch (error) {
-      console.error('Error deleting lead:', error)
-    }
+  async function bulkDeleteLeads() {
+    const ids = Array.from(selectedLeads)
+    setConfirmModal({
+      title: `Delete ${ids.length} lead${ids.length !== 1 ? 's' : ''}`,
+      message: 'Selected leads will be permanently removed. This cannot be undone.',
+      confirmLabel: 'Delete selected',
+      onConfirm: async () => {
+        setConfirmLoading(true)
+        try {
+          const results = await Promise.all(
+            ids.map((leadId) => fetch(`/api/dashboard/leads/${leadId}`, { method: 'DELETE' }))
+          )
+          const failed = results.filter((r) => !r.ok).length
+          if (failed > 0) {
+            setToast({ type: 'error', message: `Failed to delete ${failed} lead(s).` })
+          } else {
+            setToast({ type: 'success', message: `Deleted ${ids.length} lead(s).` })
+          }
+          fetchLeads()
+          setSelectedLeads(new Set())
+          setSelectAll(false)
+        } catch {
+          setToast({ type: 'error', message: 'Something went wrong while deleting.' })
+        } finally {
+          setConfirmLoading(false)
+          setConfirmModal(null)
+        }
+      },
+    })
+  }
+
+  function promptBulkStatusUpdate(newStatus: string) {
+    setConfirmModal({
+      title: 'Update lead status',
+      message: `Set ${selectedLeads.size} lead(s) to "${newStatus}"?`,
+      confirmLabel: 'Update status',
+      variant: 'primary',
+      onConfirm: async () => {
+        setConfirmLoading(true)
+        try {
+          const promises = Array.from(selectedLeads).map((leadId) =>
+            fetch(`/api/dashboard/leads/${leadId}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: newStatus }),
+            })
+          )
+          await Promise.all(promises)
+          setToast({ type: 'success', message: `Updated ${selectedLeads.size} lead(s).` })
+          fetchLeads()
+          setSelectedLeads(new Set())
+          setSelectAll(false)
+        } catch {
+          setToast({ type: 'error', message: 'Failed to update some leads.' })
+        } finally {
+          setConfirmLoading(false)
+          setConfirmModal(null)
+        }
+      },
+    })
   }
 
   // Close dropdown when clicking outside
@@ -190,83 +280,42 @@ export default function LeadsPage() {
         </div>
       </div>
 
+      {toast && <ToastBanner type={toast.type} message={toast.message} onDismiss={() => setToast(null)} />}
+
       {/* Bulk Actions Toolbar */}
-      {selectedLeads.size > 0 && (
-        <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-gray-900">
-              {selectedLeads.size} lead{selectedLeads.size !== 1 ? 's' : ''} selected
-            </span>
-            <button
-              onClick={() => {
-                setSelectedLeads(new Set())
-                setSelectAll(false)
-              }}
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Clear selection
-            </button>
-          </div>
-          <div className="flex gap-3">
-            <select
-              onChange={async (e) => {
-                const newStatus = e.target.value
-                if (newStatus && confirm(`Update ${selectedLeads.size} lead(s) to status "${newStatus}"?`)) {
-                  try {
-                    const promises = Array.from(selectedLeads).map(leadId =>
-                      fetch(`/api/dashboard/leads/${leadId}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status: newStatus }),
-                      })
-                    )
-                    await Promise.all(promises)
-                    fetchLeads()
-                    setSelectedLeads(new Set())
-                    setSelectAll(false)
-                  } catch (error) {
-                    console.error('Error updating leads:', error)
-                    alert('Failed to update some leads')
-                  }
-                }
-                e.target.value = ''
-              }}
-              className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm text-gray-900"
-            >
-              <option value="">Update Status...</option>
-              <option value="new">New</option>
-              <option value="contacted">Contacted</option>
-              <option value="qualified">Qualified</option>
-              <option value="booked">Booked</option>
-              <option value="closed">Closed</option>
-              <option value="lost">Lost</option>
-            </select>
-            <button
-              onClick={async () => {
-                if (confirm(`Delete ${selectedLeads.size} lead(s)? This action cannot be undone.`)) {
-                  try {
-                    const promises = Array.from(selectedLeads).map(leadId =>
-                      fetch(`/api/dashboard/leads/${leadId}`, {
-                        method: 'DELETE',
-                      })
-                    )
-                    await Promise.all(promises)
-                    fetchLeads()
-                    setSelectedLeads(new Set())
-                    setSelectAll(false)
-                  } catch (error) {
-                    console.error('Error deleting leads:', error)
-                    alert('Failed to delete some leads')
-                  }
-                }
-              }}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
-            >
-              Delete Selected
-            </button>
-          </div>
-        </div>
-      )}
+      <BulkActionBar
+        count={selectedLeads.size}
+        itemLabel="lead"
+        onClearSelection={() => {
+          setSelectedLeads(new Set())
+          setSelectAll(false)
+        }}
+      >
+        <select
+          onChange={(e) => {
+            const newStatus = e.target.value
+            if (newStatus) promptBulkStatusUpdate(newStatus)
+            e.target.value = ''
+          }}
+          className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm text-gray-900"
+        >
+          <option value="">Update Status...</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="qualified">Qualified</option>
+          <option value="booked">Booked</option>
+          <option value="closed">Closed</option>
+          <option value="lost">Lost</option>
+        </select>
+        <button
+          type="button"
+          onClick={bulkDeleteLeads}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+        >
+          <TrashIcon className="w-4 h-4" />
+          Delete selected
+        </button>
+      </BulkActionBar>
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -569,6 +618,17 @@ export default function LeadsPage() {
           </>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={!!confirmModal}
+        title={confirmModal?.title || ''}
+        message={confirmModal?.message || ''}
+        confirmLabel={confirmModal?.confirmLabel}
+        variant={confirmModal?.variant || 'danger'}
+        loading={confirmLoading}
+        onConfirm={() => confirmModal?.onConfirm()}
+        onCancel={() => !confirmLoading && setConfirmModal(null)}
+      />
     </div>
   )
 }

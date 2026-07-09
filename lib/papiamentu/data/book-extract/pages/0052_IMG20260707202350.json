@@ -1,0 +1,38 @@
+{
+  "index": 52,
+  "source_file": "IMG20260707202350.jpg",
+  "extracted_at": "2026-07-08T19:59:49.902Z",
+  "page_type": "other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 8 Lamari i oseano",
+  "week": "Siman 2",
+  "section": null,
+  "page_numbers": [
+    "102",
+    "103"
+  ],
+  "words": [],
+  "phrases": [
+    "Ami a shon kangreu",
+    "Yápi ta sinti kantá di lamán. E ta mira un piskadó vega ku so boti bo bashi.",
+    "E piskadó ta masha rabia. E ta kó di un rabia.",
+    "E piskadó ta un piskadó ku yápi komprendé kó di rabia.",
+    "Skibi e sinseku di e kensá ku e nesesario den bashi."
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [
+    "A yega buki nobo pa biblioteka di skol. Bo ta yuda pone nan na nan den bo skref.",
+    "Kashi e título di buki bon, spesialmente e prome palabra.",
+    "E ta kó di H.",
+    "Den e buki nobo pa skibe entre:",
+    "koral di blachi – koral di dede – koral di kachu gróf",
+    "koral di esu – koral di streá di boka grandi – koral korá"
+  ],
+  "questions": [
+    "6g Kua frase ta di mas?",
+    "Shon piskadó ta konta"
+  ],
+  "raw_text": "A yega buki nobo pa biblioteka di skol. Bo ta yuda pone nan na nan den bo skref.\nKashi e título di buki bon, spesialmente e prome palabra.\nE ta kó di H.\nDen e buki nobo pa skibe entre:\nkoral di blachi – koral di dede – koral di kachu gróf\nkoral di esu – koral di streá di boka grandi – koral korá\nAmi a shon kangreu\nYápi ta sinti kantá di lamán. E ta mira un piskadó vega ku so boti bo bashi.\nE piskadó ta masha rabia. E ta kó di un rabia.\nE piskadó ta un piskadó ku yápi komprendé kó di rabia.\nSkibi e sinseku di e kensá ku e nesesario den bashi.\n6g Kua frase ta di mas?\nShon piskadó ta konta"
+}

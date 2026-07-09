@@ -1,0 +1,39 @@
+{
+  "index": 200,
+  "source_file": "IMG20260707205631.jpg",
+  "extracted_at": "2026-07-08T20:58:06.406Z",
+  "page_type": "other",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 10",
+  "week": "Siman 1",
+  "section": "Skucha i papia",
+  "page_numbers": [
+    "170",
+    "171"
+  ],
+  "words": [],
+  "phrases": [
+    "Den kada frase tin un palabra",
+    "Bisa ku ta trata di un hende yón di algú chikitú.",
+    "Mi a hinka e teléfon den un sakitu.",
+    "E palabra ta sakitu. Un sakitu ta un sak chikitú."
+  ],
+  "conversation_rules": [
+    "Den kada frase tin un palabra.",
+    "Buska i skibi e palabra ku falta."
+  ],
+  "grammar_rules": [],
+  "paragraphs": [
+    "Un suvenir",
+    "1. Den Punda tin hopi ... di suvenir.",
+    "2. E dámita ta krá ta e tin masá servisial.",
+    "3. E regil ku na keda den m.",
+    "4. Sheila ku su amiguita ta henda grasioso.",
+    "5. Sheila ta kuminda ku bandera di Kòrsou ariba.",
+    "6. E suvenir ta den e buki ku kahito korá.",
+    "7. Sheila i Marla"
+  ],
+  "questions": [],
+  "raw_text": "Pensa bon\nYena e palabra koretko\nDen kada frase tin un palabra.\nBisa ku ta trata di un hende yón di algú chikitú. E palabra ta sakitu. Un sakitu ta un sak chikitú.\n\nUn suvenir\n1. Den Punda tin hopi ... di suvenir.\n2. E dámita ta krá ta e tin masá servisial.\n3. E regil ku na keda den m.\n4. Sheila ku su amiguita ta henda grasioso.\n5. Sheila ta kuminda ku bandera di Kòrsou ariba.\n6. E suvenir ta den e buki ku kahito korá.\n7. Sheila i Marla"
+}

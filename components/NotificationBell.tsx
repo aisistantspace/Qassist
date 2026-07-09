@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { BellIcon, CheckIcon } from '@heroicons/react/24/outline'
+import { BellIcon, CheckIcon, XMarkIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { BellAlertIcon } from '@heroicons/react/24/solid'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -24,6 +24,7 @@ export default function NotificationBell() {
   const [unreadCount, setUnreadCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [clearConfirm, setClearConfirm] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const fetchNotifications = async () => {
@@ -103,6 +104,44 @@ export default function NotificationBell() {
     }
   }
 
+  const dismissNotification = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation()
+    try {
+      const res = await fetch(`/api/notifications/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        setNotifications(prev => {
+          const removed = prev.find(n => n.id === id)
+          if (removed && !removed.is_read) {
+            setUnreadCount(c => Math.max(0, c - 1))
+          }
+          return prev.filter(n => n.id !== id)
+        })
+      }
+    } catch (error) {
+      console.error('Error dismissing notification:', error)
+    }
+  }
+
+  const clearAllNotifications = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'clear_all' }),
+      })
+      if (res.ok) {
+        setNotifications([])
+        setUnreadCount(0)
+        setClearConfirm(false)
+      }
+    } catch (error) {
+      console.error('Error clearing notifications:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'form_submission':
@@ -160,19 +199,53 @@ export default function NotificationBell() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
-          <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+          <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between gap-2">
             <h3 className="font-semibold text-gray-900">Notifications</h3>
-            {unreadCount > 0 && (
-              <button
-                onClick={markAllAsRead}
-                disabled={loading}
-                className="text-xs text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
-              >
-                <CheckIcon className="w-3 h-3" />
-                Mark all read
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllAsRead}
+                  disabled={loading}
+                  className="text-xs text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+                >
+                  <CheckIcon className="w-3 h-3" />
+                  Mark all read
+                </button>
+              )}
+              {notifications.length > 0 && (
+                <button
+                  onClick={() => setClearConfirm(true)}
+                  disabled={loading}
+                  className="text-xs text-red-600 hover:text-red-700 font-medium flex items-center gap-1"
+                >
+                  <TrashIcon className="w-3 h-3" />
+                  Clear all
+                </button>
+              )}
+            </div>
           </div>
+
+          {clearConfirm && (
+            <div className="px-4 py-3 bg-red-50 border-b border-red-100 text-sm">
+              <p className="text-red-900 mb-2">Remove all notifications permanently?</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={clearAllNotifications}
+                  disabled={loading}
+                  className="px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded-lg hover:bg-red-700 disabled:opacity-50"
+                >
+                  Yes, clear all
+                </button>
+                <button
+                  onClick={() => setClearConfirm(false)}
+                  disabled={loading}
+                  className="px-3 py-1.5 bg-white border border-gray-300 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="max-h-[400px] overflow-y-auto">
             {notifications.length === 0 ? (
@@ -213,6 +286,14 @@ export default function NotificationBell() {
                       {!notification.is_read && (
                         <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 shrink-0" />
                       )}
+                      <button
+                        type="button"
+                        onClick={(e) => dismissNotification(e, notification.id)}
+                        className="p-1 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 shrink-0 self-start"
+                        aria-label="Dismiss notification"
+                      >
+                        <XMarkIcon className="w-4 h-4" />
+                      </button>
                     </div>
                   </li>
                 ))}

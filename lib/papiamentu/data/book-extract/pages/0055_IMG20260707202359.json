@@ -1,0 +1,34 @@
+{
+  "index": 55,
+  "source_file": "IMG20260707202359.jpg",
+  "extracted_at": "2026-07-08T20:00:22.636Z",
+  "page_type": "reading",
+  "book_series": "Fiesta di idioma",
+  "grade": "3",
+  "theme": "Tema 8 Lamán i océano",
+  "week": "Siman 3",
+  "section": "Mi por lesa",
+  "page_numbers": [
+    "108",
+    "109"
+  ],
+  "words": [],
+  "phrases": [
+    "Dólfin ta masha ... Nan gusta yuda.",
+    "Asta ku nan sa salba hende.",
+    "Na Sea Aquarium un ... ta duna mucha disabilidat lés ku ayudo di dólfin.",
+    "Dólfin i hende ta reaksiòn riba otro.",
+    "Tin un ... entre nan dos.",
+    "Ora un mucha bira mas ... por hasi diferente kos sin yudansa di mucha."
+  ],
+  "conversation_rules": [],
+  "grammar_rules": [],
+  "paragraphs": [
+    "Dólfin ta masha ... Nan gusta yuda. Asta ku nan sa salba hende.",
+    "Na Sea Aquarium un ... ta duna mucha disabilidat lés ku ayudo di dólfin.",
+    "Dólfin i hende ta reaksiòn riba otro. Tin un ... entre nan dos.",
+    "Ora un mucha bira mas ... por hasi diferente kos sin yudansa di mucha."
+  ],
+  "questions": [],
+  "raw_text": "Dólfin ta masha ... Nan gusta yuda.\nAsta ku nan sa salba hende.\nNa Sea Aquarium un ... ta duna mucha disabilidat lés ku ayudo di dólfin.\nDólfin i hende ta reaksiòn riba otro.\nTin un ... entre nan dos.\nOra un mucha bira mas ... por hasi diferente kos sin yudansa di mucha."
+}
