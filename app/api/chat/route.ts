@@ -23,12 +23,16 @@ import {
 import { inferDepartmentFromFormName } from '@/lib/insurance-form-templates'
 import { createFormSubmissionNotification } from '@/lib/notifications'
 import type { ChatRequest, ChatResponse, Message } from '@/lib/types'
+import { assertDemoChatAccess } from '@/lib/demo-auth'
 
 // Check if integration is enabled
 const isHubSpotEnabled = !!process.env.HUBSPOT_ACCESS_TOKEN
 const isMailchimpEnabled = !!(process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_AUDIENCE_ID)
 
 export async function POST(request: NextRequest) {
+  const demoDenied = assertDemoChatAccess(request)
+  if (demoDenied) return demoDenied
+
   // Rate limiting: max 20 requests per minute per IP
   const clientIP = getClientIP(request)
   const rl = checkRateLimit(`chat:${clientIP}`, 20, 60_000)

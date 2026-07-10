@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { canAccessDemoChat, getChatGateSlug } from '@/lib/demo-auth'
 
 const AUTH_COOKIE_NAME = 'dashboard_auth'
 
@@ -65,6 +66,26 @@ export function middleware(request: NextRequest) {
       }
     }
 
+    // ENNIA / demo chat gate — require demo login before /chat when configured
+    const chatGateSlug = getChatGateSlug()
+    if (chatGateSlug && pathname === '/chat') {
+      if (!canAccessDemoChat(request, chatGateSlug)) {
+        const loginUrl = new URL(`/demo/${chatGateSlug}/login`, request.url)
+        loginUrl.searchParams.set('redirect', pathname + request.nextUrl.search)
+        return NextResponse.redirect(loginUrl)
+      }
+    }
+
+    // Demo login pages: if already authed, go straight to chat
+    const demoLoginMatch = pathname.match(/^\/demo\/([^/]+)\/login$/)
+    if (demoLoginMatch) {
+      const slug = demoLoginMatch[1].toLowerCase()
+      if (canAccessDemoChat(request, slug)) {
+        const redirectTo = request.nextUrl.searchParams.get('redirect') || (slug === 'ennia' ? '/chat' : `/chat?slug=${slug}`)
+        return NextResponse.redirect(new URL(redirectTo, request.url))
+      }
+    }
+
     // Protect sensitive API routes
     if (pathname.startsWith('/api/') && isProtectedApiRoute(pathname)) {
       if (!isAuthenticated(request)) {
@@ -86,6 +107,8 @@ export const config = {
   matcher: [
     '/dashboard/:path*',
     '/login',
+    '/chat',
+    '/demo/:path*',
     '/api/:path*',
   ],
 }

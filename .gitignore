@@ -39,4 +39,7 @@ next-env.d.ts
 # local source photos for OCR (multi-GB; keep merged JSON in repo)
 /Papiamentu book images/
 
+# OCR runtime log (local only)
+lib/papiamentu/data/book-extract/extract.log
+
 

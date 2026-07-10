@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "source": "Fiesta di idioma — Grande 3, 4, 5, 6 (Curaçao school books)",
+    "source": "Fiesta di idioma — Grande 3–6 student books + teacher guide",
     "series": "Fiesta di idioma",
     "grades": [
       "3",
@@ -8,16 +8,264 @@
       "5",
       "6"
     ],
-    "merged_at": "2026-07-08T22:31:10.749Z",
-    "page_count": 370,
-    "rule_count": 1
+    "merged_at": "2026-07-10T04:02:46.331Z",
+    "page_count": 531,
+    "student_page_count": 370,
+    "teacher_page_count": 161,
+    "rule_count": 35
   },
   "rules": [
     {
       "text": "Nos ta papia kla pa tur hende por t'endes nos bon.",
       "source": "IMG20260707205447.jpg",
       "grade": "3",
-      "section": "Skucha i papia"
+      "section": "Skucha i papia",
+      "book_role": "student"
+    },
+    {
+      "text": "E signonan di puntuashon ku e alumnonan mester ta korigi e frase.",
+      "source": "IMG20260709151054.jpg",
+      "grade": "unknown",
+      "section": "methodology",
+      "book_role": "teacher",
+      "type": "orthography"
+    },
+    {
+      "text": "Bisa e alumno ku un preposishon ta nombra e relacion entre dos kashi.",
+      "source": "IMG20260709151223.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Mira i pintura bou di tiara 6.",
+      "source": "IMG20260709151239.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Duna e alumno un tempu pa pensa.",
+      "source": "IMG20260709151239.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Spika ku bo ta skibi ku lètèr kapital.",
+      "source": "IMG20260709151613.jpg",
+      "grade": "6",
+      "section": "Skucha i papia",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Lèksion di lètèr kapital.",
+      "source": "IMG20260709151613.jpg",
+      "grade": "6",
+      "section": "Skucha i papia",
+      "book_role": "teacher",
+      "type": "orthography"
+    },
+    {
+      "text": "Alumno ta deskribi su opinion di un palabra.",
+      "source": "IMG20260709151758.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Alumno ta deskribi su habilidad gramatikal.",
+      "source": "IMG20260709151758.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "E ta bini pa keda.",
+      "source": "IMG20260709151804.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "E ta hasi un protesta.",
+      "source": "IMG20260709151804.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Bé e alumno ku por hasi un frase ku sustantivo.",
+      "source": "IMG20260709151814.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Sustantivo ta un tipo di palabra.",
+      "source": "IMG20260709151814.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher",
+      "type": "orthography"
+    },
+    {
+      "text": "E ta bálá yérdi. Kábe a puntá: Kiko ta Polo Nort?",
+      "source": "IMG20260709151900.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Reglas de ortografía: Uso de 'k' y 'c'.",
+      "source": "IMG20260709151907.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Enseñar el uso correcto de la 'k' y la 'c'.",
+      "source": "IMG20260709151907.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher",
+      "type": "orthography"
+    },
+    {
+      "text": "Sustantivo ta un palabra ku ta nombra un persona, un lugar, of un kos.",
+      "source": "IMG20260709151926.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Adjetivo ta un palabra ku ta duna mas informacion riba un sustantivo.",
+      "source": "IMG20260709151926.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Bisa e alumno ku en nan por kambia e frase.",
+      "source": "IMG20260709151948.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "E letra kapítal ta usa pa e nòmber di buki.",
+      "source": "IMG20260709151955.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher",
+      "type": "orthography"
+    },
+    {
+      "text": "Lago nos mira e palabra di kiki bo ta kiki.",
+      "source": "IMG20260709152026.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "E verbo ta kumiñku ku e.",
+      "source": "IMG20260709152026.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Palabra ta falta den e dos frase.",
+      "source": "IMG20260709152030.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "E palabra ta falta den e frase kompleto den e dos frase.",
+      "source": "IMG20260709152030.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Alumnonan mester ta komprendé e regla di gramatika.",
+      "source": "IMG20260709152101.jpg",
+      "grade": "3",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Bisa e alumno ku ta bai pone signo di puntuashon den e frase.",
+      "source": "IMG20260709152109.jpg",
+      "grade": "unknown",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Alumno por komprendé e frase i número di frase i preposishon den e skèr.",
+      "source": "IMG20260709152109.jpg",
+      "grade": "unknown",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "E ta importante pa usa e palabra ku ta relashoná ku e tema.",
+      "source": "IMG20260709152117.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Alumno mester ta komprondé e diferensia entre e palabra ku ta referí na bestia.",
+      "source": "IMG20260709152117.jpg",
+      "grade": "4",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "k vs c, shon, apostrophe rules",
+      "source": "IMG20260709152210.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Uitleg over spelling: let op de juiste schrijfwijze.",
+      "source": "IMG20260709152210.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher",
+      "type": "orthography"
+    },
+    {
+      "text": "Alumno ta desaroyá su nòmber metalinwísiko.",
+      "source": "IMG20260709152227.jpg",
+      "grade": "6",
+      "section": "methodology",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Den Papiamentu, ta importante pa usa 'i' pa konectá dos idea. Ejemplo: Amira ta bini i ta grita.",
+      "source": "IMG20260709152240.jpg",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "book_role": "teacher"
+    },
+    {
+      "text": "Konsiderá e uso di 'i' i 'y' den Papiamentu.",
+      "source": "IMG20260709152240.jpg",
+      "grade": "3",
+      "section": "Skucha i papia",
+      "book_role": "teacher",
+      "type": "orthography"
+    },
+    {
+      "text": "E ta komprendé e nèdènto e palabra.",
+      "source": "IMG20260709152246.jpg",
+      "grade": "4",
+      "section": "Mi por lesa",
+      "book_role": "teacher"
     }
   ]
 }

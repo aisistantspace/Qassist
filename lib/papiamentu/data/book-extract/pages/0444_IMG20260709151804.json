@@ -1,0 +1,53 @@
+{
+  "index": 444,
+  "source_file": "IMG20260709151804.jpg",
+  "book_role": "teacher",
+  "extracted_at": "2026-07-10T03:28:47.566Z",
+  "page_type": "teacher_guide",
+  "book_series": "Fiesta di idioma",
+  "grade": "4",
+  "theme": "Tema 8",
+  "week": "Siman 2",
+  "section": "methodology",
+  "page_numbers": [
+    "112",
+    "113"
+  ],
+  "words": [],
+  "phrases": [
+    "Kanguru ta haña un laska duru.",
+    "E ta bini pa keda.",
+    "E ta hasi un protesta."
+  ],
+  "conversation_rules": [
+    "Regla di kòmbersashon: E ta hasi un protesta pa su nomber."
+  ],
+  "grammar_rules": [
+    "E ta bini pa keda.",
+    "E ta hasi un protesta."
+  ],
+  "lesson_objectives": [
+    "E ta komprendé kon kanguru ta hasi un protesta.",
+    "E ta por papia di su laska."
+  ],
+  "teaching_notes": [
+    "E ta hasi un protesta pa su nomber.",
+    "E ta bini pa keda."
+  ],
+  "orthography_teaching": [],
+  "methodology": [
+    "E ta hasi un protesta.",
+    "E ta bini pa keda."
+  ],
+  "paragraphs": [
+    "1. Loké Kanguru no tabata pehú pa nu mèmber, e ta hasi un protesta.",
+    "2. E ta bini pa keda.",
+    "3. E ta hasi un protesta."
+  ],
+  "questions": [
+    "1. Kiko e ta hasi pa bini?",
+    "2. Kiko e ta hasi pa keda?",
+    "3. Kiko e ta hasi pa protesta?"
+  ],
+  "raw_text": "1. Loké Kanguru no tabata pehú pa nu mèmber, e ta hasi un protesta.\n2. E ta bini pa keda.\n3. E ta hasi un protesta."
+}

@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "source": "Fiesta di idioma — Grande 3, 4, 5, 6 (Curaçao school books)",
+    "source": "Fiesta di idioma — Grande 3–6 student books + teacher guide",
     "series": "Fiesta di idioma",
     "grades": [
       "3",
@@ -8,9 +8,11 @@
       "5",
       "6"
     ],
-    "merged_at": "2026-07-08T22:31:10.749Z",
-    "page_count": 370,
-    "word_count": 1768
+    "merged_at": "2026-07-10T04:02:46.331Z",
+    "page_count": 531,
+    "student_page_count": 370,
+    "teacher_page_count": 161,
+    "word_count": 1781
   },
   "words": [
     {
@@ -436,6 +438,18 @@
       ]
     },
     {
+      "word": "actividad",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709151907.jpg"
+      ]
+    },
+    {
       "word": "ada",
       "levels": [
         "C1"
@@ -752,6 +766,18 @@
       ],
       "sources": [
         "IMG20260707204527.jpg"
+      ]
+    },
+    {
+      "word": "alumno",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709151907.jpg"
       ]
     },
     {
@@ -3921,11 +3947,13 @@
       ],
       "grades": [
         "3",
+        "4",
         "6"
       ],
       "sources": [
         "IMG20260707201911.jpg",
-        "IMG20260707202007.jpg"
+        "IMG20260707202007.jpg",
+        "IMG20260709151814.jpg"
       ]
     },
     {
@@ -5025,6 +5053,18 @@
       ]
     },
     {
+      "word": "efektivo",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709152246.jpg"
+      ]
+    },
+    {
       "word": "ehanista",
       "levels": [
         "C2"
@@ -5222,6 +5262,18 @@
       ],
       "sources": [
         "IMG20260707202706.jpg"
+      ]
+    },
+    {
+      "word": "emperor",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709152246.jpg"
       ]
     },
     {
@@ -5845,6 +5897,18 @@
       ],
       "sources": [
         "IMG20260707211113.jpg"
+      ]
+    },
+    {
+      "word": "frase",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "unknown"
+      ],
+      "sources": [
+        "IMG20260709151557.jpg"
       ]
     },
     {
@@ -9408,6 +9472,30 @@
       ]
     },
     {
+      "word": "konsepto",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "unknown"
+      ],
+      "sources": [
+        "IMG20260709151557.jpg"
+      ]
+    },
+    {
+      "word": "konsist",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709152246.jpg"
+      ]
+    },
+    {
       "word": "konsumo",
       "levels": [
         "NULL"
@@ -9597,13 +9685,16 @@
     {
       "word": "kòrsou",
       "levels": [
+        "A1",
         "NULL"
       ],
       "grades": [
-        "3"
+        "3",
+        "unknown"
       ],
       "sources": [
-        "IMG20260707202448.jpg"
+        "IMG20260707202448.jpg",
+        "IMG20260709151557.jpg"
       ]
     },
     {
@@ -11955,6 +12046,19 @@
       ]
     },
     {
+      "word": "material",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709151907.jpg",
+        "IMG20260709152246.jpg"
+      ]
+    },
+    {
       "word": "matetkúper",
       "levels": [
         "A1"
@@ -12864,6 +12968,18 @@
       ],
       "sources": [
         "IMG20260707205341.jpg"
+      ]
+    },
+    {
+      "word": "museo",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "unknown"
+      ],
+      "sources": [
+        "IMG20260709151557.jpg"
       ]
     },
     {
@@ -14274,11 +14390,13 @@
         "NULL"
       ],
       "grades": [
-        "3"
+        "3",
+        "4"
       ],
       "sources": [
         "IMG20260707202148.jpg",
-        "IMG20260707202448.jpg"
+        "IMG20260707202448.jpg",
+        "IMG20260709151814.jpg"
       ]
     },
     {
@@ -15859,6 +15977,18 @@
       ],
       "sources": [
         "IMG20260707201900.jpg"
+      ]
+    },
+    {
+      "word": "problema",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "unknown"
+      ],
+      "sources": [
+        "IMG20260709151557.jpg"
       ]
     },
     {
@@ -18427,6 +18557,18 @@
       ]
     },
     {
+      "word": "sustantivo",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709151814.jpg"
+      ]
+    },
+    {
       "word": "Ta for di mitar di skucha e ta warda ku e no mes ta pilá di alarma.",
       "levels": [],
       "grades": [
@@ -18988,6 +19130,18 @@
       ],
       "sources": [
         "IMG20260707211207.jpg"
+      ]
+    },
+    {
+      "word": "texto",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709151907.jpg"
       ]
     },
     {
@@ -20030,15 +20184,34 @@
       ]
     },
     {
+      "word": "vocabulario",
+      "levels": [
+        "A1"
+      ],
+      "grades": [
+        "4"
+      ],
+      "sources": [
+        "IMG20260709151814.jpg",
+        "IMG20260709151907.jpg"
+      ]
+    },
+    {
       "word": "Vokabulario",
-      "levels": [],
+      "levels": [
+        "A1"
+      ],
       "grades": [
         "3",
-        "6"
+        "4",
+        "6",
+        "unknown"
       ],
       "sources": [
         "IMG20260707203829.jpg",
-        "IMG20260707210415.jpg"
+        "IMG20260707210415.jpg",
+        "IMG20260709151557.jpg",
+        "IMG20260709152246.jpg"
       ]
     },
     {

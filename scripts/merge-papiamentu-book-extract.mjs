@@ -20,6 +20,7 @@ const PAGES_DIR = path.join(DATA_DIR, 'book-extract', 'pages')
 const VOCAB_OUT = path.join(DATA_DIR, 'school-grande-vocabulary.json')
 const PHRASES_OUT = path.join(DATA_DIR, 'school-grande-phrases.json')
 const GRAMMAR_OUT = path.join(DATA_DIR, 'school-grande-grammar.json')
+const TEACHER_GUIDE_OUT = path.join(DATA_DIR, 'school-teacher-guide.json')
 const PALABRICKS_PATH = path.join(DATA_DIR, 'palabricks-phrases.json')
 const WORDLIST_PATH = path.join(DATA_DIR, 'wordlist.json')
 const REPORT_PATH = path.join(DATA_DIR, 'book-extract', 'merge-report.json')
@@ -90,10 +91,25 @@ function main() {
   const phraseMap = new Map()
   const conversationRules = new Map()
   const grammarRules = new Map()
+  const lessonObjectives = new Map()
+  const teachingNotes = new Map()
+  const orthographyTeaching = new Map()
+  const methodology = new Map()
   const readingByGrade = { '3': [], '4': [], '5': [], '6': [], unknown: [] }
+  let studentPages = 0
+  let teacherPages = 0
+
+  const addRule = (map, text, meta) => {
+    const t = text.trim()
+    if (t.length < 10) return
+    map.set(normalizePhraseKey(t), { text: t, ...meta })
+  }
 
   for (const page of pages) {
     const source = page.source_file || `page-${page.index}`
+    const bookRole = page.book_role || (/^IMG202607091/i.test(source) ? 'teacher' : 'student')
+    if (bookRole === 'teacher') teacherPages++
+    else studentPages++
     const grade = page.grade && /^[3-6]$/.test(String(page.grade)) ? String(page.grade) : 'unknown'
     const section = page.section || page.page_type || 'other'
 
@@ -150,7 +166,38 @@ function main() {
 
     for (const rule of page.grammar_rules || []) {
       const t = rule.trim()
-      if (t.length >= 15) grammarRules.set(normalizePhraseKey(t), { text: t, source, grade, section })
+      if (t.length >= 15) {
+        grammarRules.set(normalizePhraseKey(t), {
+          text: t,
+          source,
+          grade,
+          section,
+          book_role: bookRole,
+        })
+      }
+    }
+
+    for (const item of page.lesson_objectives || []) {
+      addRule(lessonObjectives, item, { source, grade, section, book_role: bookRole })
+    }
+    for (const item of page.teaching_notes || []) {
+      addRule(teachingNotes, item, { source, grade, section, book_role: bookRole })
+    }
+    for (const item of page.orthography_teaching || []) {
+      addRule(orthographyTeaching, item, { source, grade, section, book_role: bookRole })
+      if (item.trim().length >= 15) {
+        grammarRules.set(normalizePhraseKey(item.trim()), {
+          text: item.trim(),
+          source,
+          grade,
+          section,
+          book_role: bookRole,
+          type: 'orthography',
+        })
+      }
+    }
+    for (const item of page.methodology || []) {
+      addRule(methodology, item, { source, grade, section, book_role: bookRole })
     }
 
     if (page.page_type === 'grammar' && page.raw_text) {
@@ -166,7 +213,8 @@ function main() {
     }
 
     // Fallback: mine phrases from raw_text on conversation/reading pages
-    if (['conversation', 'reading', 'comprehension'].includes(page.page_type) && page.raw_text) {
+    const mineTypes = ['conversation', 'reading', 'comprehension', 'lesson_plan', 'teacher_guide', 'methodology']
+    if (mineTypes.includes(page.page_type) && page.raw_text) {
       for (const s of splitSentences(page.raw_text)) {
         if (s.length >= 12 && s.length < 300) {
           addPhrase(phraseMap, s, { source, grade, section, type: page.page_type })
@@ -189,11 +237,13 @@ function main() {
   const grammar = [...grammarRules.values()]
 
   const meta = {
-    source: 'Fiesta di idioma — Grande 3, 4, 5, 6 (Curaçao school books)',
+    source: 'Fiesta di idioma — Grande 3–6 student books + teacher guide',
     series: 'Fiesta di idioma',
     grades: ['3', '4', '5', '6'],
     merged_at: new Date().toISOString(),
     page_count: pages.length,
+    student_page_count: studentPages,
+    teacher_page_count: teacherPages,
   }
 
   const vocabDoc = { metadata: { ...meta, word_count: vocabulary.length }, words: vocabulary }
@@ -212,10 +262,24 @@ function main() {
     metadata: { ...meta, rule_count: grammar.length },
     rules: grammar,
   }
+  const teacherGuideDoc = {
+    metadata: {
+      ...meta,
+      lesson_objective_count: lessonObjectives.size,
+      teaching_note_count: teachingNotes.size,
+      orthography_teaching_count: orthographyTeaching.size,
+      methodology_count: methodology.size,
+    },
+    lesson_objectives: [...lessonObjectives.values()],
+    teaching_notes: [...teachingNotes.values()],
+    orthography_teaching: [...orthographyTeaching.values()],
+    methodology: [...methodology.values()],
+  }
 
   fs.writeFileSync(VOCAB_OUT, JSON.stringify(vocabDoc, null, 2), 'utf8')
   fs.writeFileSync(PHRASES_OUT, JSON.stringify(phrasesDoc, null, 2), 'utf8')
   fs.writeFileSync(GRAMMAR_OUT, JSON.stringify(grammarDoc, null, 2), 'utf8')
+  fs.writeFileSync(TEACHER_GUIDE_OUT, JSON.stringify(teacherGuideDoc, null, 2), 'utf8')
   fs.writeFileSync(LEGACY_VOCAB, JSON.stringify(vocabDoc, null, 2), 'utf8')
   fs.writeFileSync(LEGACY_PHRASES, JSON.stringify(phrasesDoc, null, 2), 'utf8')
 
@@ -268,17 +332,25 @@ function main() {
     canonical_phrases: phrases.length,
     conversation_rules: rules.length,
     grammar_rules: grammar.length,
+    teacher_lesson_objectives: lessonObjectives.size,
+    teacher_teaching_notes: teachingNotes.size,
+    teacher_orthography_points: orthographyTeaching.size,
+    teacher_methodology: methodology.size,
+    student_pages: studentPages,
+    teacher_pages: teacherPages,
     palabricks_phrases_added: palabricksAdded,
     wordlist_new_words: wordlistAdded,
-    outputs: [VOCAB_OUT, PHRASES_OUT, GRAMMAR_OUT, PALABRICKS_PATH, WORDLIST_PATH],
+    outputs: [VOCAB_OUT, PHRASES_OUT, GRAMMAR_OUT, TEACHER_GUIDE_OUT, PALABRICKS_PATH, WORDLIST_PATH],
   }
   fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2), 'utf8')
 
-  console.log('Grande 3–6 school book merge complete:')
+  console.log('Fiesta di idioma merge complete:')
+  console.log(`  Pages:       ${pages.length} (${studentPages} student, ${teacherPages} teacher)`)
   console.log(`  Vocabulary:  ${vocabulary.length} → school-grande-vocabulary.json`)
   console.log(`  Phrases:     ${phrases.length} → school-grande-phrases.json`)
   console.log(`  Conv. rules: ${rules.length}`)
   console.log(`  Grammar:     ${grammar.length} → school-grande-grammar.json`)
+  console.log(`  Teacher:     ${lessonObjectives.size} objectives, ${orthographyTeaching.size} orthography points → school-teacher-guide.json`)
   console.log(`  Palabricks:  +${palabricksAdded} phrases`)
   console.log(`  Wordlist:    +${wordlistAdded} words`)
 }

@@ -25,6 +25,7 @@ export async function GET() {
   const schoolPhrases = readJsonSafe(path.join(process.cwd(), 'lib', 'papiamentu', 'data', 'school-grande-phrases.json'))
     || readJsonSafe(path.join(process.cwd(), 'lib', 'papiamentu', 'data', 'fiesta-phrases.json'))
   const schoolGrammar = readJsonSafe(path.join(process.cwd(), 'lib', 'papiamentu', 'data', 'school-grande-grammar.json'))
+  const teacherGuide = readJsonSafe(path.join(process.cwd(), 'lib', 'papiamentu', 'data', 'school-teacher-guide.json'))
 
   const imageDir = path.join(process.cwd(), 'Papiamentu book images')
   let imageCount = 0
@@ -56,6 +57,12 @@ export async function GET() {
     schoolGrammar: {
       rule_count: schoolGrammar?.metadata?.rule_count ?? schoolGrammar?.rules?.length ?? 0,
       merged_at: schoolGrammar?.metadata?.merged_at ?? null,
+    },
+    teacherGuide: {
+      lesson_objectives: teacherGuide?.metadata?.lesson_objective_count ?? teacherGuide?.lesson_objectives?.length ?? 0,
+      orthography_points: teacherGuide?.metadata?.orthography_teaching_count ?? teacherGuide?.orthography_teaching?.length ?? 0,
+      teaching_notes: teacherGuide?.metadata?.teaching_note_count ?? teacherGuide?.teaching_notes?.length ?? 0,
+      merged_at: teacherGuide?.metadata?.merged_at ?? null,
     },
   })
 }

@@ -219,10 +219,10 @@ export default function PapiamentuPage() {
           <ul className="list-disc list-inside space-y-0.5 ml-1">
             <li><code className="bg-gray-100 px-1 rounded">school-grande-vocabulary.json</code> + <code className="bg-gray-100 px-1 rounded">wordlist.json</code> → spell-check</li>
             <li><code className="bg-gray-100 px-1 rounded">school-grande-phrases.json</code> + <code className="bg-gray-100 px-1 rounded">palabricks-phrases.json</code> → phrase correction</li>
-            <li><code className="bg-gray-100 px-1 rounded">school-grande-grammar.json</code> → AI prompt guide</li>
+            <li><code className="bg-gray-100 px-1 rounded">school-grande-grammar.json</code> + <code className="bg-gray-100 px-1 rounded">school-teacher-guide.json</code> → AI prompt guide</li>
           </ul>
           <p className="pt-2">
-            <strong>Step 1</strong> (local): <code className="bg-gray-100 px-1 rounded">npm run pa:extract-book</code> — OCR ~370 pages (resumable).
+            <strong>Step 1</strong> (local): <code className="bg-gray-100 px-1 rounded">npm run pa:extract-book</code> — OCR student + teacher books (~461 pages, resumable).
             <strong> Step 2</strong>: merge above or <code className="bg-gray-100 px-1 rounded">npm run pa:merge-book</code>.
           </p>
         </div>

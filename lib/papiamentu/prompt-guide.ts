@@ -7,7 +7,7 @@
  * correction layer even runs.
  */
 
-import { getCanonicalPhrases, getTranslations, getInsuranceDemoPhrases, getSchoolGrandePromptSamples, getSchoolConversationRules, getSchoolGrammarRules } from './load-data'
+import { getCanonicalPhrases, getTranslations, getInsuranceDemoPhrases, getSchoolGrandePromptSamples, getSchoolConversationRules, getSchoolGrammarRules, getSchoolTeacherOrthographyRules, getSchoolTeacherLessonObjectives } from './load-data'
 import { getPapiamentuInsurancePromptSection } from './insurance-prompt'
 
 let cachedGuide: string | null = null
@@ -35,7 +35,9 @@ export function getPapiamentuPromptGuide(): string {
   ]
 
   const schoolRules = getSchoolConversationRules().slice(0, 5)
-  const schoolGrammar = getSchoolGrammarRules().slice(0, 8)
+  const schoolGrammar = getSchoolGrammarRules().slice(0, 12)
+  const teacherOrthography = getSchoolTeacherOrthographyRules().slice(0, 8)
+  const teacherObjectives = getSchoolTeacherLessonObjectives().slice(0, 5)
 
   cachedGuide = `
 ### PAPIAMENTU LANGUAGE GUIDE — Buki di Oro (Official Curaçao Orthography 2009)
@@ -135,7 +137,9 @@ ${getPapiamentuInsurancePromptSection()}
 **SCHOOL PAPIAMENTU — Fiesta di idioma (Grande 3–6, official Curaçao curriculum):**
 Your Papiamentu should match the quality of these school books — natural, correct orthography, child-friendly but professional.
 ${schoolRules.length > 0 ? `\nConversation norms (Regla di kòmbersashon):\n${schoolRules.map((r) => `- ${r}`).join('\n')}` : ''}
+${teacherOrthography.length > 0 ? `\nOrthography teaching (teacher guide — follow exactly):\n${teacherOrthography.map((r) => `- ${r}`).join('\n')}` : ''}
 ${schoolGrammar.length > 0 ? `\nGrammar from school books:\n${schoolGrammar.map((r) => `- ${r}`).join('\n')}` : ''}
+${teacherObjectives.length > 0 ? `\nLesson quality bar (teacher guide objectives):\n${teacherObjectives.map((r) => `- ${r}`).join('\n')}` : ''}
 
 **COMMON EXPRESSIONS (school-validated + official):**
 ${keyPhrases.slice(0, 18).map((p) => `- ${p}`).join('\n')}

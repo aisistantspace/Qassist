@@ -142,6 +142,22 @@ export default function DeployPage() {
         </div>
       </div>
 
+      {/* ENNIA / stakeholder demo link */}
+      <div className="mt-8 bg-teal-50 border border-teal-100 rounded-2xl p-8">
+        <h3 className="text-lg font-bold text-gray-900 mb-2">Share ENNIA demo (username + password)</h3>
+        <p className="text-gray-600 text-sm mb-4">
+          Send stakeholders a private link to try the assistant with your ENNIA knowledge base — without dashboard access.
+          Set <code className="bg-white px-1 rounded text-xs">DEMO_ENNIA_USERNAME</code> and{' '}
+          <code className="bg-white px-1 rounded text-xs">DEMO_ENNIA_PASSWORD</code> in Vercel env vars, then share:
+        </p>
+        <div className="bg-white border border-teal-100 rounded-lg p-4 font-mono text-sm text-gray-800 break-all">
+          {appUrl}/demo/ennia
+        </div>
+        <p className="mt-3 text-xs text-gray-500">
+          They sign in → chat opens at /chat with ENNIA branding and crawled content. Your dashboard login stays separate.
+        </p>
+      </div>
+
       {/* WordPress Help */}
       <div className="mt-12 bg-blue-50 border border-blue-100 rounded-2xl p-8">
         <div className="flex items-start gap-4">

@@ -26,6 +26,12 @@ let schoolPhrases: {
   conversation_rules?: { text: string }[]
 } | null = null
 let schoolGrammar: { rules?: { text: string; grade?: string }[] } | null = null
+let schoolTeacherGuide: {
+  lesson_objectives?: { text: string }[]
+  teaching_notes?: { text: string }[]
+  orthography_teaching?: { text: string }[]
+  methodology?: { text: string }[]
+} | null = null
 
 function schoolVocabPath(): string {
   const primary = path.join(dataDir(), 'school-grande-vocabulary.json')
@@ -41,6 +47,10 @@ function schoolPhrasesPath(): string {
 
 function schoolGrammarPath(): string {
   return path.join(dataDir(), 'school-grande-grammar.json')
+}
+
+function schoolTeacherGuidePath(): string {
+  return path.join(dataDir(), 'school-teacher-guide.json')
 }
 
 function loadInsuranceVocabFile(): {
@@ -107,6 +117,21 @@ function loadSchoolGrammarFile(): { rules?: { text: string; grade?: string }[] }
   return schoolGrammar ?? { rules: [] }
 }
 
+function loadSchoolTeacherGuideFile(): {
+  lesson_objectives?: { text: string }[]
+  teaching_notes?: { text: string }[]
+  orthography_teaching?: { text: string }[]
+  methodology?: { text: string }[]
+} {
+  if (schoolTeacherGuide) return schoolTeacherGuide
+  try {
+    schoolTeacherGuide = JSON.parse(fs.readFileSync(schoolTeacherGuidePath(), 'utf8'))
+  } catch {
+    schoolTeacherGuide = {}
+  }
+  return schoolTeacherGuide ?? {}
+}
+
 /** Words from Fiesta di idioma Grande 3–6 vocabulary lists. */
 export function getBookVocabularyWords(): string[] {
   const data = loadSchoolVocabularyFile()
@@ -145,10 +170,38 @@ export function getSchoolConversationRules(): string[] {
 /** Grammar notes from school books for prompt injection. */
 export function getSchoolGrammarRules(): string[] {
   const data = loadSchoolGrammarFile()
-  return (data.rules || [])
+  const fromGrammar = (data.rules || [])
     .map((r) => r.text)
     .filter((s) => typeof s === 'string' && s.length > 10)
-    .slice(0, 40)
+  const orthography = getSchoolTeacherOrthographyRules()
+  return [...orthography, ...fromGrammar].slice(0, 50)
+}
+
+/** Orthography teaching points from the teacher guide (highest authority for spelling). */
+export function getSchoolTeacherOrthographyRules(): string[] {
+  const data = loadSchoolTeacherGuideFile()
+  return (data.orthography_teaching || [])
+    .map((r) => r.text)
+    .filter((s) => typeof s === 'string' && s.length > 10)
+    .slice(0, 20)
+}
+
+/** Lesson objectives from teacher guide — what "good" Papiamentu looks like per lesson. */
+export function getSchoolTeacherLessonObjectives(): string[] {
+  const data = loadSchoolTeacherGuideFile()
+  return (data.lesson_objectives || [])
+    .map((r) => r.text)
+    .filter((s) => typeof s === 'string' && s.length > 10)
+    .slice(0, 15)
+}
+
+/** Didactic methodology snippets from teacher guide. */
+export function getSchoolTeacherMethodology(): string[] {
+  const data = loadSchoolTeacherGuideFile()
+  return (data.methodology || [])
+    .map((r) => r.text)
+    .filter((s) => typeof s === 'string' && s.length > 10)
+    .slice(0, 10)
 }
 
 /** Sample school phrases for AI prompt (diverse, natural PA). */

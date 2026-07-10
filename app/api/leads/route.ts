@@ -5,11 +5,15 @@ import { addContactToMailchimp } from '@/lib/mailchimp'
 import { checkRateLimit, getClientIP, sanitizeInput } from '@/lib/security'
 import { findReturningCustomer, getRecentConversation } from '@/lib/customer-matching'
 import type { Lead } from '@/lib/types'
+import { assertDemoChatAccess } from '@/lib/demo-auth'
 
 // Check if Mailchimp integration is enabled
 const isMailchimpEnabled = !!(process.env.MAILCHIMP_API_KEY && process.env.MAILCHIMP_AUDIENCE_ID)
 
 export async function POST(request: NextRequest) {
+  const demoDenied = assertDemoChatAccess(request)
+  if (demoDenied) return demoDenied
+
   // Rate limiting: max 10 requests per minute per IP
   const clientIP = getClientIP(request)
   const rl = checkRateLimit(`leads:${clientIP}`, 10, 60_000)

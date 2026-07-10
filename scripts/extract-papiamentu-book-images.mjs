@@ -25,6 +25,7 @@ Return ONLY valid JSON (no markdown):
 {
   "page_type": "vocabulary_list|reading|conversation|grammar|exercise|comprehension|cover|index|other",
   "book_series": "Fiesta di idioma",
+  "book_role": "student",
   "grade": "3|4|5|6|null",
   "theme": "Tema N title or null",
   "week": "Siman N or null",
@@ -50,6 +51,47 @@ CRITICAL rules:
 - Do NOT translate to Dutch or English.
 - If unreadable: page_type "other", empty arrays.
 `
+
+const TEACHER_EXTRACTION_PROMPT = `You extract text from a photo of the TEACHER GUIDE (maestro/handboek) for Curaçao Papiamentu school books "Fiesta di idioma" Grande 3–6.
+
+This book guides teachers on HOW to teach lessons: methodology, lesson plans, orthography teaching, conversation norms, answers, rubrics, and model Papiamentu the teacher should use in class.
+
+Return ONLY valid JSON (no markdown):
+{
+  "page_type": "lesson_plan|teacher_guide|methodology|orthography_teaching|grammar|conversation|vocabulary_list|answer_key|rubric|exercise|comprehension|cover|index|other",
+  "book_series": "Fiesta di idioma",
+  "book_role": "teacher",
+  "grade": "3|4|5|6|null",
+  "theme": "Tema N title or null",
+  "week": "Siman N or null",
+  "section": "Skucha i papia|Mi por lesa|Bo a komprendé|Regla di kòmbersashon|didactic|methodology|null",
+  "page_numbers": ["4","5"],
+  "words": [{"word": "model vocabulary or key terms", "level": "A1|A2|B1|B2|C1|C2|D1|D2|E1|E2|null"}],
+  "phrases": ["model sentences teachers should say OR exemplary student sentences"],
+  "conversation_rules": ["Regla di kòmbersashon — full rule text"],
+  "grammar_rules": ["grammar/orthography rules explained for teachers"],
+  "lesson_objectives": ["what students should learn this lesson/week"],
+  "teaching_notes": ["didactic instructions, tips, steps for the teacher"],
+  "orthography_teaching": ["explicit orthography/spelling teaching points (Buki di Oro / FPI)"],
+  "methodology": ["how to run the activity, classroom procedure"],
+  "paragraphs": ["reading passages or example texts on the page"],
+  "questions": ["comprehension or discussion questions"],
+  "raw_text": "ALL readable text verbatim, preserve line breaks"
+}
+
+CRITICAL rules:
+- Preserve Curaçao spelling exactly: è ò ù ü ñ and acute accents á é í ó ú.
+- Use "i" not Spanish "y" for "and".
+- Teacher instructions in Dutch may appear — extract Dutch into teaching_notes ONLY; model Papiamentu sentences go in phrases.
+- Orthography boxes (k vs c, shon, apostrophe rules) → orthography_teaching AND grammar_rules.
+- "Regla di kòmbersashon" → conversation_rules.
+- Lesson aims ("leerdoelen", learning goals) → lesson_objectives.
+- Do NOT invent text. If unreadable: page_type "other", empty arrays.
+`
+
+function isTeacherImage(filename) {
+  return /^IMG202607091/i.test(filename)
+}
 
 function loadEnv() {
   for (const envFile of ['.env.local', '.env']) {
@@ -106,7 +148,12 @@ async function resizeForVision(inputPath) {
   return buf.toString('base64')
 }
 
-async function extractPage(client, imagePath, model, attempt = 1) {
+async function extractPage(client, imagePath, model, bookRole, attempt = 1) {
+  const prompt = bookRole === 'teacher' ? TEACHER_EXTRACTION_PROMPT : EXTRACTION_PROMPT
+  const userHint =
+    bookRole === 'teacher'
+      ? 'Extract all text from this Fiesta di idioma TEACHER GUIDE page (lesson methodology, orthography teaching, model Papiamentu).'
+      : 'Extract all Papiamentu text from this Grande 3-6 school book page.'
   const b64 = await resizeForVision(imagePath)
   const response = await client.chat.completions.create({
     model,
@@ -114,11 +161,11 @@ async function extractPage(client, imagePath, model, attempt = 1) {
     max_tokens: 8192,
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: EXTRACTION_PROMPT },
+      { role: 'system', content: prompt },
       {
         role: 'user',
         content: [
-          { type: 'text', text: 'Extract all Papiamentu text from this Grande 3-6 school book page.' },
+          { type: 'text', text: userHint },
           {
             type: 'image_url',
             image_url: { url: `data:image/jpeg;base64,${b64}`, detail: 'high' },
@@ -129,16 +176,19 @@ async function extractPage(client, imagePath, model, attempt = 1) {
   })
   const content = response.choices[0]?.message?.content || '{}'
   try {
-    return JSON.parse(content)
+    const parsed = JSON.parse(content)
+    parsed.book_role = bookRole
+    return parsed
   } catch (parseErr) {
     if (attempt < 2) {
       await new Promise((r) => setTimeout(r, 1000))
-      return extractPage(client, imagePath, model, attempt + 1)
+      return extractPage(client, imagePath, model, bookRole, attempt + 1)
     }
     // Last resort: wrap raw text only
     return {
       page_type: 'other',
       book_series: 'Fiesta di idioma',
+      book_role: bookRole,
       grade: null,
       raw_text: content.slice(0, 50000),
       words: [],
@@ -179,10 +229,11 @@ async function main() {
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   const manifest = loadManifest()
   manifest.total_images = images.length
-  manifest.source = 'Fiesta di idioma — Grande 3-6 school books'
+  manifest.source = 'Fiesta di idioma — Grande 3-6 student + teacher guides'
   if (!manifest.started_at) manifest.started_at = new Date().toISOString()
 
-  console.log(`Grande 3-6 school books: ${images.length} images, processing ${slice.length}`)
+  const teacherCount = images.filter(isTeacherImage).length
+  console.log(`Fiesta di idioma: ${images.length} images (${images.length - teacherCount} student, ${teacherCount} teacher), processing ${slice.length}`)
 
   let done = 0
   let skipped = 0
@@ -199,13 +250,15 @@ async function main() {
     }
 
     const imagePath = path.join(BOOK_DIR, file)
-    process.stdout.write(`[${globalIndex + 1}/${images.length}] ${file} ... `)
+    const bookRole = isTeacherImage(file) ? 'teacher' : 'student'
+    process.stdout.write(`[${globalIndex + 1}/${images.length}] ${file} (${bookRole}) ... `)
 
     try {
-      const extracted = await extractPage(client, imagePath, opts.model)
+      const extracted = await extractPage(client, imagePath, opts.model, bookRole)
       const record = {
         index: globalIndex + 1,
         source_file: file,
+        book_role: bookRole,
         extracted_at: new Date().toISOString(),
         ...extracted,
       }
@@ -215,6 +268,7 @@ async function main() {
       const entry = {
         index: globalIndex + 1,
         source_file: file,
+        book_role: bookRole,
         output_file: outName,
         page_type: extracted.page_type || 'other',
         grade: extracted.grade || null,
