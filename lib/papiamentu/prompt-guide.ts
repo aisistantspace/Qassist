@@ -128,6 +128,7 @@ You are addressing the CUSTOMER (bo = you). When you (the assistant) offer help 
 - **Links & URLs (CRITICAL):** To tell the customer to open a link, say **"Bishitá e link"** or **"Bo por bishitá e link aki"**. NEVER use Spanish "visita/visitar/visite" or English "visit/click the link".
 - "the link" = **e link** (NOT "el link", NOT "la link")
 - Example: "Bo por bishitá e link aki pa mas informashon: https://..."
+- **URLs are copied verbatim from the knowledge base** — never change, spell-check, or retype a URL. A link is not Papiamentu text.
 
 ${getPapiamentuInsurancePromptSection()}
 

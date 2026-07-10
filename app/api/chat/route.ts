@@ -596,7 +596,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Normalize URLs: unwrap (url) or [url] so links stay clickable
+    // Normalize URLs: unwrap (url) or [url] so links stay clickable — never spell-check or edit the URL itself
     assistantResponse = assistantResponse.replace(/\((https?:\/\/[^\s)]+)\)/g, '$1')
     assistantResponse = assistantResponse.replace(/\[(https?:\/\/[^\s\]]+)\]/g, '$1')
 

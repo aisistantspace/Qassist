@@ -2,6 +2,7 @@
  * Papiamentu correction layer – single entry point.
  *
  * Pipeline:
+ *   0. URLs (https://...) are NEVER modified — split out and passed through verbatim
  *   1. (Pre-pass) Phrase-level fixes on raw text (greetings, Spanish→Papiamentu)
  *   2. Tokenize
  *   3. Per word:
@@ -22,6 +23,9 @@ import { normalizeVariant } from './variant'
 import { correctPhrases } from './phrases'
 
 export type { CorrectPapiamentuOptions, CorrectPapiamentuResult, CorrectionChange }
+
+/** HTTP(S) URLs must never be spell-checked or orthography-corrected (e.g. .com → .kom). */
+const URL_SEGMENT = /(https?:\/\/[^\s)\]>]+)/gi
 
 // Short words (≤2 chars) and common grammar particles should not be "corrected"
 const SKIP_WORDS = new Set([
@@ -48,11 +52,38 @@ export function correctPapiamentu(
   text: string,
   options: CorrectPapiamentuOptions = {}
 ): CorrectPapiamentuResult {
+  if (!text || typeof text !== 'string') {
+    return { corrected: text || '', changes: undefined }
+  }
+
+  const parts = text.split(URL_SEGMENT)
+  if (parts.length === 1) {
+    return correctPapiamentuText(text, options)
+  }
+
+  const changes: CorrectionChange[] = []
+  const corrected = parts.map((part, index) => {
+    if (index % 2 === 1) return part
+    const result = correctPapiamentuText(part, options)
+    if (result.changes) changes.push(...result.changes)
+    return result.corrected
+  }).join('')
+
+  return {
+    corrected,
+    changes: changes.length > 0 ? changes : undefined,
+  }
+}
+
+function correctPapiamentuText(
+  text: string,
+  options: CorrectPapiamentuOptions = {}
+): CorrectPapiamentuResult {
   const locale = options.locale ?? 'pap-CW'
   const changes: CorrectionChange[] = []
 
   if (!text || typeof text !== 'string') {
-    return { corrected: text || '', changes }
+    return { corrected: text || '', changes: undefined }
   }
 
   // ── Step 1: Phrase-level pre-pass (greetings, Spanish→Papiamentu) ──
