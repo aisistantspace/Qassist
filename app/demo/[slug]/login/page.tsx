@@ -1,28 +1,120 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, Suspense } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import EnniaLoginPage from '@/components/demo/EnniaLoginPage'
 import { enniaTheme } from '@/lib/demo-themes/ennia'
+
+function GenericDemoLogin({
+  displayName,
+  onSubmit,
+}: {
+  displayName: string
+  onSubmit: (user: string, pass: string) => Promise<{ ok: boolean; error?: string }>
+}) {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
+    const result = await onSubmit(username, password)
+    if (!result.ok) {
+      setError(result.error || 'Invalid username or password')
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-[100dvh] bg-slate-900 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-[400px]">
+        <div className="text-center mb-6">
+          <h1 className="text-xl font-bold text-white">{displayName}</h1>
+          <p className="text-sm text-slate-400 mt-1">Sign in</p>
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+          {error && (
+            <p className="mb-4 text-sm text-red-200 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-1.5">
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                required
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={isLoading}
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-500/40 min-h-[48px]"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="w-full px-4 py-3 pr-16 rounded-xl bg-white/5 border border-white/10 text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-500/40 min-h-[48px]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 px-4 text-sm text-slate-500"
+                  tabIndex={-1}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading || !username || !password}
+              className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold disabled:opacity-40 min-h-[48px]"
+            >
+              {isLoading ? 'Signing in…' : 'Continue'}
+            </button>
+          </form>
+        </div>
+
+        <p className="mt-5 text-center text-xs text-slate-500">
+          <Link href="/login" className="text-slate-400 hover:text-white">
+            Platform admin
+          </Link>
+        </p>
+      </div>
+    </div>
+  )
+}
 
 function DemoLoginForm() {
   const params = useParams()
   const router = useRouter()
   const searchParams = useSearchParams()
   const slug = String(params.slug || 'ennia').toLowerCase()
-
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-
-  const displayName = slug === 'ennia' ? 'ENNIA' : slug.toUpperCase()
   const redirect = searchParams.get('redirect') || '/dashboard'
-
-  useEffect(() => {
-    setError('')
-  }, [slug])
 
   async function submitLogin(user: string, pass: string) {
     try {
@@ -37,9 +129,9 @@ function DemoLoginForm() {
       }
       router.push(data.redirect || redirect)
       router.refresh()
-      return { ok: true, redirect: data.redirect }
+      return { ok: true }
     } catch {
-      return { ok: false, error: 'Something went wrong. Please try again.' }
+      return { ok: false, error: 'Something went wrong. Try again.' }
     }
   }
 
@@ -47,117 +139,28 @@ function DemoLoginForm() {
     return <EnniaLoginPage onSubmit={submitLogin} />
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
-    const result = await submitLogin(username, password)
-    if (!result.ok) {
-      setError(result.error || 'Invalid username or password')
-      setIsLoading(false)
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 border border-white/10 mb-4">
-            <span className="text-2xl font-bold text-white">{displayName.slice(0, 1)}</span>
-          </div>
-          <h1 className="text-2xl font-bold text-white">{displayName} Demo</h1>
-          <p className="mt-2 text-sm text-slate-400">Sign in to access your dashboard and AI assistant</p>
-        </div>
-
-        <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 shadow-xl">
-          {error && (
-            <div className="mb-5 rounded-lg bg-red-500/10 border border-red-400/20 px-4 py-3 text-sm text-red-200">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                autoComplete="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-                placeholder="Enter username"
-                disabled={isLoading}
-                autoFocus
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-                  placeholder="Enter password"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 text-slate-500 hover:text-slate-300 text-sm"
-                  tabIndex={-1}
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading || !username || !password}
-              className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-semibold transition-colors"
-            >
-              {isLoading ? 'Signing in…' : 'Sign in to dashboard'}
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+    <GenericDemoLogin displayName={slug.toUpperCase()} onSubmit={submitLogin} />
   )
 }
 
-function EnniaLoading() {
+function Loading() {
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center gap-4"
+      className="min-h-[100dvh] flex items-center justify-center"
       style={{ background: enniaTheme.colors.skyMuted }}
     >
       <div
-        className="w-10 h-10 border-2 rounded-full animate-spin"
+        className="w-8 h-8 border-2 rounded-full animate-spin"
         style={{ borderColor: `${enniaTheme.colors.cyan}33`, borderTopColor: enniaTheme.colors.cyan }}
       />
-      <p className="text-sm font-medium" style={{ color: enniaTheme.colors.textMuted }}>
-        Loading ENNIA demo…
-      </p>
     </div>
   )
 }
 
 export default function DemoLoginPage() {
   return (
-    <Suspense fallback={<EnniaLoading />}>
+    <Suspense fallback={<Loading />}>
       <DemoLoginForm />
     </Suspense>
   )
