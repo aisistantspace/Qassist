@@ -7,16 +7,22 @@ import { enniaTheme } from '@/lib/demo-themes/ennia'
 function applyEnniaBrandingDefaults(data: Record<string, unknown>, slug: string | null) {
   if (slug !== 'ennia') return data
   const b = enniaTheme.branding
+  const storedWelcome = typeof data.welcome_message === 'string' ? data.welcome_message : ''
+  const welcomeMessage =
+    storedWelcome && !/welkom|waarmee/i.test(storedWelcome)
+      ? storedWelcome
+      : b.welcomeMessage
   return {
     ...data,
     company_name: data.company_name || 'ENNIA',
     company_website: data.company_website || enniaTheme.website,
     widget_title: data.widget_title || b.widgetTitle,
     agent_name: data.agent_name || b.agentName,
-    welcome_message: data.welcome_message || b.welcomeMessage,
+    welcome_message: welcomeMessage,
     primary_color: data.primary_color || b.primaryColor,
     logo_url: data.logo_url || b.logoUrl,
     favicon_url: data.favicon_url || b.faviconUrl,
+    default_language: data.default_language || b.defaultLanguage,
   }
 }
 

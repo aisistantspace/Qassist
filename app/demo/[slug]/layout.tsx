@@ -16,8 +16,8 @@ export async function generateMetadata({
 
   if (normalized === 'ennia') {
     return {
-      title: 'ENNIA Feel Secure — Inloggen',
-      description: 'Log in op de ENNIA AI assistant demo.',
+      title: 'ENNIA Feel Secure — Sign In',
+      description: 'Sign in to the ENNIA AI assistant demo.',
       icons: { icon: '/ennia/favicon-32x32.png' },
     }
   }

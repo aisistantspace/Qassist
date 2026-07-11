@@ -48,11 +48,8 @@ export default function EnniaLoginPage({ onSubmit }: EnniaLoginPageProps) {
           <h1 className="text-4xl xl:text-5xl font-bold leading-tight" style={{ color: c.greenDarker }}>
             {enniaTheme.tagline}
           </h1>
-          <p className="mt-3 text-xl font-semibold" style={{ color: c.greenDark }}>
-            {enniaTheme.taglineNl}
-          </p>
           <p className="mt-6 text-base leading-relaxed max-w-md" style={{ color: c.text }}>
-            AI assistant demo — dashboard, chat en verzekeringskennis voor ENNIA.
+            AI assistant demo — dashboard, chat, and insurance knowledge for ENNIA stakeholders.
           </p>
         </section>
 
@@ -71,10 +68,10 @@ export default function EnniaLoginPage({ onSubmit }: EnniaLoginPageProps) {
               style={{ borderColor: c.greenBorder }}
             >
               <h2 className="text-xl font-bold" style={{ color: c.greenDarker }}>
-                Inloggen
+                Sign in
               </h2>
               <p className="text-sm mt-1 mb-6" style={{ color: c.textMuted }}>
-                Demo-account voor stakeholders.
+                Demo account for stakeholders.
               </p>
 
               {error && (
@@ -89,7 +86,7 @@ export default function EnniaLoginPage({ onSubmit }: EnniaLoginPageProps) {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="username" className="block text-sm font-semibold mb-1.5" style={{ color: c.text }}>
-                    Gebruikersnaam
+                    Username
                   </label>
                   <input
                     id="username"
@@ -108,7 +105,7 @@ export default function EnniaLoginPage({ onSubmit }: EnniaLoginPageProps) {
 
                 <div>
                   <label htmlFor="password" className="block text-sm font-semibold mb-1.5" style={{ color: c.text }}>
-                    Wachtwoord
+                    Password
                   </label>
                   <div className="relative">
                     <input
@@ -130,7 +127,7 @@ export default function EnniaLoginPage({ onSubmit }: EnniaLoginPageProps) {
                       style={{ color: c.greenDark }}
                       tabIndex={-1}
                     >
-                      {showPassword ? 'Verberg' : 'Toon'}
+                      {showPassword ? 'Hide' : 'Show'}
                     </button>
                   </div>
                 </div>
@@ -141,7 +138,7 @@ export default function EnniaLoginPage({ onSubmit }: EnniaLoginPageProps) {
                   className="w-full py-3 rounded font-bold text-white text-base disabled:opacity-40 min-h-[44px] hover:opacity-95 transition-opacity"
                   style={{ backgroundColor: c.greenDark }}
                 >
-                  {isLoading ? 'Bezig…' : 'Inloggen'}
+                  {isLoading ? 'Signing in…' : 'Sign in'}
                 </button>
               </form>
             </div>
