@@ -46,86 +46,108 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#0B0F19] flex items-center justify-center px-4 py-8 sm:px-6">
-      <div className="w-full max-w-[400px]">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 mb-4">
-            <span className="text-lg font-bold text-white">A</span>
+    <div className="min-h-[100dvh] bg-[#0B0F19] flex flex-col lg:flex-row">
+      {/* Brand — desktop only */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 xl:p-16 border-r border-white/[0.06]">
+        <div>
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded bg-blue-600 mb-6">
+            <span className="text-sm font-bold text-white">A</span>
           </div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-3xl font-bold text-white tracking-tight leading-tight">
             Astute <span className="text-blue-400">AI</span>sistant
           </h1>
+          <p className="mt-4 text-slate-400 text-base max-w-sm leading-relaxed">
+            AI service desk — chat, leads, knowledge base, and dashboards for your customers.
+          </p>
         </div>
+        <p className="text-xs text-slate-600">Platform owner access</p>
+      </div>
 
-        <Link
-          href="/demo/ennia/login"
-          className="flex items-center justify-between gap-3 w-full mb-6 p-4 rounded-2xl border border-[#00A8E8]/40 bg-[#00A8E8]/10 hover:bg-[#00A8E8]/20 transition-colors min-h-[56px]"
-        >
-          <div className="text-left min-w-0">
-            <p className="font-semibold text-white">ENNIA Demo</p>
-            <p className="text-sm text-slate-400 truncate">Customer login</p>
-          </div>
-          <span className="text-[#00A8E8] text-sm font-medium shrink-0">→</span>
-        </Link>
-
-        <div className="relative mb-5">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/10" />
-          </div>
-          <p className="relative text-center text-xs text-slate-500 bg-[#0B0F19] px-3 mx-auto w-fit">Admin</p>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
-          {error && (
-            <p className="mb-4 text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
-              {error}
-            </p>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Admin password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Admin password"
-                  disabled={isLoading}
-                  autoComplete="current-password"
-                  className="w-full px-4 py-3.5 pr-16 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-50"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 px-4 text-sm text-slate-500 hover:text-slate-300"
-                  tabIndex={-1}
-                >
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
-              </div>
+      {/* Sign-in */}
+      <div className="flex-1 flex items-center justify-center px-4 py-10 sm:px-8">
+        <div className="w-full max-w-[420px]">
+          <div className="lg:hidden text-center mb-8">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded bg-blue-600 mb-3">
+              <span className="text-sm font-bold text-white">A</span>
             </div>
+            <h1 className="text-lg font-bold text-white">
+              Astute <span className="text-blue-400">AI</span>sistant
+            </h1>
+          </div>
 
-            <button
-              type="submit"
-              disabled={isLoading || !password}
-              className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-base disabled:opacity-40 transition-colors min-h-[48px]"
-            >
-              {isLoading ? (
-                <span className="inline-flex items-center justify-center gap-2">
-                  <Spinner />
-                  Signing in…
-                </span>
-              ) : (
-                'Sign in'
-              )}
-            </button>
-          </form>
+          <h2 className="text-lg font-semibold text-white mb-1 lg:mb-2">Sign in</h2>
+          <p className="text-sm text-slate-500 mb-6">Pick how you want to access the platform.</p>
+
+          <Link
+            href="/demo/ennia/login"
+            className="flex items-center justify-between gap-3 w-full mb-5 p-4 rounded border border-[#00A8E8]/50 bg-[#00A8E8]/10 hover:bg-[#00A8E8]/15 transition-colors min-h-[52px]"
+          >
+            <div className="text-left min-w-0">
+              <p className="font-semibold text-white">ENNIA Demo</p>
+              <p className="text-sm text-slate-400">Dashboard &amp; chat · username + password</p>
+            </div>
+            <span className="text-[#00A8E8] text-sm shrink-0">→</span>
+          </Link>
+
+          <div className="relative mb-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10" />
+            </div>
+            <p className="relative text-center text-xs text-slate-500 bg-[#0B0F19] px-2 mx-auto w-fit">Admin</p>
+          </div>
+
+          <div className="rounded border border-white/10 bg-white/[0.02] p-5 sm:p-6">
+            {error && (
+              <p className="mb-4 text-sm text-red-300 bg-red-500/10 border border-red-500/20 rounded px-3 py-2">
+                {error}
+              </p>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-slate-400 mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Platform admin password"
+                    disabled={isLoading}
+                    autoComplete="current-password"
+                    className="w-full px-3 py-3 pr-14 rounded border border-white/10 bg-white/5 text-white placeholder:text-slate-600 text-base focus:outline-none focus:ring-1 focus:ring-blue-500/50 disabled:opacity-50 min-h-[44px]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 px-3 text-sm text-slate-500 hover:text-slate-300"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading || !password}
+                className="w-full py-3 rounded bg-blue-600 hover:bg-blue-500 text-white font-semibold text-base disabled:opacity-40 transition-colors min-h-[44px]"
+              >
+                {isLoading ? (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <Spinner />
+                    Signing in…
+                  </span>
+                ) : (
+                  'Admin sign in'
+                )}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

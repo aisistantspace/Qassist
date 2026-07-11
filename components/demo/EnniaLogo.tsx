@@ -11,7 +11,7 @@ export default function EnniaLogo({ variant = 'light', className = '' }: EnniaLo
   return (
     <div className={`inline-flex items-center gap-2.5 ${className}`} role="img" aria-label="ENNIA">
       <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-lg"
+        className="w-10 h-10 rounded flex items-center justify-center shrink-0"
         style={{
           background: `linear-gradient(135deg, ${enniaTheme.colors.cyan} 0%, ${enniaTheme.colors.cyanDark} 100%)`,
         }}

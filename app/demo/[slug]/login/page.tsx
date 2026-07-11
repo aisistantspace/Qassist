@@ -38,9 +38,9 @@ function GenericDemoLogin({
           <p className="text-sm text-slate-400 mt-1">Sign in</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="rounded border border-white/10 bg-white/5 p-6">
           {error && (
-            <p className="mb-4 text-sm text-red-200 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+            <p className="mb-4 text-sm text-red-200 bg-red-500/10 border border-red-500/20 rounded px-3 py-2">
               {error}
             </p>
           )}
@@ -59,7 +59,7 @@ function GenericDemoLogin({
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={isLoading}
                 autoFocus
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-500/40 min-h-[48px]"
+                className="w-full px-3 py-3 rounded border border-white/10 bg-white/5 text-white text-base focus:outline-none focus:ring-1 focus:ring-blue-500/40 min-h-[44px]"
               />
             </div>
 
@@ -76,7 +76,7 @@ function GenericDemoLogin({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
-                  className="w-full px-4 py-3 pr-16 rounded-xl bg-white/5 border border-white/10 text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-500/40 min-h-[48px]"
+                  className="w-full px-3 py-3 pr-14 rounded border border-white/10 bg-white/5 text-white text-base focus:outline-none focus:ring-1 focus:ring-blue-500/40 min-h-[44px]"
                 />
                 <button
                   type="button"
@@ -92,7 +92,7 @@ function GenericDemoLogin({
             <button
               type="submit"
               disabled={isLoading || !username || !password}
-              className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold disabled:opacity-40 min-h-[48px]"
+              className="w-full py-3 rounded bg-blue-600 hover:bg-blue-500 text-white font-semibold disabled:opacity-40 min-h-[44px]"
             >
               {isLoading ? 'Signing in…' : 'Continue'}
             </button>
