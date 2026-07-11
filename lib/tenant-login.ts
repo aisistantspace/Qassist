@@ -2,7 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getTenantIdBySlug, DEFAULT_TENANT_ID } from '@/lib/tenant'
 import { setTenantSessionCookie, verifyPassword } from '@/lib/tenant-session'
-import { getDemoCredentials, verifyDemoLogin, setDemoAuthCookie, generateDemoAuthToken } from '@/lib/demo-auth'
+import {
+  clearDemoAuthCookie,
+  getDemoCredentials,
+  verifyDemoLogin,
+  setDemoAuthCookie,
+  generateDemoAuthToken,
+} from '@/lib/demo-auth'
+import { clearAuthCookie } from '@/lib/auth'
 
 export async function handleTenantLogin(request: NextRequest): Promise<NextResponse> {
   try {
@@ -79,6 +86,9 @@ export async function handleTenantLogin(request: NextRequest): Promise<NextRespo
     })
 
     setDemoAuthCookie(response, tenantSlug, generateDemoAuthToken())
+
+    // Tenant login is separate from platform super-admin
+    clearAuthCookie(response)
 
     return response
   } catch (error) {

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyPassword, generateAuthToken, setAuthCookie } from '@/lib/auth'
+import { clearTenantSessionCookie } from '@/lib/tenant-session'
+import { clearDemoAuthCookie } from '@/lib/demo-auth'
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,10 +27,14 @@ export async function POST(request: NextRequest) {
     const token = generateAuthToken()
     
     // Create response
-    const response = NextResponse.json({ success: true })
-    
-    // Set authentication cookie
+    const response = NextResponse.json({
+      success: true,
+      redirect: '/dashboard/tenants',
+    })
+
     setAuthCookie(response, token)
+    clearTenantSessionCookie(response)
+    clearDemoAuthCookie(response, 'ennia')
 
     return response
   } catch (error: any) {

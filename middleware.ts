@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { canAccessDemoChat, getChatGateSlug } from '@/lib/demo-auth'
-import { isDashboardAuthenticated } from '@/lib/dashboard-tenant'
+import { canAccessDemoChat, getChatGateSlug, hasTenantDemoAccess } from '@/lib/demo-auth'
+import { isDashboardAuthenticated, isSuperAdminRequest } from '@/lib/dashboard-tenant'
 
 // API routes that require authentication (settings, admin, upload, dashboard analytics, etc.)
 const PROTECTED_API_PREFIXES = [
@@ -29,6 +29,7 @@ export function middleware(request: NextRequest) {
   try {
     const { pathname } = request.nextUrl
     const authed = isDashboardAuthenticated(request)
+    const superAdmin = isSuperAdminRequest(request)
 
     // Protect dashboard UI routes (super admin or tenant SaaS session)
     if (pathname.startsWith('/dashboard')) {
@@ -39,10 +40,10 @@ export function middleware(request: NextRequest) {
       }
     }
 
-    // Redirect authenticated users away from super-admin login page
+    // Platform admin login — only redirect if super admin (not tenant demo session)
     if (pathname === '/login') {
-      if (authed) {
-        return NextResponse.redirect(new URL('/dashboard', request.url))
+      if (superAdmin) {
+        return NextResponse.redirect(new URL('/dashboard/tenants', request.url))
       }
     }
 
@@ -56,11 +57,11 @@ export function middleware(request: NextRequest) {
       }
     }
 
-    // Demo login pages: if already authed, go to dashboard (full SaaS experience)
+    // Demo login pages — only skip if THIS tenant is signed in (super admin ≠ demo user)
     const demoLoginMatch = pathname.match(/^\/demo\/([^/]+)\/login$/)
     if (demoLoginMatch) {
       const slug = demoLoginMatch[1].toLowerCase()
-      if (canAccessDemoChat(request, slug)) {
+      if (hasTenantDemoAccess(request, slug)) {
         const redirectTo = request.nextUrl.searchParams.get('redirect') || '/dashboard'
         return NextResponse.redirect(new URL(redirectTo, request.url))
       }

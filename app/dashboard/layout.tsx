@@ -129,16 +129,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }
 
-  const tenantLabel = session?.tenant?.name || session?.tenant?.slug?.toUpperCase() || 'AI Assistant'
+  const tenantLabel = session?.isSuperAdmin
+    ? 'Astute AIssistant'
+    : session?.tenant?.name || session?.tenant?.slug?.toUpperCase() || 'AI Assistant'
   const chatHref = session?.chatPath || '/chat'
+  const isEnniaTenant = !session?.isSuperAdmin && session?.tenant?.slug === 'ennia'
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
       <div className="p-6 border-b border-gray-200">
         <h1 className="text-xl font-bold text-gray-900">{tenantLabel}</h1>
         <p className="text-sm text-gray-500 mt-1">
-          {session?.isSuperAdmin ? 'Super Admin' : session?.user?.username ? `@${session.user.username}` : 'Dashboard'}
+          {session?.isSuperAdmin
+            ? 'Platform super admin'
+            : session?.user?.username
+              ? `@${session.user.username} · customer account`
+              : 'Dashboard'}
         </p>
+        {session?.isSuperAdmin && (
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5 mt-2">
+            Admin mode — use <strong>Tenants</strong> to manage customers. ENNIA demo is a separate login.
+          </p>
+        )}
+        {isEnniaTenant && (
+          <p className="text-xs text-[#0088C7] bg-[#E8F6FC] border border-[#D4EAF5] rounded-lg px-2 py-1.5 mt-2">
+            ENNIA Feel Secure · demo account
+          </p>
+        )}
       </div>
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navigation.map((item) => {
@@ -227,6 +244,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       <div className="pl-0 lg:pl-64 lg:pt-14">
+        {session?.isSuperAdmin && pathname === '/dashboard' && (
+          <div className="mx-4 sm:mx-6 lg:mx-8 mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            You&apos;re in <strong>platform admin</strong> mode. This overview shows the default tenant (ENNIA) data.
+            Go to <Link href="/dashboard/tenants" className="font-semibold underline">Tenants</Link> to create accounts, or use{' '}
+            <a href="/demo/ennia/login" className="font-semibold underline">/demo/ennia/login</a> for the customer demo experience.
+          </div>
+        )}
         <main className="p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>

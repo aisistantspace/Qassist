@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
 /* ---------- Inline SVG Icons ---------- */
 
@@ -138,7 +139,7 @@ function LoginForm() {
         return
       }
 
-      const redirect = searchParams.get('redirect') || '/dashboard'
+      const redirect = data.redirect || searchParams.get('redirect') || '/dashboard/tenants'
       router.push(redirect)
       router.refresh()
     } catch (err: any) {
@@ -247,22 +248,56 @@ function LoginForm() {
         {/* Glass card */}
         <div className="w-full max-w-sm">
           {/* Mobile brand (only visible on small screens) */}
-          <div className="lg:hidden text-center mb-10">
+          <div className="lg:hidden text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/20 mb-4">
               <SparkleIcon className="w-7 h-7 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-white tracking-tight">
               Astute <span className="text-blue-400">AI</span>sistant
             </h1>
-            <p className="mt-1 text-sm text-slate-500 font-medium">AI-Powered Service Desk</p>
           </div>
 
-          {/* Card */}
+          <div className="mb-6 text-center lg:text-left">
+            <h2 className="text-xl font-bold text-white">Sign in</h2>
+            <p className="mt-1 text-sm text-slate-500">Choose your account type below</p>
+          </div>
+
+          {/* ENNIA demo — primary path */}
+          <Link
+            href="/demo/ennia/login"
+            className="group block mb-6 rounded-2xl p-5 border border-[#00A8E8]/30 bg-gradient-to-br from-[#00A8E8]/15 to-[#0088C7]/10 hover:from-[#00A8E8]/25 hover:to-[#0088C7]/20 transition-all shadow-lg shadow-[#00A8E8]/10"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-8 h-8 rounded-lg bg-[#00A8E8] flex items-center justify-center text-white text-xs font-black">
+                    E
+                  </div>
+                  <span className="text-lg font-bold text-white">ENNIA Demo</span>
+                </div>
+                <p className="text-sm text-slate-400 leading-snug">
+                  Customer preview — dashboard, chat &amp; insurance AI. Username + password.
+                </p>
+                <p className="mt-2 text-xs font-semibold text-[#6BB4C5]">Feel Secure · Stakeholder access</p>
+              </div>
+              <ArrowRightIcon className="w-5 h-5 text-[#00A8E8] group-hover:translate-x-1 transition-transform shrink-0 mt-1" />
+            </div>
+          </Link>
+
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/[0.08]" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase tracking-wider">
+              <span className="bg-[#0B0F19] px-3 text-slate-600 font-semibold">Platform owner</span>
+            </div>
+          </div>
+
+          {/* Admin card */}
           <div className="backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/30 p-8">
-            {/* Header */}
-            <div className="mb-7">
-              <h2 className="text-xl font-bold text-white">Welcome back</h2>
-              <p className="mt-1 text-sm text-slate-500">Sign in to your dashboard</p>
+            <div className="mb-6">
+              <h3 className="text-base font-bold text-white">Astute admin</h3>
+              <p className="mt-1 text-xs text-slate-500">Manage tenants, all customers — password only</p>
             </div>
 
             {/* Error */}
@@ -333,7 +368,7 @@ function LoginForm() {
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    <span>Sign in to Dashboard</span>
+                    <span>Admin sign in</span>
                     <ArrowRightIcon className="w-4 h-4" />
                   </span>
                 )}

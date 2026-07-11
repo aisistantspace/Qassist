@@ -89,12 +89,19 @@ export function isDemoAuthenticated(request: NextRequest, slug: string): boolean
   return !!request.cookies.get(demoAuthCookieName(slug))?.value
 }
 
-export function canAccessDemoChat(request: NextRequest, slug: string): boolean {
+/** True when this specific tenant/demo slug is signed in (not super admin alone). */
+export function hasTenantDemoAccess(request: NextRequest, slug: string): boolean {
   const normalized = slug.toLowerCase()
   const session = getTenantSession(request)
   if (session?.slug === normalized) return true
+  return isDemoAuthenticated(request, normalized)
+}
+
+export function canAccessDemoChat(request: NextRequest, slug: string): boolean {
+  const normalized = slug.toLowerCase()
+  if (hasTenantDemoAccess(request, normalized)) return true
   if (!isDemoConfigured(normalized)) return true
-  return isDemoAuthenticated(request, normalized) || isDashboardAuthenticated(request)
+  return isDashboardAuthenticated(request)
 }
 
 /**
