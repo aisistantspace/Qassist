@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Signika } from 'next/font/google'
 
-const jakarta = Plus_Jakarta_Sans({
+const signika = Signika({
   subsets: ['latin'],
+  weight: ['400', '600', '700'],
 })
 
 export async function generateMetadata({
@@ -15,9 +16,9 @@ export async function generateMetadata({
 
   if (normalized === 'ennia') {
     return {
-      title: 'ENNIA Feel Secure — AI Assistant Demo',
-      description:
-        'Sign in to the ENNIA AI assistant demo. Dashboard, chat, and insurance knowledge for the Dutch Caribbean.',
+      title: 'ENNIA Feel Secure — Inloggen',
+      description: 'Log in op de ENNIA AI assistant demo.',
+      icons: { icon: 'https://www.ennia.com/assets/img/favicon-32x32.png' },
     }
   }
 
@@ -37,5 +38,5 @@ export default async function DemoLayout({
   const { slug } = await params
   const isEnnia = slug.toLowerCase() === 'ennia'
 
-  return <div className={isEnnia ? jakarta.className : undefined}>{children}</div>
+  return <div className={isEnnia ? signika.className : undefined}>{children}</div>
 }

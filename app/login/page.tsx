@@ -80,13 +80,22 @@ function LoginForm() {
 
           <Link
             href="/demo/ennia/login"
-            className="flex items-center justify-between gap-3 w-full mb-5 p-4 rounded border border-[#00A8E8]/50 bg-[#00A8E8]/10 hover:bg-[#00A8E8]/15 transition-colors min-h-[52px]"
+            className="flex items-center justify-between gap-3 w-full mb-5 p-4 rounded border border-[#307E57]/50 bg-[#307E57]/10 hover:bg-[#307E57]/15 transition-colors min-h-[52px]"
           >
-            <div className="text-left min-w-0">
-              <p className="font-semibold text-white">ENNIA Demo</p>
-              <p className="text-sm text-slate-400">Dashboard &amp; chat · username + password</p>
+            <div className="text-left min-w-0 flex items-center gap-3">
+              <img
+                src="https://www.ennia.com/assets/img/logo-green.webp"
+                alt="ENNIA"
+                width={90}
+                height={21}
+                className="h-5 w-auto shrink-0"
+              />
+              <div>
+                <p className="font-semibold text-white">ENNIA Demo</p>
+                <p className="text-sm text-slate-400">Customer login</p>
+              </div>
             </div>
-            <span className="text-[#00A8E8] text-sm shrink-0">→</span>
+            <span className="text-[#307E57] text-sm shrink-0">→</span>
           </Link>
 
           <div className="relative mb-5">

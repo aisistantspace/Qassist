@@ -148,11 +148,11 @@ function Loading() {
   return (
     <div
       className="min-h-[100dvh] flex items-center justify-center"
-      style={{ background: enniaTheme.colors.skyMuted }}
+      style={{ background: enniaTheme.colors.greenBg }}
     >
       <div
         className="w-8 h-8 border-2 rounded-full animate-spin"
-        style={{ borderColor: `${enniaTheme.colors.cyan}33`, borderTopColor: enniaTheme.colors.cyan }}
+        style={{ borderColor: `${enniaTheme.colors.greenBorder}`, borderTopColor: enniaTheme.colors.greenDark }}
       />
     </div>
   )
