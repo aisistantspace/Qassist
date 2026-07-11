@@ -14,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline'
 import InlineForm from './InlineForm'
 import type { FormField } from '@/lib/types'
+import { enniaTheme, isEnniaBrand } from '@/lib/demo-themes/ennia'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -34,6 +35,8 @@ interface BrandingConfig {
   primary_color: string
   welcome_message: string
   developer_branding_enabled: boolean
+  logo_url?: string
+  widget_title?: string
 }
 
 interface Props {
@@ -136,6 +139,11 @@ export default function ModernChatInterface({
   const primaryColor = propPrimaryColor || branding?.primary_color || DEFAULT_PRIMARY_COLOR
   const agentName = branding?.agent_name || 'Assistant'
   const avatarUrl = branding?.agent_avatar_url || DEFAULT_AVATAR
+  const isEnnia = isEnniaBrand(branding?.company_name, primaryColor)
+  const headerLogo = isEnnia
+    ? enniaTheme.logo.white
+    : branding?.logo_url || avatarUrl
+  const chatTitle = isEnnia ? enniaTheme.branding.widgetTitle : agentName
 
   useEffect(() => {
     fetchBranding()
@@ -360,15 +368,43 @@ export default function ModernChatInterface({
       {/* Header */}
       <div className="w-full shrink-0">
         <header
-          className="relative flex items-center justify-between px-4 sm:px-5 py-4 text-black border-b"
-          style={{ background: 'linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0.44%, rgba(0, 0, 0, 0) 49.5%), #ffffff' }}
+          className={`relative flex items-center justify-between px-4 sm:px-5 py-3.5 border-b ${
+            isEnnia ? 'text-white' : 'text-black'
+          }`}
+          style={
+            isEnnia
+              ? { backgroundColor: enniaTheme.colors.greenDark, borderColor: enniaTheme.colors.greenDarker }
+              : {
+                  background:
+                    'linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0.44%, rgba(0, 0, 0, 0) 49.5%), #ffffff',
+                }
+          }
         >
           <div className="flex items-center gap-3 min-w-0">
-            <div className="relative flex shrink-0 overflow-hidden rounded-full size-10 border border-gray-100">
-              <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
-            </div>
+            {isEnnia ? (
+              <img
+                src={headerLogo}
+                alt="ENNIA"
+                className="h-7 w-auto shrink-0"
+                width={enniaTheme.logo.whiteWidth}
+                height={enniaTheme.logo.whiteHeight}
+              />
+            ) : (
+              <div className="relative flex shrink-0 overflow-hidden rounded-full size-10 border border-gray-100">
+                <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
+              </div>
+            )}
             <div className="flex flex-col justify-center min-w-0">
-              <h1 className="font-medium text-sm tracking-tight text-gray-900 truncate">{agentName}</h1>
+              <h1
+                className={`font-semibold text-sm tracking-tight truncate ${
+                  isEnnia ? 'text-white/95' : 'text-gray-900'
+                }`}
+              >
+                {chatTitle}
+              </h1>
+              {isEnnia && (
+                <p className="text-[11px] text-white/80 font-medium">{enniaTheme.tagline}</p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
@@ -379,8 +415,12 @@ export default function ModernChatInterface({
                 onClick={() => handleLanguageSelect(lang.code)}
                 className={`flex min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-md text-lg transition-all ${
                   selectedLanguage === lang.code
-                    ? 'scale-110 bg-gray-100 ring-1 ring-gray-200'
-                    : 'opacity-50 hover:opacity-100 hover:bg-gray-50'
+                    ? isEnnia
+                      ? 'scale-110 bg-white/15 ring-1 ring-white/25'
+                      : 'scale-110 bg-gray-100 ring-1 ring-gray-200'
+                    : isEnnia
+                      ? 'opacity-70 hover:opacity-100 hover:bg-white/10'
+                      : 'opacity-50 hover:opacity-100 hover:bg-gray-50'
                 }`}
                 title={lang.name}
                 aria-label={`Switch to ${lang.name}`}
@@ -390,7 +430,11 @@ export default function ModernChatInterface({
               </button>
             ))}
             <button
-              className="flex min-w-[44px] min-h-[44px] items-center justify-center rounded-md text-gray-500 opacity-90 hover:opacity-100 hover:bg-gray-100 transition-all"
+              className={`flex min-w-[44px] min-h-[44px] items-center justify-center rounded-md transition-all ${
+                isEnnia
+                  ? 'text-white/80 hover:text-white hover:bg-white/10'
+                  : 'text-gray-500 opacity-90 hover:opacity-100 hover:bg-gray-100'
+              }`}
               title="Open menu"
             >
               <EllipsisHorizontalIcon className="h-5 w-5" />
@@ -398,7 +442,11 @@ export default function ModernChatInterface({
             {onClose && (
               <button
                 onClick={onClose}
-                className="flex min-w-[44px] min-h-[44px] items-center justify-center rounded-md text-gray-500 opacity-70 hover:opacity-100 hover:bg-gray-100 transition-all"
+                className={`flex min-w-[44px] min-h-[44px] items-center justify-center rounded-md transition-all ${
+                  isEnnia
+                    ? 'text-white/80 hover:text-white hover:bg-white/10'
+                    : 'text-gray-500 opacity-70 hover:opacity-100 hover:bg-gray-100'
+                }`}
                 title="Close chat"
               >
                 <XMarkIcon className="h-5 w-5" />

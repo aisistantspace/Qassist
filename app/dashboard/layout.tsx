@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { Signika } from 'next/font/google'
 import {
   Bars3Icon,
   ChatBubbleLeftRightIcon,
@@ -18,6 +19,13 @@ import {
   BuildingOffice2Icon,
 } from '@heroicons/react/24/outline'
 import NotificationBell from '@/components/NotificationBell'
+import EnniaLogo from '@/components/demo/EnniaLogo'
+import { enniaTheme } from '@/lib/demo-themes/ennia'
+
+const signika = Signika({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+})
 
 interface SessionInfo {
   authenticated: boolean
@@ -134,26 +142,45 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     : session?.tenant?.name || session?.tenant?.slug?.toUpperCase() || 'AI Assistant'
   const chatHref = session?.chatPath || '/chat'
   const isEnniaTenant = !session?.isSuperAdmin && session?.tenant?.slug === 'ennia'
+  const ec = enniaTheme.colors
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
-      <div className="p-6 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-gray-900">{tenantLabel}</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          {session?.isSuperAdmin
-            ? 'Platform super admin'
-            : session?.user?.username
-              ? `@${session.user.username} · customer account`
-              : 'Dashboard'}
-        </p>
+      <div
+        className={`p-6 border-b ${isEnniaTenant ? '' : 'border-gray-200'}`}
+        style={isEnniaTenant ? { backgroundColor: ec.greenDark, borderColor: ec.greenDarker } : undefined}
+      >
+        {isEnniaTenant ? (
+          <>
+            <EnniaLogo variant="light" />
+            <p className="text-sm text-white/90 mt-3 font-semibold">{enniaTheme.tagline}</p>
+            <p className="text-xs text-white/75 mt-1">
+              {session?.user?.username ? `@${session.user.username}` : 'Demo account'}
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="text-xl font-bold text-gray-900">{tenantLabel}</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              {session?.isSuperAdmin
+                ? 'Platform super admin'
+                : session?.user?.username
+                  ? `@${session.user.username} · customer account`
+                  : 'Dashboard'}
+            </p>
+          </>
+        )}
         {session?.isSuperAdmin && (
           <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5 mt-2">
             Admin mode — use <strong>Tenants</strong> to manage customers. ENNIA demo is a separate login.
           </p>
         )}
         {isEnniaTenant && (
-          <p className="text-xs text-[#0088C7] bg-[#E8F6FC] border border-[#D4EAF5] rounded-lg px-2 py-1.5 mt-2">
-            ENNIA Feel Secure · demo account
+          <p
+            className="text-xs rounded px-2 py-1.5 mt-2 font-medium"
+            style={{ color: ec.greenDarker, backgroundColor: ec.greenBg, border: `1px solid ${ec.greenBorder}` }}
+          >
+            Feel Secure · AI assistant demo
           </p>
         )}
       </div>
@@ -166,9 +193,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href={item.href}
               onClick={() => !isLg && setSidebarOpen(false)}
               className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px]
-                ${isActive ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-100'}
+                flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors min-h-[44px]
+                ${
+                  isEnniaTenant
+                    ? isActive
+                      ? 'font-semibold'
+                      : 'hover:bg-black/[0.04]'
+                    : isActive
+                      ? 'bg-primary-50 text-primary-700'
+                      : 'text-gray-700 hover:bg-gray-100'
+                }
               `}
+              style={
+                isEnniaTenant
+                  ? {
+                      color: isActive ? ec.greenDark : ec.text,
+                      backgroundColor: isActive ? ec.greenBg : undefined,
+                    }
+                  : undefined
+              }
             >
               <item.icon className="w-5 h-5 shrink-0" />
               {item.name}
@@ -191,7 +234,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </a>
         </div>
         <div className="text-xs text-gray-500">Version 3.0.0 (White Label)</div>
-        <Link href={chatHref} className="text-xs text-primary-600 hover:text-primary-700 mt-1 inline-block">
+        <Link
+          href={chatHref}
+          className={`text-xs mt-1 inline-block font-semibold hover:underline ${isEnniaTenant ? '' : 'text-primary-600 hover:text-primary-700'}`}
+          style={isEnniaTenant ? { color: ec.greenDark } : undefined}
+        >
           ← Open Chat Assistant
         </Link>
       </div>
@@ -199,7 +246,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   )
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      className={`min-h-screen ${isEnniaTenant ? signika.className : 'bg-gray-50'}`}
+      style={isEnniaTenant ? { backgroundColor: ec.greenBg } : undefined}
+    >
       {!isLg && sidebarOpen && (
         <button
           type="button"

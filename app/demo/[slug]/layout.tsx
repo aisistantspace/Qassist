@@ -18,7 +18,7 @@ export async function generateMetadata({
     return {
       title: 'ENNIA Feel Secure — Inloggen',
       description: 'Log in op de ENNIA AI assistant demo.',
-      icons: { icon: 'https://www.ennia.com/assets/img/favicon-32x32.png' },
+      icons: { icon: '/ennia/favicon-32x32.png' },
     }
   }
 

@@ -84,7 +84,7 @@ function LoginForm() {
           >
             <div className="text-left min-w-0 flex items-center gap-3">
               <img
-                src="https://www.ennia.com/assets/img/logo-green.webp"
+                src="/ennia/logo-green.webp"
                 alt="ENNIA"
                 width={90}
                 height={21}

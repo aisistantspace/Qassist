@@ -13,8 +13,8 @@ export const enniaTheme = {
     white: '#FFFFFF',
   },
   logo: {
-    white: 'https://www.ennia.com/assets/img/logo.webp',
-    green: 'https://www.ennia.com/assets/img/logo-green.webp',
+    white: '/ennia/logo-white.webp',
+    green: '/ennia/logo-green.webp',
     whiteWidth: 77,
     whiteHeight: 32,
     greenWidth: 130,
@@ -23,4 +23,18 @@ export const enniaTheme = {
   tagline: 'Feel Secure',
   taglineNl: 'Voel je veilig',
   website: 'https://www.ennia.com',
+  branding: {
+    primaryColor: '#307E57',
+    agentName: 'ENNIA Assistant',
+    widgetTitle: 'ENNIA Chat',
+    welcomeMessage: 'Welkom bij ENNIA! Waarmee kunnen we je helpen?',
+    logoUrl: '/ennia/logo-green.webp',
+    faviconUrl: '/ennia/favicon-32x32.png',
+  },
 } as const
+
+export function isEnniaBrand(companyName?: string | null, primaryColor?: string | null): boolean {
+  const name = (companyName || '').toLowerCase()
+  const color = (primaryColor || '').toLowerCase()
+  return name.includes('ennia') || color === enniaTheme.branding.primaryColor.toLowerCase()
+}

@@ -17,7 +17,10 @@ SET
   company_website = COALESCE(NULLIF(company_website, ''), 'https://www.ennia.com'),
   widget_title = COALESCE(NULLIF(widget_title, ''), 'ENNIA Chat'),
   agent_name = COALESCE(NULLIF(agent_name, ''), 'ENNIA Assistant'),
-  welcome_message = COALESCE(NULLIF(welcome_message, ''), 'Welcome to ENNIA! How can we help you today?'),
+  welcome_message = COALESCE(NULLIF(welcome_message, ''), 'Welkom bij ENNIA! Waarmee kunnen we je helpen?'),
+  primary_color = COALESCE(NULLIF(primary_color, ''), '#307E57'),
+  logo_url = COALESCE(NULLIF(logo_url, ''), '/ennia/logo-green.webp'),
+  favicon_url = COALESCE(NULLIF(favicon_url, ''), '/ennia/favicon-32x32.png'),
   updated_at = NOW()
 WHERE tenant_id = '00000000-0000-0000-0000-000000000001';
 

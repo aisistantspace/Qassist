@@ -1,14 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { getTenantFromRequest, getTenantIdBySlug } from '@/lib/tenant'
-import { getDashboardTenantId } from '@/lib/dashboard-tenant'
+import { getDashboardTenantId, getDashboardTenantContext } from '@/lib/dashboard-tenant'
+import { enniaTheme } from '@/lib/demo-themes/ennia'
+
+function applyEnniaBrandingDefaults(data: Record<string, unknown>, slug: string | null) {
+  if (slug !== 'ennia') return data
+  const b = enniaTheme.branding
+  return {
+    ...data,
+    company_name: data.company_name || 'ENNIA',
+    company_website: data.company_website || enniaTheme.website,
+    widget_title: data.widget_title || b.widgetTitle,
+    agent_name: data.agent_name || b.agentName,
+    welcome_message: data.welcome_message || b.welcomeMessage,
+    primary_color: data.primary_color || b.primaryColor,
+    logo_url: data.logo_url || b.logoUrl,
+    favicon_url: data.favicon_url || b.faviconUrl,
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const slug = searchParams.get('slug') ?? searchParams.get('tenantSlug')
+    const slugParam = searchParams.get('slug') ?? searchParams.get('tenantSlug')
     const tenantIdParam = searchParams.get('tenant') ?? searchParams.get('tenantId')
-    const tenantId = tenantIdParam ?? (slug ? (await getTenantIdBySlug(slug))?.id : null) ?? (await getTenantFromRequest(request)).tenantId
+
+    let tenantId = tenantIdParam
+    let slug = slugParam
+
+    if (!tenantId && !slug) {
+      try {
+        const ctx = await getDashboardTenantContext(request)
+        if (!ctx.isSuperAdmin) {
+          tenantId = ctx.tenantId
+          slug = ctx.slug
+        }
+      } catch {
+        // Public chat — fall through to default tenant resolution
+      }
+    }
+
+    if (!tenantId) {
+      tenantId =
+        (slug ? (await getTenantIdBySlug(slug))?.id : null) ??
+        (await getTenantFromRequest(request)).tenantId
+    }
+    if (!slug && tenantId) {
+      const supabaseAdmin = getSupabaseAdmin()
+      const { data: tenantRow } = await supabaseAdmin
+        .from('tenants')
+        .select('slug')
+        .eq('id', tenantId)
+        .maybeSingle()
+      slug = tenantRow?.slug ?? null
+    }
+
     const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('branding_config')
@@ -20,7 +67,8 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
     if (!data) {
-      return NextResponse.json({
+      const defaults = applyEnniaBrandingDefaults(
+        {
           company_name: 'My Company',
           company_description: '',
           widget_title: 'Chat Assistant',
@@ -30,11 +78,15 @@ export async function GET(request: NextRequest) {
           enable_lead_capture: true,
           lead_capture_fields: ['name', 'email'],
           agent_name: 'Assistant',
-          agent_avatar_url: 'https://backend.chatbase.co/storage/v1/object/public/chatbots-profile-pictures/82428ef0-b36b-48e1-bf3f-9a94f7fac629/P4HvZfc4t5WKWkbDOEwcm.ico?width=40&height=40&quality=50',
+          agent_avatar_url:
+            'https://backend.chatbase.co/storage/v1/object/public/chatbots-profile-pictures/82428ef0-b36b-48e1-bf3f-9a94f7fac629/P4HvZfc4t5WKWkbDOEwcm.ico?width=40&height=40&quality=50',
           developer_branding_enabled: true,
-        })
+        },
+        slug
+      )
+      return NextResponse.json(defaults)
     }
-    return NextResponse.json(data)
+    return NextResponse.json(applyEnniaBrandingDefaults(data, slug))
   } catch (error: any) {
     console.error('Error fetching branding:', error)
     let errorMessage = 'Failed to fetch branding configuration'
