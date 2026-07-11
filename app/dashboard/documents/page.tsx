@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { format } from 'date-fns'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import ActionMenu from '@/components/dashboard/ActionMenu'
