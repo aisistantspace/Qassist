@@ -8,6 +8,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      borderRadius: {
+        DEFAULT: '5px',
+        sm: '5px',
+        md: '5px',
+        lg: '5px',
+        xl: '5px',
+        '2xl': '5px',
+      },
       colors: {
         primary: {
           50: '#f0f9ff',

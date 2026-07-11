@@ -38,7 +38,7 @@ export default function ConfirmModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
-        className="relative bg-white rounded-xl shadow-2xl p-6 max-w-md w-full border border-gray-100"
+        className="relative bg-white rounded-lg shadow-lg p-6 max-w-md w-full border border-gray-200"
       >
         <h3 id="confirm-modal-title" className="text-lg font-semibold text-gray-900 mb-2">
           {title}

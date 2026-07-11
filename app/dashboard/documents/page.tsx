@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
-import Link from 'next/link'
+import { TrashIcon } from '@heroicons/react/24/outline'
+import ActionMenu from '@/components/dashboard/ActionMenu'
+import { ui } from '@/lib/dashboard-ui'
 
 interface Document {
   id: string
@@ -96,19 +98,19 @@ export default function DocumentsPage() {
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
             <div className="text-sm text-gray-600">Total Documents</div>
             <div className="text-2xl font-bold text-gray-900">{stats.total_documents}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
             <div className="text-sm text-gray-600">Completed</div>
             <div className="text-2xl font-bold text-green-600">{stats.completed_documents}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
             <div className="text-sm text-gray-600">Total Chunks</div>
             <div className="text-2xl font-bold text-blue-600">{stats.total_chunks}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
             <div className="text-sm text-gray-600">Total Size</div>
             <div className="text-2xl font-bold text-purple-600">
               {formatFileSize(stats.total_size_bytes || 0)}
@@ -118,7 +120,7 @@ export default function DocumentsPage() {
       )}
 
       {/* Documents Table */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading documents...</div>
         ) : documents.length === 0 ? (
@@ -154,12 +156,11 @@ export default function DocumentsPage() {
                     }`}>
                       {doc.status}
                     </span>
-                    <button
-                      onClick={() => handleDelete(doc.id)}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium min-h-[44px] flex items-center"
-                    >
-                      Delete
-                    </button>
+                    <ActionMenu
+                      items={[
+                        { label: 'Delete document', icon: TrashIcon, destructive: true, onClick: () => handleDelete(doc.id) },
+                      ]}
+                    />
                   </div>
                 </div>
               ))}
@@ -217,13 +218,12 @@ export default function DocumentsPage() {
                   <td className="px-6 py-4 text-sm text-gray-500">
                     {format(new Date(doc.created_at), 'MMM d, yyyy')}
                   </td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => handleDelete(doc.id)}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium"
-                    >
-                      Delete
-                    </button>
+                  <td className={`${ui.td} text-right`}>
+                    <ActionMenu
+                      items={[
+                        { label: 'Delete document', icon: TrashIcon, destructive: true, onClick: () => handleDelete(doc.id) },
+                      ]}
+                    />
                   </td>
                 </tr>
               ))}

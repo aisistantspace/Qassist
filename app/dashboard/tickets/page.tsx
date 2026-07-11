@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { format } from 'date-fns'
+import { EyeIcon } from '@heroicons/react/24/outline'
+import ActionMenu from '@/components/dashboard/ActionMenu'
+import { ui } from '@/lib/dashboard-ui'
 
 interface Ticket {
   id: string
@@ -150,29 +152,28 @@ export default function TicketsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Tickets</h1>
-        <p className="text-gray-600 mt-2">Escalation queue — pick up routed conversations by department</p>
+        <h1 className={ui.pageTitle}>Tickets</h1>
+        <p className={ui.pageSubtitle}>Escalation queue — pick up routed conversations by department</p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Total</div>
           <div className="text-2xl font-bold text-gray-900">{tickets.length}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Open</div>
           <div className="text-2xl font-bold text-green-600">{openCount}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Waiting for Human</div>
           <div className="text-2xl font-bold text-amber-600">{waitingCount}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Resolved</div>
           <div className="text-2xl font-bold text-gray-600">{resolvedCount}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Service / Inquiry</div>
           <div className="text-2xl font-bold text-orange-600">
             {serviceCount} <span className="text-gray-400 font-normal">/</span> <span className="text-sky-600">{inquiryCount}</span>
@@ -181,7 +182,7 @@ export default function TicketsPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className={ui.filterCard}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
@@ -237,12 +238,12 @@ export default function TicketsPage() {
       </div>
 
       {/* Tickets list */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className={ui.tableShell}>
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading tickets...</div>
         ) : filtered.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gray-50 mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-gray-50 mb-4">
               <svg className="w-8 h-8 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
               </svg>
@@ -310,12 +311,11 @@ export default function TicketsPage() {
                           </span>
                         )}
                       </div>
-                      <Link
-                        href={`/dashboard/conversations/${ticket.id}`}
-                        className="text-primary-600 text-sm font-medium min-h-[44px] flex items-center"
-                      >
-                        View →
-                      </Link>
+                      <ActionMenu
+                        items={[
+                          { label: 'View ticket', icon: EyeIcon, href: `/dashboard/conversations/${ticket.id}` },
+                        ]}
+                      />
                     </div>
                   </div>
                 )
@@ -325,18 +325,18 @@ export default function TicketsPage() {
             {/* Desktop table */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full min-w-[900px]">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className={ui.tableHead}>
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reason</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Waiting</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className={ui.th}>Ticket</th>
+                    <th className={ui.th}>Contact</th>
+                    <th className={ui.th}>Department</th>
+                    <th className={ui.th}>Priority</th>
+                    <th className={ui.th}>Status</th>
+                    <th className={ui.th}>Type</th>
+                    <th className={ui.th}>Reason</th>
+                    <th className={ui.th}>Waiting</th>
+                    <th className={ui.th}>Created</th>
+                    <th className={`${ui.th} text-right`}>Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -346,7 +346,7 @@ export default function TicketsPage() {
                     const db = ticket.department ? deptBadge[ticket.department] : null
                     const pb = ticket.priority ? priorityBadge[ticket.priority] : null
                     return (
-                      <tr key={ticket.id} className={`hover:bg-gray-50 ${ticket.priority === 'urgent' ? 'bg-red-50/40' : ticket.priority === 'high' ? 'bg-orange-50/30' : ''}`}>
+                      <tr key={ticket.id} className={`${ui.row} ${ticket.priority === 'urgent' ? 'bg-red-50/40' : ticket.priority === 'high' ? 'bg-orange-50/30' : ''}`}>
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-1.5">
                             <span className="text-xs font-mono text-gray-500">#{shortId(ticket.id)}</span>
@@ -404,13 +404,12 @@ export default function TicketsPage() {
                             ? format(new Date(ticket.routed_at), 'MMM d, HH:mm')
                             : format(new Date(ticket.created_at), 'MMM d, HH:mm')}
                         </td>
-                        <td className="px-4 py-4">
-                          <Link
-                            href={`/dashboard/conversations/${ticket.id}`}
-                            className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-                          >
-                            View →
-                          </Link>
+                        <td className={`${ui.td} text-right`}>
+                          <ActionMenu
+                            items={[
+                              { label: 'View ticket', icon: EyeIcon, href: `/dashboard/conversations/${ticket.id}` },
+                            ]}
+                          />
                         </td>
                       </tr>
                     )

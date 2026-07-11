@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { EllipsisVerticalIcon, PhoneIcon, EnvelopeIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline'
+import { PhoneIcon, EnvelopeIcon, PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline'
 import ConfirmModal from '@/components/dashboard/ConfirmModal'
 import BulkActionBar from '@/components/dashboard/BulkActionBar'
 import ToastBanner from '@/components/dashboard/ToastBanner'
+import ActionMenu from '@/components/dashboard/ActionMenu'
+import { ui } from '@/lib/dashboard-ui'
 
 interface Lead {
   id: string
@@ -39,8 +41,6 @@ export default function LeadsPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [temperatureFilter, setTemperatureFilter] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set())
   const [selectAll, setSelectAll] = useState(false)
   const [confirmModal, setConfirmModal] = useState<{
@@ -113,7 +113,6 @@ export default function LeadsPage() {
           if (response.ok) {
             setToast({ type: 'success', message: 'Lead deleted.' })
             fetchLeads()
-            setOpenDropdown(null)
           } else {
             setToast({ type: 'error', message: 'Failed to delete lead.' })
           }
@@ -189,21 +188,6 @@ export default function LeadsPage() {
     })
   }
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (openDropdown) {
-        const ref = dropdownRefs.current[openDropdown]
-        if (ref && !ref.contains(event.target as Node)) {
-          setOpenDropdown(null)
-        }
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [openDropdown])
-
   const filteredLeads = leads.filter(lead => {
     if (!searchTerm) return true
     const searchLower = searchTerm.toLowerCase()
@@ -223,14 +207,13 @@ export default function LeadsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Leads</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className={ui.pageTitle}>Leads</h1>
+        <p className={ui.pageSubtitle}>
           People interested in acquiring a product or service — quotes, registration, forms, or clear buy intent. General info chats are not listed here.
         </p>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className={ui.filterCard}>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -239,7 +222,7 @@ export default function LeadsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 text-gray-900"
+              className={ui.select}
             >
               <option value="all">All Statuses</option>
               <option value="new">New</option>
@@ -257,7 +240,7 @@ export default function LeadsPage() {
             <select
               value={temperatureFilter}
               onChange={(e) => setTemperatureFilter(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 text-gray-900"
+              className={ui.select}
             >
               <option value="all">All Temperatures</option>
               <option value="hot">Hot (70+)</option>
@@ -274,7 +257,7 @@ export default function LeadsPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by name, email, or phone..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-gray-50 text-gray-900 placeholder-gray-400"
+              className={ui.input}
             />
           </div>
         </div>
@@ -297,7 +280,7 @@ export default function LeadsPage() {
             if (newStatus) promptBulkStatusUpdate(newStatus)
             e.target.value = ''
           }}
-          className="px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm text-gray-900"
+          className={`${ui.select} w-auto`}
         >
           <option value="">Update Status...</option>
           <option value="new">New</option>
@@ -310,7 +293,7 @@ export default function LeadsPage() {
         <button
           type="button"
           onClick={bulkDeleteLeads}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+          className={ui.btnDanger}
         >
           <TrashIcon className="w-4 h-4" />
           Delete selected
@@ -319,23 +302,23 @@ export default function LeadsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Total</div>
           <div className="text-2xl font-bold text-gray-900">{leads.length}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Hot</div>
           <div className="text-2xl font-bold text-red-600">
             {leads.filter(l => l.temperature === 'hot').length}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Warm</div>
           <div className="text-2xl font-bold text-amber-600">
             {leads.filter(l => l.temperature === 'warm').length}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Cold</div>
           <div className="text-2xl font-bold text-blue-600">
             {leads.filter(l => l.temperature === 'cold').length}
@@ -344,7 +327,7 @@ export default function LeadsPage() {
       </div>
 
       {/* Leads Table */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className={ui.tableShell}>
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading leads...</div>
         ) : filteredLeads.length === 0 ? (
@@ -421,9 +404,9 @@ export default function LeadsPage() {
             {/* Desktop table */}
             <div className="hidden md:block overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
           <table className="w-full min-w-[800px]">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className={ui.tableHead}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-12">
+                <th className={`${ui.th} w-12`}>
                   <input
                     type="checkbox"
                     checked={selectAll && filteredLeads.length > 0}
@@ -438,33 +421,19 @@ export default function LeadsPage() {
                     className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                   />
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Contact
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Interest & Details
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Score
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Synced
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Created
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Actions
-                </th>
+                <th className={ui.th}>Contact</th>
+                <th className={ui.th}>Interest & Details</th>
+                <th className={ui.th}>Score</th>
+                <th className={ui.th}>Status</th>
+                <th className={ui.th}>Synced</th>
+                <th className={ui.th}>Created</th>
+                <th className={`${ui.th} text-right`}>Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredLeads.map((lead) => (
-                <tr key={lead.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+                <tr key={lead.id} className={ui.row}>
+                  <td className={ui.td}>
                     <input
                       type="checkbox"
                       checked={selectedLeads.has(lead.id)}
@@ -553,62 +522,17 @@ export default function LeadsPage() {
                   <td className="px-6 py-4 text-sm text-gray-500">
                     {format(new Date(lead.created_at), 'MMM d, yyyy')}
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="relative" ref={(el) => { dropdownRefs.current[lead.id] = el }}>
-                      <button
-                        onClick={() => setOpenDropdown(openDropdown === lead.id ? null : lead.id)}
-                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                        aria-label="Actions"
-                      >
-                        <EllipsisVerticalIcon className="w-5 h-5" />
-                      </button>
-                      
-                      {openDropdown === lead.id && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10 py-1">
-                          <a
-                            href={`/dashboard/leads/${lead.id}`}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setOpenDropdown(null)}
-                          >
-                            <EyeIcon className="w-4 h-4" />
-                            View Details
-                          </a>
-                          {lead.phone && (
-                            <a
-                              href={`tel:${lead.phone}`}
-                              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              onClick={() => setOpenDropdown(null)}
-                            >
-                              <PhoneIcon className="w-4 h-4" />
-                              Call
-                            </a>
-                          )}
-                          <a
-                            href={`mailto:${lead.email}`}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setOpenDropdown(null)}
-                          >
-                            <EnvelopeIcon className="w-4 h-4" />
-                            Email
-                          </a>
-                          <Link
-                            href={`/dashboard/leads/${lead.id}`}
-                            onClick={() => setOpenDropdown(null)}
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            <PencilIcon className="w-4 h-4" />
-                            Edit
-                          </Link>
-                          <button
-                            onClick={() => deleteLead(lead.id)}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 text-left"
-                          >
-                            <TrashIcon className="w-4 h-4" />
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                  <td className={`${ui.td} text-right`}>
+                    <ActionMenu
+                      label={`Actions for ${lead.name}`}
+                      items={[
+                        { label: 'View details', icon: EyeIcon, href: `/dashboard/leads/${lead.id}` },
+                        { label: 'Call', icon: PhoneIcon, href: `tel:${lead.phone}`, hidden: !lead.phone },
+                        { label: 'Email', icon: EnvelopeIcon, href: `mailto:${lead.email}` },
+                        { label: 'Edit', icon: PencilIcon, href: `/dashboard/leads/${lead.id}` },
+                        { label: 'Delete', icon: TrashIcon, destructive: true, onClick: () => deleteLead(lead.id) },
+                      ]}
+                    />
                   </td>
                 </tr>
               ))}

@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { format } from 'date-fns'
-import { ChatBubbleLeftRightIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { ChatBubbleLeftRightIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline'
 import ConfirmModal from '@/components/dashboard/ConfirmModal'
 import BulkActionBar from '@/components/dashboard/BulkActionBar'
 import EmptyState from '@/components/dashboard/EmptyState'
 import ToastBanner from '@/components/dashboard/ToastBanner'
+import ActionMenu from '@/components/dashboard/ActionMenu'
+import { ui } from '@/lib/dashboard-ui'
 
 interface Conversation {
   id: string
@@ -184,8 +185,8 @@ export default function ConversationsPage() {
     <div>
       <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Conversations</h1>
-          <p className="text-gray-600 mt-2">View and manage all chat conversations</p>
+          <h1 className={ui.pageTitle}>Conversations</h1>
+          <p className={ui.pageSubtitle}>View and manage all chat conversations</p>
         </div>
         {completedCount > 0 && (
           <button
@@ -205,14 +206,14 @@ export default function ConversationsPage() {
         <button
           type="button"
           onClick={promptDeleteSelected}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-medium"
+          className={ui.btnDanger}
         >
           <TrashIcon className="w-4 h-4" />
           Delete selected
         </button>
       </BulkActionBar>
 
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className={ui.filterCard}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Status</label>
@@ -253,7 +254,7 @@ export default function ConversationsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className={ui.tableShell}>
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading conversations...</div>
         ) : filteredConversations.length === 0 ? (
@@ -311,20 +312,13 @@ export default function ConversationsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-end gap-3 pt-1 pl-8">
-                    <button
-                      type="button"
-                      onClick={() => promptDeleteSingle(conv.id)}
-                      className="text-red-600 text-sm font-medium hover:text-red-800"
-                    >
-                      Delete
-                    </button>
-                    <Link
-                      href={`/dashboard/conversations/${conv.id}`}
-                      className="text-primary-600 text-sm font-medium min-h-[44px] flex items-center"
-                    >
-                      View →
-                    </Link>
+                  <div className="flex items-center justify-end pt-1 pl-8">
+                    <ActionMenu
+                      items={[
+                        { label: 'View conversation', icon: EyeIcon, href: `/dashboard/conversations/${conv.id}` },
+                        { label: 'Delete', icon: TrashIcon, destructive: true, onClick: () => promptDeleteSingle(conv.id) },
+                      ]}
+                    />
                   </div>
                 </div>
               ))}
@@ -332,9 +326,9 @@ export default function ConversationsPage() {
 
             <div className="hidden md:block overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
               <table className="w-full min-w-[760px]">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className={ui.tableHead}>
                   <tr>
-                    <th className="px-4 py-3 w-10">
+                    <th className={`${ui.th} w-10`}>
                       <input
                         type="checkbox"
                         checked={selectAll && filteredConversations.length > 0}
@@ -343,21 +337,21 @@ export default function ConversationsPage() {
                         aria-label="Select all conversations"
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Lead</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Turns</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Language</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Department</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Intent</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className={ui.th}>Lead</th>
+                    <th className={ui.th}>Turns</th>
+                    <th className={ui.th}>Language</th>
+                    <th className={ui.th}>Status</th>
+                    <th className={ui.th}>Department</th>
+                    <th className={ui.th}>Intent</th>
+                    <th className={ui.th}>Date</th>
+                    <th className={`${ui.th} text-right`}>Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredConversations.map((conv) => {
                     const db = conv.department ? deptBadge[conv.department] : null
                     return (
-                      <tr key={conv.id} className={`hover:bg-gray-50 ${selected.has(conv.id) ? 'bg-primary-50/40' : ''}`}>
+                      <tr key={conv.id} className={`${ui.row} ${selected.has(conv.id) ? ui.rowSelected : ''}`}>
                         <td className="px-4 py-4">
                           <input
                             type="checkbox"
@@ -425,22 +419,13 @@ export default function ConversationsPage() {
                         <td className="px-4 py-4 text-sm text-gray-500">
                           {format(new Date(conv.created_at), 'MMM d, yyyy HH:mm')}
                         </td>
-                        <td className="px-4 py-4">
-                          <div className="flex items-center gap-3">
-                            <Link
-                              href={`/dashboard/conversations/${conv.id}`}
-                              className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-                            >
-                              View →
-                            </Link>
-                            <button
-                              type="button"
-                              onClick={() => promptDeleteSingle(conv.id)}
-                              className="text-red-600 hover:text-red-800 text-sm font-medium"
-                            >
-                              Delete
-                            </button>
-                          </div>
+                        <td className={`${ui.td} text-right`}>
+                          <ActionMenu
+                            items={[
+                              { label: 'View conversation', icon: EyeIcon, href: `/dashboard/conversations/${conv.id}` },
+                              { label: 'Delete', icon: TrashIcon, destructive: true, onClick: () => promptDeleteSingle(conv.id) },
+                            ]}
+                          />
                         </td>
                       </tr>
                     )
@@ -453,17 +438,17 @@ export default function ConversationsPage() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Total Conversations</div>
           <div className="text-2xl font-bold text-gray-900">{conversations.length}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Active</div>
           <div className="text-2xl font-bold text-green-600">
             {conversations.filter((c) => c.status === 'active').length}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className={ui.statCard}>
           <div className="text-sm text-gray-600">Escalated</div>
           <div className="text-2xl font-bold text-orange-600">
             {conversations.filter((c) => c.status === 'escalated').length}

@@ -153,8 +153,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {isEnniaTenant ? (
           <>
             <EnniaLogo variant="light" />
-            <p className="text-sm text-white/90 mt-3 font-semibold">{enniaTheme.tagline}</p>
-            <p className="text-xs text-white/75 mt-1">
+            <p className="text-xs text-white/80 mt-3">
               {session?.user?.username ? `@${session.user.username}` : 'Demo account'}
             </p>
           </>
@@ -173,14 +172,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {session?.isSuperAdmin && (
           <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-2 py-1.5 mt-2">
             Admin mode — use <strong>Tenants</strong> to manage customers. ENNIA demo is a separate login.
-          </p>
-        )}
-        {isEnniaTenant && (
-          <p
-            className="text-xs rounded px-2 py-1.5 mt-2 font-medium"
-            style={{ color: ec.greenDarker, backgroundColor: ec.greenBg, border: `1px solid ${ec.greenBorder}` }}
-          >
-            Feel Secure · AI assistant demo
           </p>
         )}
       </div>
@@ -219,10 +210,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           )
         })}
       </nav>
-      <div className="p-4 border-t border-gray-200 space-y-2">
+      <div className={`p-4 border-t space-y-2 ${isEnniaTenant ? 'border-gray-200 bg-white' : 'border-gray-200'}`}>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors min-h-[44px]"
+          className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
+            isEnniaTenant ? 'text-gray-700 hover:bg-gray-100' : 'text-gray-700 hover:bg-gray-100'
+          }`}
         >
           <ArrowRightOnRectangleIcon className="w-4 h-4" />
           Logout
@@ -261,7 +254,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div
         className={`
-          fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200
+          fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200 shadow-sm
           transition-transform duration-200 ease-out
           lg:translate-x-0
           ${isLg ? 'w-64' : 'w-72 max-w-[85vw]'}
@@ -271,7 +264,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {sidebarContent}
       </div>
 
-      <header className="sticky top-0 z-20 flex items-center justify-between h-14 px-4 bg-white border-b border-gray-200 lg:hidden">
+      <header className="sticky top-0 z-20 flex items-center justify-between h-14 px-4 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm lg:hidden">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
@@ -288,14 +281,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </header>
 
-      <div className="hidden lg:flex lg:fixed lg:top-0 lg:right-0 lg:left-64 lg:z-20 lg:h-14 lg:items-center lg:justify-between lg:px-8 lg:bg-white lg:border-b lg:border-gray-200">
+      <div className="hidden lg:flex lg:fixed lg:top-0 lg:right-0 lg:left-64 lg:z-20 lg:h-14 lg:items-center lg:justify-between lg:px-8 lg:bg-white/95 lg:backdrop-blur lg:border-b lg:border-gray-200 lg:shadow-sm">
         <h1 className="text-lg font-semibold text-gray-900">{getPageTitle(pathname)}</h1>
         <NotificationBell />
       </div>
 
       <div className="pl-0 lg:pl-64 lg:pt-14">
         {session?.isSuperAdmin && pathname === '/dashboard' && (
-          <div className="mx-4 sm:mx-6 lg:mx-8 mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <div className="mx-4 sm:mx-6 lg:mx-8 mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
             You&apos;re in <strong>platform admin</strong> mode. This overview shows the default tenant (ENNIA) data.
             Go to <Link href="/dashboard/tenants" className="font-semibold underline">Tenants</Link> to create accounts, or use{' '}
             <a href="/demo/ennia/login" className="font-semibold underline">/demo/ennia/login</a> for the customer demo experience.

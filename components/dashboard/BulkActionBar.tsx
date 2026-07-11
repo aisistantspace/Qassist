@@ -18,7 +18,7 @@ export default function BulkActionBar({
   if (count === 0) return null
 
   return (
-    <div className="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div className="flex items-center gap-3">
         <span className="inline-flex items-center justify-center min-w-[2rem] h-8 px-2 rounded-full bg-primary-600 text-white text-sm font-bold">
           {count}
