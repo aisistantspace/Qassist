@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
+import { getTenantSession } from '@/lib/tenant-session'
 
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000 // 7 days for demo guests
 
@@ -89,8 +90,11 @@ export function isDemoAuthenticated(request: NextRequest, slug: string): boolean
 }
 
 export function canAccessDemoChat(request: NextRequest, slug: string): boolean {
-  if (!isDemoConfigured(slug)) return true
-  return isDemoAuthenticated(request, slug) || isDashboardAuthenticated(request)
+  const normalized = slug.toLowerCase()
+  const session = getTenantSession(request)
+  if (session?.slug === normalized) return true
+  if (!isDemoConfigured(normalized)) return true
+  return isDemoAuthenticated(request, normalized) || isDashboardAuthenticated(request)
 }
 
 /**
@@ -144,8 +148,21 @@ export async function canAccessDemoChatFromCookieStore(
   slug: string,
   getCookie: (name: string) => string | undefined
 ): Promise<boolean> {
-  if (!isDemoConfigured(slug)) return true
+  const normalized = slug.toLowerCase()
+  const tenantCookie = getCookie('tenant_session')
+  if (tenantCookie) {
+    try {
+      const [body] = tenantCookie.split('.')
+      if (body) {
+        const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf8')) as { slug?: string; exp?: number }
+        if (payload.slug === normalized && (payload.exp ?? 0) > Date.now()) return true
+      }
+    } catch {
+      // ignore malformed cookie
+    }
+  }
+  if (!isDemoConfigured(normalized)) return true
   if (getCookie('dashboard_auth')) return true
-  if (getCookie(demoAuthCookieName(slug))) return true
+  if (getCookie(demoAuthCookieName(normalized))) return true
   return false
 }

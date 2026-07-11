@@ -176,7 +176,10 @@ export default function ModernChatInterface({
 
   const fetchWidgetConfig = async () => {
     try {
-      const res = await fetch('/api/settings/widget?t=' + Date.now())
+      let url = '/api/settings/widget?t=' + Date.now()
+      if (tenantSlug) url += '&slug=' + encodeURIComponent(tenantSlug)
+      if (tenantId) url += '&tenant=' + encodeURIComponent(tenantId)
+      const res = await fetch(url)
       if (res.ok) {
         const data = await res.json()
         if (data.suggested_messages && Array.isArray(data.suggested_messages) && data.suggested_messages.length > 0) {

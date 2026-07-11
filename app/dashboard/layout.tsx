@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   Bars3Icon,
-  ChartBarIcon,
   ChatBubbleLeftRightIcon,
   UserGroupIcon,
   DocumentTextIcon,
@@ -16,10 +15,19 @@ import {
   ArrowRightOnRectangleIcon,
   TicketIcon,
   QuestionMarkCircleIcon,
+  BuildingOffice2Icon,
 } from '@heroicons/react/24/outline'
 import NotificationBell from '@/components/NotificationBell'
 
-const navigation = [
+interface SessionInfo {
+  authenticated: boolean
+  isSuperAdmin?: boolean
+  user?: { username: string; role: string }
+  tenant?: { id: string; name: string; slug: string }
+  chatPath?: string
+}
+
+const baseNavigation = [
   { name: 'Overview', href: '/dashboard', icon: HomeIcon },
   { name: 'Conversations', href: '/dashboard/conversations', icon: ChatBubbleLeftRightIcon },
   { name: 'Leads', href: '/dashboard/leads', icon: UserGroupIcon },
@@ -31,6 +39,8 @@ const navigation = [
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
 ]
 
+const superAdminNav = { name: 'Tenants', href: '/dashboard/tenants', icon: BuildingOffice2Icon }
+
 const pageTitles: Record<string, string> = {
   '/dashboard': 'Overview',
   '/dashboard/conversations': 'Conversations',
@@ -41,6 +51,7 @@ const pageTitles: Record<string, string> = {
   '/dashboard/forms': 'Automated Forms',
   '/dashboard/deploy': 'Deploy',
   '/dashboard/settings': 'Settings',
+  '/dashboard/tenants': 'Tenants',
 }
 
 function getPageTitle(pathname: string | null): string {
@@ -51,15 +62,23 @@ function getPageTitle(pathname: string | null): string {
   return 'Dashboard'
 }
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isLg, setIsLg] = useState(true)
+  const [session, setSession] = useState<SessionInfo | null>(null)
+
+  const navigation = session?.isSuperAdmin
+    ? [...baseNavigation.slice(0, 8), superAdminNav, baseNavigation[8]]
+    : baseNavigation
+
+  useEffect(() => {
+    fetch('/api/auth/session')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setSession(data))
+      .catch(() => setSession(null))
+  }, [pathname])
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)')
@@ -100,7 +119,8 @@ export default function DashboardLayout({
   async function handleLogout() {
     try {
       await fetch('/api/auth/logout', { method: 'POST' })
-      router.push('/login')
+      const slug = session?.tenant?.slug
+      router.push(slug && !session?.isSuperAdmin ? `/demo/${slug}/login` : '/login')
       router.refresh()
     } catch (error) {
       console.error('Logout error:', error)
@@ -109,11 +129,16 @@ export default function DashboardLayout({
     }
   }
 
+  const tenantLabel = session?.tenant?.name || session?.tenant?.slug?.toUpperCase() || 'AI Assistant'
+  const chatHref = session?.chatPath || '/chat'
+
   const sidebarContent = (
     <div className="flex flex-col h-full">
       <div className="p-6 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-gray-900">AI Assistant</h1>
-        <p className="text-sm text-gray-500 mt-1">Dashboard</p>
+        <h1 className="text-xl font-bold text-gray-900">{tenantLabel}</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          {session?.isSuperAdmin ? 'Super Admin' : session?.user?.username ? `@${session.user.username}` : 'Dashboard'}
+        </p>
       </div>
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navigation.map((item) => {
@@ -143,11 +168,14 @@ export default function DashboardLayout({
           Logout
         </button>
         <div className="text-[10px] text-gray-400 font-medium mb-2">
-          Developed by <a href="https://astuteweb.agency" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Astute Web Agency</a>
+          Developed by{' '}
+          <a href="https://astuteweb.agency" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
+            Astute Web Agency
+          </a>
         </div>
         <div className="text-xs text-gray-500">Version 3.0.0 (White Label)</div>
-        <Link href="/chat" className="text-xs text-primary-600 hover:text-primary-700 mt-1 inline-block">
-          ← Test Chat
+        <Link href={chatHref} className="text-xs text-primary-600 hover:text-primary-700 mt-1 inline-block">
+          ← Open Chat Assistant
         </Link>
       </div>
     </div>
@@ -155,7 +183,6 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Mobile backdrop */}
       {!isLg && sidebarOpen && (
         <button
           type="button"
@@ -165,7 +192,6 @@ export default function DashboardLayout({
         />
       )}
 
-      {/* Sidebar: desktop fixed, mobile overlay */}
       <div
         className={`
           fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200
@@ -178,7 +204,6 @@ export default function DashboardLayout({
         {sidebarContent}
       </div>
 
-      {/* Mobile header */}
       <header className="sticky top-0 z-20 flex items-center justify-between h-14 px-4 bg-white border-b border-gray-200 lg:hidden">
         <button
           type="button"
@@ -196,19 +221,13 @@ export default function DashboardLayout({
         </div>
       </header>
 
-      {/* Desktop header bar */}
       <div className="hidden lg:flex lg:fixed lg:top-0 lg:right-0 lg:left-64 lg:z-20 lg:h-14 lg:items-center lg:justify-between lg:px-8 lg:bg-white lg:border-b lg:border-gray-200">
-        <h1 className="text-lg font-semibold text-gray-900">
-          {getPageTitle(pathname)}
-        </h1>
+        <h1 className="text-lg font-semibold text-gray-900">{getPageTitle(pathname)}</h1>
         <NotificationBell />
       </div>
 
-      {/* Main content */}
       <div className="pl-0 lg:pl-64 lg:pt-14">
-        <main className="p-4 sm:p-6 lg:p-8">
-          {children}
-        </main>
+        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   )

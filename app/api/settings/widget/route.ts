@@ -1,14 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getTenantFromRequest, getTenantIdBySlug } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
-export async function GET() {
+async function resolveWidgetTenantId(request: NextRequest): Promise<string> {
   try {
+    return await getDashboardTenantId(request)
+  } catch {
+    const { searchParams } = new URL(request.url)
+    const slug = searchParams.get('slug') ?? searchParams.get('tenantSlug')
+    const tenantIdParam = searchParams.get('tenant') ?? searchParams.get('tenantId')
+    if (tenantIdParam) return tenantIdParam
+    if (slug) {
+      const resolved = await getTenantIdBySlug(slug)
+      if (resolved) return resolved.id
+    }
+    return (await getTenantFromRequest(request)).tenantId
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const tenantId = await resolveWidgetTenantId(request)
     const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('widget_config')
       .select('*')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -27,32 +45,33 @@ export async function GET() {
       bubble_text: null,
       bubble_position: 'left',
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching widget config:', error)
+    const err = error as { message?: string; name?: string }
     let errorMessage = 'Failed to fetch config'
-    
-    if (error.message?.includes('Supabase admin client is not initialized') || error.message?.includes('Missing environment variables')) {
+
+    if (err.message?.includes('Supabase admin client is not initialized') || err.message?.includes('Missing environment variables')) {
       errorMessage = 'Database connection error. Please check your Supabase configuration in Vercel environment variables.'
-    } else if (error.message?.includes('fetch failed') || error.name === 'TypeError') {
+    } else if (err.message?.includes('fetch failed') || err.name === 'TypeError') {
       errorMessage = 'Database connection error. Unable to connect to Supabase. Please check your network connection and Supabase configuration.'
-    } else if (error.message) {
-      errorMessage = error.message
+    } else if (err.message) {
+      errorMessage = err.message
     }
-    
+
     return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const body = await request.json()
 
-    // More robustly check for existence
     const supabaseAdmin = getSupabaseAdmin()
     const { data: existing, error: fetchError } = await supabaseAdmin
       .from('widget_config')
       .select('id')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -75,34 +94,32 @@ export async function POST(request: NextRequest) {
         throw new Error(`Database error: ${error.message}`)
       }
       return NextResponse.json({ success: true, data })
-    } else {
-      const { data, error } = await supabaseAdmin
-        .from('widget_config')
-        .insert({ ...body, tenant_id: DEFAULT_TENANT_ID })
-        .select()
-        .single()
+    }
 
-      if (error) {
-        console.error('Supabase error inserting widget config:', error)
-        throw new Error(`Database error: ${error.message}`)
-      }
-      return NextResponse.json({ success: true, data })
+    const { data, error } = await supabaseAdmin
+      .from('widget_config')
+      .insert({ ...body, tenant_id: tenantId })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Supabase error inserting widget config:', error)
+      throw new Error(`Database error: ${error.message}`)
     }
-  } catch (error: any) {
+    return NextResponse.json({ success: true, data })
+  } catch (error: unknown) {
     console.error('Error in widget settings POST:', error)
+    const err = error as { message?: string; name?: string }
     let errorMessage = 'Failed to update config'
-    
-    if (error.message?.includes('Supabase admin client is not initialized') || error.message?.includes('Missing environment variables')) {
+
+    if (err.message?.includes('Supabase admin client is not initialized') || err.message?.includes('Missing environment variables')) {
       errorMessage = 'Database connection error. Please check your Supabase configuration in Vercel environment variables.'
-    } else if (error.message?.includes('fetch failed') || error.name === 'TypeError') {
+    } else if (err.message?.includes('fetch failed') || err.name === 'TypeError') {
       errorMessage = 'Database connection error. Unable to connect to Supabase. Please check your network connection and Supabase configuration.'
-    } else if (error.message) {
-      errorMessage = error.message
+    } else if (err.message) {
+      errorMessage = err.message
     }
-    
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    )
+
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

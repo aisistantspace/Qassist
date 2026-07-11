@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const supabaseAdmin = getSupabaseAdmin()
     const [
       { count: leadsToday },
@@ -18,33 +19,33 @@ export async function GET() {
       supabaseAdmin
         .from('leads')
         .select('*', { count: 'exact', head: true })
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()),
       supabaseAdmin
         .from('conversations')
         .select('*', { count: 'exact', head: true })
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .eq('status', 'active'),
       supabaseAdmin
         .from('conversations')
         .select('*', { count: 'exact', head: true })
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .eq('status', 'escalated')
         .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
       supabaseAdmin
         .from('leads')
         .select('*', { count: 'exact', head: true })
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .eq('synced_to_mailchimp', true),
       supabaseAdmin
         .from('leads')
         .select('*', { count: 'exact', head: true })
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .eq('synced_to_hubspot', true),
       supabaseAdmin
         .from('conversations')
         .select('turn_count')
-        .eq('tenant_id', DEFAULT_TENANT_ID),
+        .eq('tenant_id', tenantId),
     ])
 
     const avgConversationLength = avgData && avgData.length > 0
@@ -55,7 +56,7 @@ export async function GET() {
     const { data: langData } = await supabaseAdmin
       .from('conversations')
       .select('language')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
 
     const languageDistribution: Record<string, number> = {}
     if (langData) {
@@ -69,7 +70,7 @@ export async function GET() {
     const { count: kbCount } = await supabaseAdmin
       .from('knowledge_base')
       .select('*', { count: 'exact', head: true })
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
 
     return NextResponse.json({
       leads_today: leadsToday || 0,

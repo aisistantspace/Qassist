@@ -16,7 +16,7 @@ function DemoLoginForm() {
   const [showPassword, setShowPassword] = useState(false)
 
   const displayName = slug === 'ennia' ? 'ENNIA' : slug.toUpperCase()
-  const redirect = searchParams.get('redirect') || (slug === 'ennia' ? '/chat' : `/chat?slug=${slug}`)
+  const redirect = searchParams.get('redirect') || '/dashboard'
 
   useEffect(() => {
     setError('')
@@ -28,7 +28,7 @@ function DemoLoginForm() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/demo-login', {
+      const response = await fetch('/api/auth/tenant-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ slug, username, password }),
@@ -57,7 +57,7 @@ function DemoLoginForm() {
           </div>
           <h1 className="text-2xl font-bold text-white">{displayName} Demo</h1>
           <p className="mt-2 text-sm text-slate-400">
-            Sign in to try the AI assistant with {displayName} insurance information
+            Sign in to access your {displayName} dashboard and AI assistant
           </p>
         </div>
 
@@ -121,7 +121,7 @@ function DemoLoginForm() {
               disabled={isLoading || !username || !password}
               className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-semibold transition-colors"
             >
-              {isLoading ? 'Signing in…' : 'Open chat assistant'}
+              {isLoading ? 'Signing in…' : 'Sign in to dashboard'}
             </button>
           </form>
         </div>

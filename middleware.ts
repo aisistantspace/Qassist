@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { canAccessDemoChat, getChatGateSlug } from '@/lib/demo-auth'
-
-const AUTH_COOKIE_NAME = 'dashboard_auth'
+import { isDashboardAuthenticated } from '@/lib/dashboard-tenant'
 
 // API routes that require authentication (settings, admin, upload, dashboard analytics, etc.)
 const PROTECTED_API_PREFIXES = [
@@ -19,54 +18,35 @@ const PROTECTED_API_PREFIXES = [
 ]
 
 function isProtectedApiRoute(pathname: string): boolean {
-  return PROTECTED_API_PREFIXES.some(prefix => pathname.startsWith(prefix))
-}
-
-function isAuthenticated(request: NextRequest): boolean {
-  try {
-    // 1. Dashboard auth cookie
-    const authCookie = request.cookies.get(AUTH_COOKIE_NAME)
-    if (authCookie?.value) {
-      return true
-    }
-
-    // 2. Bearer token (matches dashboard password for programmatic access)
-    const authHeader = request.headers.get('authorization')
-    if (authHeader?.startsWith('Bearer ')) {
-      const token = authHeader.slice(7).trim()
-      const dashboardPassword = process.env.DASHBOARD_PASSWORD || process.env.ADMIN_PASSWORD
-      if (dashboardPassword && token === dashboardPassword) {
-        return true
-      }
-    }
-  } catch {
-    // Never crash on auth check
+  // Public read for chat/embed; writes still require auth below
+  if (pathname === '/api/settings/branding' || pathname === '/api/settings/widget') {
+    return false
   }
-
-  return false
+  return PROTECTED_API_PREFIXES.some(prefix => pathname.startsWith(prefix))
 }
 
 export function middleware(request: NextRequest) {
   try {
     const { pathname } = request.nextUrl
+    const authed = isDashboardAuthenticated(request)
 
-    // Protect dashboard UI routes
+    // Protect dashboard UI routes (super admin or tenant SaaS session)
     if (pathname.startsWith('/dashboard')) {
-      if (!isAuthenticated(request)) {
+      if (!authed) {
         const loginUrl = new URL('/login', request.url)
         loginUrl.searchParams.set('redirect', pathname)
         return NextResponse.redirect(loginUrl)
       }
     }
 
-    // Redirect authenticated users away from login page
+    // Redirect authenticated users away from super-admin login page
     if (pathname === '/login') {
-      if (isAuthenticated(request)) {
+      if (authed) {
         return NextResponse.redirect(new URL('/dashboard', request.url))
       }
     }
 
-    // ENNIA / demo chat gate — require demo login before /chat when configured
+    // ENNIA / demo chat gate — require login before /chat when configured
     const chatGateSlug = getChatGateSlug()
     if (chatGateSlug && pathname === '/chat') {
       if (!canAccessDemoChat(request, chatGateSlug)) {
@@ -76,19 +56,19 @@ export function middleware(request: NextRequest) {
       }
     }
 
-    // Demo login pages: if already authed, go straight to chat
+    // Demo login pages: if already authed, go to dashboard (full SaaS experience)
     const demoLoginMatch = pathname.match(/^\/demo\/([^/]+)\/login$/)
     if (demoLoginMatch) {
       const slug = demoLoginMatch[1].toLowerCase()
       if (canAccessDemoChat(request, slug)) {
-        const redirectTo = request.nextUrl.searchParams.get('redirect') || (slug === 'ennia' ? '/chat' : `/chat?slug=${slug}`)
+        const redirectTo = request.nextUrl.searchParams.get('redirect') || '/dashboard'
         return NextResponse.redirect(new URL(redirectTo, request.url))
       }
     }
 
-    // Protect sensitive API routes
+    // Protect sensitive API routes (POST/PUT/PATCH/DELETE always; GET except public settings above)
     if (pathname.startsWith('/api/') && isProtectedApiRoute(pathname)) {
-      if (!isAuthenticated(request)) {
+      if (!authed) {
         return NextResponse.json(
           { error: 'Unauthorized. Please provide a valid authentication cookie or Bearer token.' },
           { status: 401 }
@@ -96,9 +76,22 @@ export function middleware(request: NextRequest) {
       }
     }
 
+    const isPublicSettingsRead =
+      (pathname === '/api/settings/branding' || pathname === '/api/settings/widget') &&
+      request.method === 'GET'
+    if (
+      pathname.startsWith('/api/') &&
+      !isPublicSettingsRead &&
+      (pathname.startsWith('/api/settings/branding') || pathname.startsWith('/api/settings/widget')) &&
+      request.method !== 'GET'
+    ) {
+      if (!authed) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+    }
+
     return NextResponse.next()
   } catch {
-    // If middleware fails for any reason, let the request through rather than crashing
     return NextResponse.next()
   }
 }

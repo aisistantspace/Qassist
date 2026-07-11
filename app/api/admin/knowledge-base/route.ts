@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 import { generateEmbedding } from '@/lib/openai'
 
 // GET all knowledge base entries
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('knowledge_base')
       .select('id, title, content, category, language, tags, created_at, source_document_id')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -48,6 +49,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const body = await request.json()
     const { title, content, category, language, tags } = body
@@ -68,7 +70,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from('knowledge_base')
       .insert({
-        tenant_id: DEFAULT_TENANT_ID,
+        tenant_id: tenantId,
         title,
         content,
         category,
@@ -102,6 +104,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const body = await request.json()
     const { id, title, content, category, language, tags } = body
@@ -128,7 +131,7 @@ export async function PUT(request: NextRequest) {
         tags: tags || [],
         embedding,
       })
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('id', id)
       .select()
       .single()
@@ -157,6 +160,7 @@ export async function PUT(request: NextRequest) {
 
 // DELETE a knowledge base entry
 export async function DELETE(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
@@ -172,7 +176,7 @@ export async function DELETE(request: NextRequest) {
     const { error } = await supabaseAdmin
       .from('knowledge_base')
       .delete()
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('id', id)
 
     if (error) throw error

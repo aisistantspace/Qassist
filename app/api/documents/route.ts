@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const { data: documents, error } = await supabaseAdmin
       .from('documents')
       .select('*')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
 
     if (error) throw error

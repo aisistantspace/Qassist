@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('agent_settings')
       .select('*')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -44,6 +45,7 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
@@ -52,7 +54,7 @@ export async function PATCH(request: NextRequest) {
     const { data: existing } = await supabaseAdmin
       .from('agent_settings')
       .select('id')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -86,7 +88,7 @@ export async function PATCH(request: NextRequest) {
       const { data, error } = await supabaseAdmin
         .from('agent_settings')
         .insert({
-          tenant_id: DEFAULT_TENANT_ID,
+          tenant_id: tenantId,
           instructions: instructions || 'You are a dedicated customer support agent.',
           openai_model: openai_model || 'gpt-4o-mini',
           temperature: temperature ?? 0.7,

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const { id } = await params
     const supabaseAdmin = getSupabaseAdmin()
 
@@ -16,7 +17,7 @@ export async function GET(
         *,
         conversations(*)
       `)
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('id', id)
       .single()
 
@@ -47,6 +48,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const { id } = await params
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
@@ -64,7 +66,7 @@ export async function PATCH(
     const { data, error } = await supabaseAdmin
       .from('leads')
       .update(updates)
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('id', id)
       .select()
       .single()
@@ -96,13 +98,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const { id } = await params
     const supabaseAdmin = getSupabaseAdmin()
 
     const { error } = await supabaseAdmin
       .from('leads')
       .delete()
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('id', id)
 
     if (error) throw error

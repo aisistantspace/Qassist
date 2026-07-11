@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 import { isAcquisitionLead } from '@/lib/lead-acquisition'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
     let query = supabaseAdmin
       .from('leads')
       .select('*, conversations(intent, created_at), form_submissions(status)')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
 
     if (status && status !== 'all') {

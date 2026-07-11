@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const supabaseAdmin = getSupabaseAdmin()
     const { data: forms, error } = await supabaseAdmin
       .from('form_definitions')
       .select('*')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
 
     if (error) throw error
@@ -31,6 +32,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
     const { data: form, error } = await supabaseAdmin
       .from('form_definitions')
       .insert({ 
-        tenant_id: DEFAULT_TENANT_ID,
+        tenant_id: tenantId,
         name, 
         description, 
         fields, 

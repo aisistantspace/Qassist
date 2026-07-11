@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
 export async function GET(request: NextRequest) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const supabaseAdmin = getSupabaseAdmin()
     const url = new URL(request.url)
     const limit = parseInt(url.searchParams.get('limit') || '20')
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
     let query = supabaseAdmin
       .from('notifications')
       .select('*', { count: 'exact' })
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
     const { count: unreadCount } = await supabaseAdmin
       .from('notifications')
       .select('*', { count: 'exact', head: true })
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('is_read', false)
 
     return NextResponse.json({
@@ -47,6 +48,7 @@ export async function GET(request: NextRequest) {
 
 // POST - Mark all notifications as read
 export async function POST(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
@@ -55,7 +57,7 @@ export async function POST(request: NextRequest) {
       const { error } = await supabaseAdmin
         .from('notifications')
         .update({ is_read: true })
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .eq('is_read', false)
 
       if (error) throw error
@@ -67,7 +69,7 @@ export async function POST(request: NextRequest) {
       const { data, error } = await supabaseAdmin
         .from('notifications')
         .delete()
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .select('id')
 
       if (error) throw error

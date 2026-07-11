@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
         *,
         lead:leads(name, email, policy_number, account_number)
       `)
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
 
     if (escalatedOnly) {
       query = query.eq('status', 'escalated')

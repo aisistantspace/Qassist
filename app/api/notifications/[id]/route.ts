@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
 // PATCH - Mark single notification as read
 export async function PATCH(
@@ -8,6 +8,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const { id } = await params
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
@@ -24,7 +25,7 @@ export async function PATCH(
     const { data, error } = await supabaseAdmin
       .from('notifications')
       .update(updateData)
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('id', id)
       .select()
       .single()
@@ -47,13 +48,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const { id } = await params
     const supabaseAdmin = getSupabaseAdmin()
 
     const { error } = await supabaseAdmin
       .from('notifications')
       .delete()
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .eq('id', id)
 
     if (error) throw error

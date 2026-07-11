@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { getTenantFromRequest, getTenantIdBySlug, DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getTenantFromRequest, getTenantIdBySlug } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
 export async function GET(request: NextRequest) {
   try {
@@ -56,6 +57,7 @@ export async function GET(request: NextRequest) {
 // POST - Update branding configuration
 export async function POST(request: NextRequest) {
   try {
+    const tenantId = await getDashboardTenantId(request)
     const body = await request.json()
     const {
       company_name,
@@ -119,7 +121,7 @@ export async function POST(request: NextRequest) {
     const { data: existing, error: fetchError } = await supabaseAdmin
       .from('branding_config')
       .select('id')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -177,7 +179,7 @@ export async function POST(request: NextRequest) {
     } else {
       const { data, error } = await supabaseAdmin
         .from('branding_config')
-        .insert({ ...brandingData, tenant_id: DEFAULT_TENANT_ID })
+        .insert({ ...brandingData, tenant_id: tenantId })
         .select()
         .single()
 

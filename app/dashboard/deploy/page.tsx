@@ -154,7 +154,8 @@ export default function DeployPage() {
           {appUrl}/demo/ennia
         </div>
         <p className="mt-3 text-xs text-gray-500">
-          They sign in → chat opens at /chat with ENNIA branding and crawled content. Your dashboard login stays separate.
+          Customer signs in at <code className="bg-white px-1 rounded">/demo/ennia/login</code> → full dashboard + chat with ENNIA branding and knowledge base.
+          Provision DB user: <code className="bg-white px-1 rounded">npm run saas:provision-user -- --slug ennia --username ennia-demo --password YOUR_PASSWORD</code>
         </p>
       </div>
 

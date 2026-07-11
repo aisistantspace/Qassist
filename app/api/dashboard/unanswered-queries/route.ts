@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
-import { DEFAULT_TENANT_ID } from '@/lib/tenant'
+import { getDashboardTenantId } from '@/lib/dashboard-tenant'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
     let query = supabaseAdmin
       .from('unanswered_queries')
       .select('*')
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
 
     if (resolved === 'true') {
       query = query.eq('resolved', true)
@@ -58,6 +59,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const body = await request.json()
@@ -71,7 +73,7 @@ export async function PATCH(request: NextRequest) {
       .from('unanswered_queries')
       .update({ resolved })
       .eq('id', id)
-      .eq('tenant_id', DEFAULT_TENANT_ID)
+      .eq('tenant_id', tenantId)
       .select()
       .single()
 
@@ -86,6 +88,7 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+    const tenantId = await getDashboardTenantId(request)
   try {
     const supabaseAdmin = getSupabaseAdmin()
     const { searchParams } = new URL(request.url)
@@ -97,7 +100,7 @@ export async function DELETE(request: NextRequest) {
         .from('unanswered_queries')
         .delete()
         .eq('id', id)
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
 
       if (error) throw error
       return NextResponse.json({ success: true, deleted: 1 })
@@ -107,7 +110,7 @@ export async function DELETE(request: NextRequest) {
       const { data, error } = await supabaseAdmin
         .from('unanswered_queries')
         .delete()
-        .eq('tenant_id', DEFAULT_TENANT_ID)
+        .eq('tenant_id', tenantId)
         .eq('resolved', true)
         .select('id')
 

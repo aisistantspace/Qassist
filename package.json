@@ -12,7 +12,8 @@
     "lint": "next lint",
     "pa:extract-book": "node scripts/extract-papiamentu-book-images.mjs --resume",
     "pa:merge-book": "node scripts/merge-papiamentu-book-extract.mjs",
-    "pa:import-book": "npm run pa:extract-book && npm run pa:merge-book"
+    "pa:import-book": "npm run pa:extract-book && npm run pa:merge-book",
+    "saas:provision-user": "node scripts/provision-tenant-user.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",

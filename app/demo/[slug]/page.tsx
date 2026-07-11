@@ -14,7 +14,7 @@ export default async function DemoEntryPage({ params }: Props) {
   const allowed = await canAccessDemoChatFromCookieStore(normalized, (name) => cookieStore.get(name)?.value)
 
   if (allowed) {
-    redirect(normalized === 'ennia' ? '/chat' : `/chat?slug=${encodeURIComponent(normalized)}`)
+    redirect('/dashboard')
   }
 
   redirect(`/demo/${normalized}/login`)
