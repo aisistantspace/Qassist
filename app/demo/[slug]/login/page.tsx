@@ -2,6 +2,8 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import EnniaLoginPage from '@/components/demo/EnniaLoginPage'
+import { enniaTheme } from '@/lib/demo-themes/ennia'
 
 function DemoLoginForm() {
   const params = useParams()
@@ -9,10 +11,10 @@ function DemoLoginForm() {
   const searchParams = useSearchParams()
   const slug = String(params.slug || 'ennia').toLowerCase()
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   const displayName = slug === 'ennia' ? 'ENNIA' : slug.toUpperCase()
@@ -22,28 +24,36 @@ function DemoLoginForm() {
     setError('')
   }, [slug])
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
-
+  async function submitLogin(user: string, pass: string) {
     try {
       const response = await fetch('/api/auth/tenant-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug, username, password }),
+        body: JSON.stringify({ slug, username: user, password: pass }),
       })
       const data = await response.json()
       if (!response.ok) {
-        setError(data.error || 'Invalid username or password')
-        setIsLoading(false)
-        return
+        return { ok: false, error: data.error || 'Invalid username or password' }
       }
-
       router.push(data.redirect || redirect)
       router.refresh()
+      return { ok: true, redirect: data.redirect }
     } catch {
-      setError('Something went wrong. Please try again.')
+      return { ok: false, error: 'Something went wrong. Please try again.' }
+    }
+  }
+
+  if (slug === 'ennia') {
+    return <EnniaLoginPage onSubmit={submitLogin} />
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
+    const result = await submitLogin(username, password)
+    if (!result.ok) {
+      setError(result.error || 'Invalid username or password')
       setIsLoading(false)
     }
   }
@@ -56,9 +66,7 @@ function DemoLoginForm() {
             <span className="text-2xl font-bold text-white">{displayName.slice(0, 1)}</span>
           </div>
           <h1 className="text-2xl font-bold text-white">{displayName} Demo</h1>
-          <p className="mt-2 text-sm text-slate-400">
-            Sign in to access your {displayName} dashboard and AI assistant
-          </p>
+          <p className="mt-2 text-sm text-slate-400">Sign in to access your dashboard and AI assistant</p>
         </div>
 
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 shadow-xl">
@@ -125,18 +133,31 @@ function DemoLoginForm() {
             </button>
           </form>
         </div>
-
-        <p className="mt-6 text-center text-xs text-slate-500">
-          Powered by Astute AIssistant · Demo access only
-        </p>
       </div>
+    </div>
+  )
+}
+
+function EnniaLoading() {
+  return (
+    <div
+      className="min-h-screen flex flex-col items-center justify-center gap-4"
+      style={{ background: enniaTheme.colors.skyMuted }}
+    >
+      <div
+        className="w-10 h-10 border-2 rounded-full animate-spin"
+        style={{ borderColor: `${enniaTheme.colors.cyan}33`, borderTopColor: enniaTheme.colors.cyan }}
+      />
+      <p className="text-sm font-medium" style={{ color: enniaTheme.colors.textMuted }}>
+        Loading ENNIA demo…
+      </p>
     </div>
   )
 }
 
 export default function DemoLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">Loading…</div>}>
+    <Suspense fallback={<EnniaLoading />}>
       <DemoLoginForm />
     </Suspense>
   )
