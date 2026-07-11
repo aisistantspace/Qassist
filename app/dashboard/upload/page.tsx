@@ -125,7 +125,7 @@ export default function UploadPage() {
       )}
 
       {/* Instructions */}
-      <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+      <div className="mt-8 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
         <h2 className="text-lg font-semibold mb-4">How It Works</h2>
         <ol className="space-y-3 text-gray-700">
           <li className="flex gap-3">

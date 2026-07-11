@@ -3,6 +3,7 @@
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import AstuteBrandMark from '@/components/AstuteBrandMark'
 
 function Spinner({ className = 'w-5 h-5' }: { className?: string }) {
   return (
@@ -50,9 +51,7 @@ function LoginForm() {
       {/* Brand — desktop only */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 xl:p-16 border-r border-white/[0.06]">
         <div>
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded bg-blue-600 mb-6">
-            <span className="text-sm font-bold text-white">A</span>
-          </div>
+          <AstuteBrandMark className="mb-6" />
           <h1 className="text-3xl font-bold text-white tracking-tight leading-tight">
             Astute <span className="text-blue-400">AI</span>sistant
           </h1>
@@ -67,9 +66,7 @@ function LoginForm() {
       <div className="flex-1 flex items-center justify-center px-4 py-10 sm:px-8">
         <div className="w-full max-w-[420px]">
           <div className="lg:hidden text-center mb-8">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded bg-blue-600 mb-3">
-              <span className="text-sm font-bold text-white">A</span>
-            </div>
+            <AstuteBrandMark size="sm" className="mb-3 mx-auto" />
             <h1 className="text-lg font-bold text-white">
               Astute <span className="text-blue-400">AI</span>sistant
             </h1>

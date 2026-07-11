@@ -358,7 +358,7 @@ export default function FormsPage() {
       {toast && <ToastBanner type={toast.type} message={toast.message} onDismiss={() => setToast(null)} />}
 
       {/* Default Form Mode Setting */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
         <h2 className="text-lg font-semibold mb-4">Default Form Mode</h2>
         <p className="text-sm text-gray-600 mb-4">Set the default presentation mode for all forms. Each form can override this setting individually.</p>
         <div className="flex gap-4">
@@ -455,7 +455,7 @@ export default function FormsPage() {
       </div>
 
       {!isEditing && !isImporting && error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-center gap-3">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 flex items-center gap-3">
           <div className="p-1.5 bg-red-100 rounded-full">
             <XMarkIcon className="w-5 h-5 text-red-600" />
           </div>
@@ -475,7 +475,7 @@ export default function FormsPage() {
       {/* Import Modal */}
       {isImporting && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto animate-fadeIn flex flex-col">
+          <div className="bg-white rounded-lg shadow-2xl border border-gray-200 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto animate-fadeIn flex flex-col">
             <div className="p-6 sm:p-8 shrink-0">
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3 min-w-0">
@@ -543,7 +543,7 @@ export default function FormsPage() {
       )}
 
       {isEditing ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-900">
               {currentForm.id ? 'Edit Form' : 'New Conversational Form'}
@@ -966,7 +966,7 @@ export default function FormsPage() {
       ) : activeTab === 'builder' ? (
         <div className="space-y-4">
           {forms.map(form => (
-            <div key={form.id} className={`bg-white rounded-xl shadow-sm border p-6 flex justify-between items-center group transition-all ${
+            <div key={form.id} className={`bg-white rounded-lg shadow-sm border p-6 flex justify-between items-center group transition-all ${
               form.use_mode === 'disabled' ? 'border-gray-200 opacity-60' : 'border-gray-200 hover:border-primary-300'
             }`}>
               <div className="flex-1">
@@ -1029,7 +1029,7 @@ export default function FormsPage() {
           {/* Link Modal */}
           {showLinkModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Form Link</h3>
                   <button
@@ -1080,7 +1080,7 @@ export default function FormsPage() {
           )}
 
           {forms.length === 0 && !loading && (
-            <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
+            <div className="text-center py-20 bg-white rounded-lg border border-dashed border-gray-300">
               <ClipboardDocumentListIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900">No forms yet</h3>
               <p className="text-gray-500 mt-1">Start by creating your first conversational interview.</p>
@@ -1099,7 +1099,7 @@ export default function FormsPage() {
         </div>
       ) : (
         /* Submissions View */
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           {submissions.length === 0 ? (
             <div className="px-6 py-20 text-center text-gray-500">No submissions collected yet.</div>
           ) : (

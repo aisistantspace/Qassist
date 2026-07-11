@@ -129,7 +129,7 @@ function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }: {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/40" onClick={onCancel} />
-      <div className="relative bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full mx-4">
+      <div className="relative bg-white rounded-lg shadow-2xl p-6 max-w-sm w-full mx-4">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
         <p className="text-sm text-gray-600 mb-6">{message}</p>
         <div className="flex gap-3 justify-end">
@@ -683,7 +683,7 @@ export default function KnowledgeBasePage() {
 
       {/* AI Agent Tab */}
       {activeTab === 'agent' && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <div className="flex items-center gap-3 mb-6">
             <CommandLineIcon className="w-8 h-8 text-primary-600" />
             <h2 className="text-xl font-semibold text-gray-900">AI Agent Configuration</h2>
@@ -863,7 +863,7 @@ export default function KnowledgeBasePage() {
       {activeTab === 'manual' && (
         <div className="space-y-6">
           {/* Add Form */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Add Manual Entry</h2>
             
             <div className="space-y-4">
@@ -952,7 +952,7 @@ export default function KnowledgeBasePage() {
           </div>
 
           {/* Entries List */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">Manual Entries ({entries.length})</h2>
               {entries.length > 0 && (
@@ -1045,7 +1045,7 @@ export default function KnowledgeBasePage() {
       {activeTab === 'files' && (
         <div className="space-y-6">
           {/* Upload Form */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4">Upload Files</h2>
             
             <div className="space-y-4">
@@ -1087,7 +1087,7 @@ export default function KnowledgeBasePage() {
           </div>
 
           {/* Documents List */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             {(() => {
               const fileDocs = documents.filter(d => d.file_type !== 'url')
               return (
@@ -1178,7 +1178,7 @@ export default function KnowledgeBasePage() {
       {activeTab === 'scrape' && (
         <div className="space-y-6">
           {/* Crawl Website — the main feature */}
-          <div className="bg-white rounded-lg shadow-md p-6 border-2 border-primary-100">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 border-2 border-primary-100">
             <div className="flex items-center gap-3 mb-1">
               <div className="p-2 bg-primary-50 rounded-lg">
                 <GlobeAltIcon className="w-6 h-6 text-primary-600" />
@@ -1296,7 +1296,7 @@ export default function KnowledgeBasePage() {
           </div>
 
           {/* Single Page Scrape — secondary option */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             <h2 className="text-lg font-semibold mb-4 text-gray-900">Scrape Single Page</h2>
 
             <div className="space-y-4">
@@ -1325,7 +1325,7 @@ export default function KnowledgeBasePage() {
           </div>
 
           {/* Scraped Sites List */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             {(() => {
               const urlDocs = documents.filter(d => d.file_type === 'url')
               return (
@@ -1416,7 +1416,7 @@ export default function KnowledgeBasePage() {
       {/* All Data Chunks Tab */}
       {activeTab === 'chunks' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">All AI Data Chunks ({entries.length})</h2>
               {entries.length > 0 && (

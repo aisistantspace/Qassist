@@ -176,17 +176,17 @@ export default function KnowledgeGapsPage() {
       {toast && <ToastBanner type={toast.type} message={toast.message} onDismiss={() => setToast(null)} />}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
           <div className="text-sm text-gray-600">Open gaps</div>
           <div className="text-2xl font-bold text-amber-600">{stats.open}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
           <div className="text-sm text-gray-600">Total unanswered asks</div>
           <div className="text-2xl font-bold text-gray-900">{stats.total_asks}</div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
@@ -226,7 +226,7 @@ export default function KnowledgeGapsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading knowledge gaps...</div>
         ) : queries.length === 0 ? (

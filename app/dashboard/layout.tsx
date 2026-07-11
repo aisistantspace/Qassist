@@ -226,7 +226,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             Astute Web Agency
           </a>
         </div>
-        <div className="text-xs text-gray-500">Version 3.0.0 (White Label)</div>
         <Link
           href={chatHref}
           className={`text-xs mt-1 inline-block font-semibold hover:underline ${isEnniaTenant ? '' : 'text-primary-600 hover:text-primary-700'}`}

@@ -127,7 +127,7 @@ export default function PapiamentuPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-md">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 shadow-md">
             <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 20h9" />
               <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
@@ -141,7 +141,7 @@ export default function PapiamentuPage() {
       </div>
 
       {/* How it works */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-6 mb-6">
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-6 mb-6">
         <h3 className="text-sm font-semibold text-amber-900 uppercase tracking-wider mb-3">How the Papiamentu Layer Works</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex gap-3">
@@ -169,7 +169,7 @@ export default function PapiamentuPage() {
       </div>
 
       {/* Grande 3–6 school books → Papiamentu layer */}
-      <div className="bg-white border border-teal-200 rounded-xl p-6 mb-6 shadow-sm">
+      <div className="bg-white border border-teal-200 rounded-lg p-6 mb-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">Fiesta di idioma — Grande 3–6 school books</h3>
         <p className="text-sm text-gray-600 mb-4">
           Official Curaçao primary-school Papiamentu (Grande 3, 4, 5, 6). Photos in{' '}
@@ -230,7 +230,7 @@ export default function PapiamentuPage() {
       </div>
 
       {/* Demo: PA insurance glossary for RAG */}
-      <div className="bg-white border border-amber-200 rounded-xl p-6 mb-6 shadow-sm">
+      <div className="bg-white border border-amber-200 rounded-lg p-6 mb-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">Insurance demo — Papiamentu knowledge base</h3>
         <p className="text-sm text-gray-600 mb-4">
           Seed {17} Papiamentu insurance glossary entries (seguro di biahe, klaim, pòlisa, etc.) into the KB.
@@ -251,26 +251,26 @@ export default function PapiamentuPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
           <div className="text-sm text-gray-600">Total Corrections</div>
           <div className="text-2xl font-bold text-gray-900">{totalCorrections}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
           <div className="text-sm text-gray-600">Spelling</div>
           <div className="text-2xl font-bold text-red-600">{spellingCount}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
           <div className="text-sm text-gray-600">Orthography</div>
           <div className="text-2xl font-bold text-amber-600">{orthographyCount}</div>
         </div>
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
           <div className="text-sm text-gray-600">Variant</div>
           <div className="text-2xl font-bold text-blue-600">{variantCount}</div>
         </div>
       </div>
 
       {/* Filter + info */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Correction Log</h2>
@@ -294,7 +294,7 @@ export default function PapiamentuPage() {
       </div>
 
       {/* Table / Cards */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-8 text-center text-gray-500">Loading corrections...</div>
         ) : error ? (
@@ -309,7 +309,7 @@ export default function PapiamentuPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-50 mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-lg bg-amber-50 mb-4">
               <svg className="w-8 h-8 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 20h9" />
                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />

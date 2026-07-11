@@ -487,7 +487,7 @@ export default function SettingsPage() {
 
       {/* Branding Tab */}
       {activeTab === 'branding' && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-6">Company Branding</h2>
 
           <div className="space-y-6">
@@ -578,7 +578,7 @@ export default function SettingsPage() {
 
       {/* Agent Identity Tab */}
       {activeTab === 'agent' && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-6">Agent Identity</h2>
           
           <div className="space-y-6">
@@ -643,7 +643,7 @@ export default function SettingsPage() {
 
       {/* Widget Tab */}
       {activeTab === 'widget' && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-6 text-gray-900">Widget Customization</h2>
 
           <div className="space-y-6">
@@ -900,7 +900,7 @@ export default function SettingsPage() {
 
       {/* Integrations Tab */}
       {activeTab === 'integrations' && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-6 text-gray-900">Optional Integrations</h2>
 
           <div className="space-y-10">
@@ -1166,7 +1166,7 @@ export default function SettingsPage() {
 
       {/* Routing Tab */}
       {activeTab === 'routing' && (
-        <div className="bg-white rounded-lg shadow-md p-6 space-y-10">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-10">
           <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-900">
             <p className="font-medium mb-1">Links + triggers live here</p>
             <p>
@@ -1393,7 +1393,7 @@ export default function SettingsPage() {
 
       {/* Lead scoring Tab */}
       {activeTab === 'lead-scoring' && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-2 text-gray-900">Lead scoring</h2>
           <p className="text-sm text-gray-600 mb-6">
             Configure how leads are scored and which ones appear in Hot Leads. Same lead data is used for both Leads and Hot Leads; Hot Leads shows only those meeting your rules.
@@ -1549,7 +1549,7 @@ export default function SettingsPage() {
 
       {/* Papiamentu Tab */}
       {activeTab === 'papiamentu' && (
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500">
               <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1565,7 +1565,7 @@ export default function SettingsPage() {
 
           <div className="mt-6 space-y-6">
             {/* Active status */}
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
               <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
@@ -1592,7 +1592,7 @@ export default function SettingsPage() {
             </div>
 
             {/* Self-learning toggle */}
-            <div className="border border-gray-200 rounded-xl p-5">
+            <div className="border border-gray-200 rounded-lg p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-semibold text-gray-900">Self-Learning Mode</h3>
@@ -1647,7 +1647,7 @@ export default function SettingsPage() {
             {/* View Correction Log */}
             <a
               href="/dashboard/papiamentu"
-              className="flex items-center justify-between p-4 border border-primary-200 bg-primary-50 rounded-xl hover:bg-primary-100 transition-colors group"
+              className="flex items-center justify-between p-4 border border-primary-200 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors group"
             >
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">Correction Log</h3>

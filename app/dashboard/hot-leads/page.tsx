@@ -75,11 +75,11 @@ export default function HotLeadsPage() {
       </div>
 
       {loading ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center text-gray-500">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 text-center text-gray-500">
           Loading hot leads...
         </div>
       ) : hotLeads.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 text-center">
           <p className="text-gray-500 mb-2">No hot leads at the moment</p>
           <p className="text-sm text-gray-400">
             Hot leads (score 70+) will appear here automatically
@@ -92,7 +92,7 @@ export default function HotLeadsPage() {
             const needsAction = lead.status !== 'contacted' && lead.status !== 'qualified'
 
             return (
-              <div key={lead.id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+              <div key={lead.id} className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-lg transition-shadow border border-gray-100">
                 <div className="p-6">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                     <div className="flex-1 min-w-0">
