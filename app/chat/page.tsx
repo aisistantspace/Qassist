@@ -14,7 +14,11 @@ const signika = Signika({
 function ChatContent() {
   const searchParams = useSearchParams()
   const embedded = searchParams.get('embedded') === 'true'
+  const tenantSlug = searchParams.get('slug') ?? searchParams.get('tenantSlug')
   const [isEnniaSession, setIsEnniaSession] = useState(false)
+
+  const isEnniaChat =
+    tenantSlug?.toLowerCase() === 'ennia' || isEnniaSession
 
   useEffect(() => {
     fetch('/api/auth/session')
@@ -25,8 +29,8 @@ function ChatContent() {
       .catch(() => {})
   }, [])
 
-  const shellClass = isEnniaSession ? signika.className : ''
-  const pageBg = isEnniaSession ? enniaTheme.colors.greenBg : undefined
+  const shellClass = isEnniaChat ? signika.className : ''
+  const pageBg = isEnniaChat ? enniaTheme.colors.greenBg : undefined
 
   return (
     <div
@@ -34,21 +38,21 @@ function ChatContent() {
         embedded
           ? `min-h-[100dvh] h-[100dvh] overflow-hidden flex flex-col ${shellClass}`
           : `min-h-[100dvh] h-[100dvh] sm:min-h-screen sm:h-screen flex flex-col items-center justify-center p-2 sm:p-4 ${shellClass} ${
-              isEnniaSession ? '' : 'bg-gray-50'
+              isEnniaChat ? '' : 'bg-gray-50'
             }`
       }
-      style={!embedded && isEnniaSession ? { backgroundColor: pageBg } : undefined}
+      style={!embedded && isEnniaChat ? { backgroundColor: pageBg } : undefined}
     >
       <div
         className={
           embedded
             ? 'h-full w-full flex flex-col min-h-0'
             : `w-full max-w-lg flex-1 min-h-0 flex flex-col bg-white shadow-2xl overflow-hidden border sm:max-h-[700px] ${
-                isEnniaSession ? 'rounded border-[#CBDED5]' : 'rounded-2xl border-gray-200'
+                isEnniaChat ? 'rounded border-[#CBDED5]' : 'rounded-2xl border-gray-200'
               }`
         }
       >
-        <ModernChatInterface embedded={embedded} />
+        <ModernChatInterface embedded={embedded} defaultLanguage={isEnniaChat ? 'PA' : undefined} />
       </div>
     </div>
   )

@@ -49,6 +49,34 @@ interface Props {
   initialMessages?: string[]
   placeholder?: string
   disclaimer?: string
+  defaultLanguage?: ChatLanguage
+}
+
+function resolveInitialLanguage(
+  langParam: string | undefined,
+  tenantSlug: string | null,
+  defaultLanguage?: ChatLanguage
+): ChatLanguage {
+  const codes = ['EN', 'NL', 'ES', 'PA'] as const
+  if (langParam && codes.includes(langParam as ChatLanguage)) return langParam as ChatLanguage
+  if (defaultLanguage) return defaultLanguage
+  if (tenantSlug?.toLowerCase() === 'ennia') return 'PA'
+  return 'EN'
+}
+
+function welcomeForLanguage(
+  lang: ChatLanguage,
+  agent: string,
+  brandingWelcome?: string,
+  initialMessages?: string[]
+): string {
+  const welcomeByLang: Record<ChatLanguage, string> = {
+    EN: initialMessages?.[0] || brandingWelcome || `Hi! I'm ${agent}. How can I help you today?`,
+    NL: `Hallo! Ik ben ${agent}, je assistent. Hoe kan ik je helpen?`,
+    ES: `¡Hola! Soy ${agent}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
+    PA: PA_WELCOME(agent),
+  }
+  return welcomeByLang[lang] || welcomeByLang.EN
 }
 
 // Default values while loading
@@ -57,11 +85,11 @@ const DEFAULT_PRIMARY_COLOR = "#3A7D7D"
 
 type ChatLanguage = 'EN' | 'NL' | 'ES' | 'PA'
 
-const LANGUAGES: { code: ChatLanguage; name: string; flag: string }[] = [
-  { code: 'EN', name: 'English', flag: '🇬🇧' },
-  { code: 'NL', name: 'Nederlands', flag: '🇳🇱' },
-  { code: 'ES', name: 'Español', flag: '🇪🇸' },
-  { code: 'PA', name: 'Papiamentu', flag: '🇨🇼' },
+const LANGUAGES: { code: ChatLanguage; name: string }[] = [
+  { code: 'EN', name: 'English' },
+  { code: 'NL', name: 'Nederlands' },
+  { code: 'ES', name: 'Español' },
+  { code: 'PA', name: 'Papiamentu' },
 ]
 
 const PLACEHOLDERS: Record<ChatLanguage, string> = {
@@ -116,14 +144,13 @@ export default function ModernChatInterface({
   initialMessages,
   placeholder,
   disclaimer,
+  defaultLanguage: defaultLanguageProp,
 }: Props) {
   const searchParams = useSearchParams()
   const tenantSlug = searchParams.get('slug') ?? searchParams.get('tenantSlug')
   const tenantId = searchParams.get('tenant') ?? searchParams.get('tenantId')
   const langParam = searchParams.get('lang')?.toUpperCase()
-  const initialLang: ChatLanguage = (['EN', 'NL', 'ES', 'PA'] as const).includes(langParam as ChatLanguage)
-    ? (langParam as ChatLanguage)
-    : 'EN'
+  const initialLang = resolveInitialLanguage(langParam, tenantSlug, defaultLanguageProp)
   const [branding, setBranding] = useState<BrandingConfig | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -131,7 +158,7 @@ export default function ModernChatInterface({
   const [leadId, setLeadId] = useState<string | null>(null)
   const [conversationId, setConversationId] = useState<string | null>(null)
   const [selectedLanguage, setSelectedLanguage] = useState<ChatLanguage>(initialLang)
-  const [languageExplicit, setLanguageExplicit] = useState(initialLang !== 'EN' || !!langParam)
+  const [languageExplicit, setLanguageExplicit] = useState(!!langParam || initialLang !== 'EN')
   const [widgetSuggestions, setWidgetSuggestions] = useState<string[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -143,12 +170,17 @@ export default function ModernChatInterface({
   const headerLogo = isEnnia
     ? enniaTheme.logo.white
     : branding?.logo_url || avatarUrl
-  const chatTitle = isEnnia ? enniaTheme.branding.widgetTitle : agentName
 
   useEffect(() => {
     fetchBranding()
     fetchWidgetConfig()
   }, [tenantSlug, tenantId])
+
+  useEffect(() => {
+    if (langParam || !defaultLanguageProp) return
+    setSelectedLanguage(defaultLanguageProp)
+    setLanguageExplicit(defaultLanguageProp !== 'EN')
+  }, [defaultLanguageProp, langParam])
 
   const fetchBranding = async () => {
     try {
@@ -159,22 +191,25 @@ export default function ModernChatInterface({
       if (res.ok) {
         const data = await res.json()
         setBranding(data)
-        
-        // Use branding data for initial message if not already set
+
+        const agent = data.agent_name || 'your assistant'
+        const ennia = isEnniaBrand(data.company_name, data.primary_color)
+        let lang = selectedLanguage
+        if (ennia && !langParam) {
+          lang = 'PA'
+          setSelectedLanguage('PA')
+          setLanguageExplicit(true)
+        }
+
         if (messages.length === 0) {
-          const agent = data.agent_name || 'your assistant'
-          const welcomeByLang: Record<ChatLanguage, string> = {
-            EN: initialMessages?.[0] || data.welcome_message || `Hi! I'm ${agent}. How can I help you today?`,
-            NL: `Hallo! Ik ben ${agent}, je assistent. Hoe kan ik je helpen?`,
-            ES: `¡Hola! Soy ${agent}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
-            PA: PA_WELCOME(agent),
-          }
-          const welcome = welcomeByLang[selectedLanguage] || welcomeByLang.EN
-          setMessages([{
-            role: 'assistant' as const,
-            content: welcome,
-            timestamp: new Date().toISOString(),
-          }])
+          const welcome = welcomeForLanguage(lang, agent, data.welcome_message, initialMessages)
+          setMessages([
+            {
+              role: 'assistant' as const,
+              content: welcome,
+              timestamp: new Date().toISOString(),
+            },
+          ])
         }
       }
     } catch (error) {
@@ -276,17 +311,13 @@ export default function ModernChatInterface({
     // Update welcome message when user switches before chatting
     if (messages.length === 1 && messages[0].role === 'assistant') {
       const agent = branding?.agent_name || 'Assistant'
-      const welcomeByLang: Record<ChatLanguage, string> = {
-        EN: branding?.welcome_message || `Hi! I'm ${agent}. How can I help you today?`,
-        NL: `Hallo! Ik ben ${agent}, je assistent. Hoe kan ik je helpen?`,
-        ES: `¡Hola! Soy ${agent}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
-        PA: PA_WELCOME(agent),
-      }
-      setMessages([{
-        role: 'assistant',
-        content: welcomeByLang[lang],
-        timestamp: new Date().toISOString(),
-      }])
+      setMessages([
+        {
+          role: 'assistant',
+          content: welcomeForLanguage(lang, agent, branding?.welcome_message, initialMessages),
+          timestamp: new Date().toISOString(),
+        },
+      ])
     }
   }
 
@@ -390,22 +421,15 @@ export default function ModernChatInterface({
                 height={enniaTheme.logo.whiteHeight}
               />
             ) : (
-              <div className="relative flex shrink-0 overflow-hidden rounded-full size-10 border border-gray-100">
-                <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
-              </div>
+              <>
+                <div className="relative flex shrink-0 overflow-hidden rounded-full size-10 border border-gray-100">
+                  <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col justify-center min-w-0">
+                  <h1 className="font-semibold text-sm tracking-tight truncate text-gray-900">{agentName}</h1>
+                </div>
+              </>
             )}
-            <div className="flex flex-col justify-center min-w-0">
-              <h1
-                className={`font-semibold text-sm tracking-tight truncate ${
-                  isEnnia ? 'text-white/95' : 'text-gray-900'
-                }`}
-              >
-                {chatTitle}
-              </h1>
-              {isEnnia && (
-                <p className="text-[11px] text-white/80 font-medium">{enniaTheme.tagline}</p>
-              )}
-            </div>
           </div>
           <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
             {LANGUAGES.map((lang) => (
@@ -413,11 +437,11 @@ export default function ModernChatInterface({
                 key={lang.code}
                 type="button"
                 onClick={() => handleLanguageSelect(lang.code)}
-                className={`flex min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-md text-lg transition-all ${
+                className={`flex min-w-[36px] min-h-[36px] sm:min-w-[40px] sm:min-h-[40px] items-center justify-center rounded-md transition-all ${
                   selectedLanguage === lang.code
                     ? isEnnia
-                      ? 'scale-110 bg-white/15 ring-1 ring-white/25'
-                      : 'scale-110 bg-gray-100 ring-1 ring-gray-200'
+                      ? 'scale-105 bg-white/15 ring-1 ring-white/25'
+                      : 'scale-105 bg-gray-100 ring-1 ring-gray-200'
                     : isEnnia
                       ? 'opacity-70 hover:opacity-100 hover:bg-white/10'
                       : 'opacity-50 hover:opacity-100 hover:bg-gray-50'
@@ -426,7 +450,7 @@ export default function ModernChatInterface({
                 aria-label={`Switch to ${lang.name}`}
                 aria-pressed={selectedLanguage === lang.code}
               >
-                {lang.flag}
+                <span className="text-[11px] font-semibold tracking-wide leading-none">{lang.code}</span>
               </button>
             ))}
             <button

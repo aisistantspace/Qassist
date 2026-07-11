@@ -17,7 +17,7 @@ SET
   company_website = COALESCE(NULLIF(company_website, ''), 'https://www.ennia.com'),
   widget_title = COALESCE(NULLIF(widget_title, ''), 'ENNIA Chat'),
   agent_name = COALESCE(NULLIF(agent_name, ''), 'ENNIA Assistant'),
-  default_language = COALESCE(NULLIF(default_language, ''), 'EN'),
+  default_language = COALESCE(NULLIF(default_language, ''), 'PA'),
   welcome_message = 'Welcome to ENNIA! How can we help you today?',
   primary_color = COALESCE(NULLIF(primary_color, ''), '#307E57'),
   logo_url = COALESCE(NULLIF(logo_url, ''), '/ennia/logo-green.webp'),

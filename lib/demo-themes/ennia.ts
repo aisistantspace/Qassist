@@ -27,7 +27,7 @@ export const enniaTheme = {
     agentName: 'ENNIA Assistant',
     widgetTitle: 'ENNIA Chat',
     welcomeMessage: 'Welcome to ENNIA! How can we help you today?',
-    defaultLanguage: 'EN',
+    defaultLanguage: 'PA',
     logoUrl: '/ennia/logo-green.webp',
     faviconUrl: '/ennia/favicon-32x32.png',
   },
