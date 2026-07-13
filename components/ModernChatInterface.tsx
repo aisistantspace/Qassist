@@ -163,7 +163,7 @@ const PLACEHOLDERS: Record<ChatLanguage, string> = {
 }
 
 const PA_WELCOME =
-  'Bon dia! 👋 Ami ta Dami, bo asistente. Kon mi por yudabo awe?'
+  'Bon dia! 👋 Ami ta Demi, bo asistente. Kon mi por yudabo awe?'
 
 // URL regex: do not include trailing ), ], > so links stay clickable
 const URL_SPLIT_REGEX = /(https?:\/\/[^\s)\]\}>]+)/g

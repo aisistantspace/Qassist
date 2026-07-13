@@ -24,7 +24,7 @@ export const enniaTheme = {
   website: 'https://www.ennia.com',
   branding: {
     primaryColor: '#307E57',
-    agentName: 'Dami',
+    agentName: 'Demi',
     widgetTitle: 'ENNIA Chat',
     welcomeMessage: 'Welcome to ENNIA! How can we help you today?',
     defaultLanguage: 'PA',
