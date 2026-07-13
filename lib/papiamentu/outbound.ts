@@ -1,6 +1,6 @@
 /**
- * Single outbound gate for all customer-facing Papiamentu.
- * Every PA string shown to customers should pass through this helper.
+ * Single outbound gate for all customer-facing Papiamentu on the SERVER.
+ * Do not import this from client components — uses Node fs via load-data.
  */
 
 import { correctPapiamentu } from './index'

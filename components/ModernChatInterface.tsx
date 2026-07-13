@@ -14,8 +14,7 @@ import {
 import InlineForm from './InlineForm'
 import type { FormField } from '@/lib/types'
 import { enniaTheme, isEnniaBrand } from '@/lib/demo-themes/ennia'
-import { PA_WELCOME, PA_PLACEHOLDER } from '@/lib/papiamentu/ui-copy'
-import { ensurePapiamentuOutbound } from '@/lib/papiamentu/outbound'
+import { PA_WELCOME, PA_PLACEHOLDER, normalizePaWelcomeClient } from '@/lib/papiamentu/ui-copy'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -76,7 +75,7 @@ function welcomeForLanguage(
 ): string {
   const paWelcome =
     brandingWelcome && /bon dia|ami ta|mi ta|asistente|yudabo/i.test(brandingWelcome)
-      ? ensurePapiamentuOutbound(brandingWelcome)
+      ? normalizePaWelcomeClient(brandingWelcome)
       : PA_WELCOME
 
   const welcomeByLang: Record<ChatLanguage, string> = {
