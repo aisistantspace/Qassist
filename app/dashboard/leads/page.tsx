@@ -206,8 +206,7 @@ export default function LeadsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className={ui.pageTitle}>Leads</h1>
+      <div className="mb-6">
         <p className={ui.pageSubtitle}>
           People interested in acquiring a product or service — quotes, registration, forms, or clear buy intent. General info chats are not listed here.
         </p>

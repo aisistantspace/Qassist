@@ -67,11 +67,8 @@ export default function HotLeadsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Hot Leads</h1>
-        <p className="text-gray-600 mt-2">
-          High-intent leads (score 70+)
-        </p>
+      <div className="mb-6">
+        <p className="text-sm text-gray-600">High-intent leads (score 70+)</p>
       </div>
 
       {loading ? (

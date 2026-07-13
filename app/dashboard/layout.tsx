@@ -60,11 +60,23 @@ const pageTitles: Record<string, string> = {
   '/dashboard/deploy': 'Deploy',
   '/dashboard/settings': 'Settings',
   '/dashboard/tenants': 'Tenants',
+  '/dashboard/documents': 'Documents',
+  '/dashboard/upload': 'Upload',
+  '/dashboard/hot-leads': 'Hot Leads',
+  '/dashboard/papiamentu': 'Papiamentu',
+}
+
+const pageTitleEntries = Object.entries(pageTitles).sort((a, b) => b[0].length - a[0].length)
+
+function isNavActive(pathname: string | null, href: string): boolean {
+  if (!pathname) return false
+  if (href === '/dashboard') return pathname === '/dashboard'
+  return pathname === href || pathname.startsWith(href + '/')
 }
 
 function getPageTitle(pathname: string | null): string {
   if (!pathname) return 'Dashboard'
-  for (const [path, title] of Object.entries(pageTitles)) {
+  for (const [path, title] of pageTitleEntries) {
     if (pathname === path || pathname.startsWith(path + '/')) return title
   }
   return 'Dashboard'
@@ -76,6 +88,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isLg, setIsLg] = useState(true)
   const [session, setSession] = useState<SessionInfo | null>(null)
+
+  const pageTitle = getPageTitle(pathname)
 
   const navigation = session?.isSuperAdmin
     ? [...baseNavigation.slice(0, 8), superAdminNav, baseNavigation[8]]
@@ -177,7 +191,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navigation.map((item) => {
-          const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+          const isActive = isNavActive(pathname, item.href)
           return (
             <Link
               key={item.name}
@@ -273,7 +287,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Bars3Icon className="w-6 h-6" />
         </button>
         <h1 className="text-lg font-semibold text-gray-900 truncate flex-1 text-center mx-2">
-          {getPageTitle(pathname)}
+          {pageTitle}
         </h1>
         <div className="min-w-[44px] flex items-center justify-center">
           <NotificationBell />
@@ -281,7 +295,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </header>
 
       <div className="hidden lg:flex lg:fixed lg:top-0 lg:right-0 lg:left-64 lg:z-20 lg:h-14 lg:items-center lg:justify-between lg:px-8 lg:bg-white/95 lg:backdrop-blur lg:border-b lg:border-gray-200 lg:shadow-sm">
-        <h1 className="text-lg font-semibold text-gray-900">{getPageTitle(pathname)}</h1>
+        <h1 className="text-lg font-semibold text-gray-900 tracking-tight">{pageTitle}</h1>
         <NotificationBell />
       </div>
 

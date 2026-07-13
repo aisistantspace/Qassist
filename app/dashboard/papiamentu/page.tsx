@@ -134,8 +134,7 @@ export default function PapiamentuPage() {
             </svg>
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Papiamentu Layer</h1>
-            <p className="text-gray-600">AI correction engine — Buki di Oro &amp; official Curaçao orthography</p>
+            <p className="text-sm text-gray-600">AI correction engine — Buki di Oro &amp; official Curaçao orthography</p>
           </div>
         </div>
       </div>

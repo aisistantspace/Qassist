@@ -149,8 +149,7 @@ export default function KnowledgeGapsPage() {
           <Link href="/dashboard/knowledge-base" className="text-primary-600 hover:text-primary-700 text-sm mb-2 inline-block">
             ← Back to Knowledge Base
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Knowledge Gaps</h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-sm text-gray-600">
             Questions customers asked that your knowledge base could not answer. Add content to close these gaps.
           </p>
         </div>

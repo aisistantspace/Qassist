@@ -151,8 +151,7 @@ export default function TicketsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className={ui.pageTitle}>Tickets</h1>
+      <div className="mb-6">
         <p className={ui.pageSubtitle}>Escalation queue — pick up routed conversations by department</p>
       </div>
 

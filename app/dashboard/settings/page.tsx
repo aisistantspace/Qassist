@@ -435,9 +435,8 @@ export default function SettingsPage() {
   return (
     <div className="max-w-5xl">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600 mt-2">Configure your platform and branding</p>
+      <div className="mb-6">
+        <p className="text-sm text-gray-600">Configure your platform and branding</p>
       </div>
 
       {/* Message Alert */}

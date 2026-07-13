@@ -581,13 +581,10 @@ export default function KnowledgeBasePage() {
   return (
     <div className="max-w-6xl">
       {/* Header */}
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Knowledge Base</h1>
-          <p className="text-gray-600 mt-2">
-            Add content for your AI assistant to learn from - text entries, files, or websites
-          </p>
-        </div>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <p className="text-sm text-gray-600 max-w-2xl">
+          Add content for your AI assistant to learn from — text entries, files, or websites
+        </p>
         <Link
           href="/dashboard/knowledge-gaps"
           className="inline-flex items-center gap-2 px-4 py-2 border border-amber-300 bg-amber-50 text-amber-800 rounded-lg hover:bg-amber-100 text-sm font-medium shrink-0"

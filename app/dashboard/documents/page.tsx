@@ -83,11 +83,8 @@ export default function DocumentsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Document Management</h1>
-          <p className="text-gray-600 mt-2">Manage uploaded documents and training data</p>
-        </div>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <p className="text-sm text-gray-600">Manage uploaded documents and training data</p>
         <Link
           href="/dashboard/upload"
           className="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors"

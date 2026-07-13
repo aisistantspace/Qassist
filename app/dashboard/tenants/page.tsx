@@ -71,9 +71,8 @@ export default function TenantsPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">SaaS Tenants</h1>
-        <p className="text-gray-600 mt-2">Create customer accounts with their own dashboard, chat, and knowledge base.</p>
+      <div className="mb-6">
+        <p className="text-sm text-gray-600">Create customer accounts with their own dashboard, chat, and knowledge base.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

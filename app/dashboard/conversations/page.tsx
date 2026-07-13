@@ -183,11 +183,8 @@ export default function ConversationsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div>
-          <h1 className={ui.pageTitle}>Conversations</h1>
-          <p className={ui.pageSubtitle}>View and manage all chat conversations</p>
-        </div>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <p className={ui.pageSubtitle}>View and manage all chat conversations</p>
         {completedCount > 0 && (
           <button
             type="button"
