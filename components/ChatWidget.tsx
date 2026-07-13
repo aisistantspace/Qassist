@@ -149,7 +149,7 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
       EN: `Hi ${firstName}! 👋 I'm ${agentName}, your assistant. How can I help you today?`,
       NL: `Hallo ${firstName}! 👋 Ik ben ${agentName}, je assistent. Hoe kan ik je helpen?`,
       ES: `¡Hola ${firstName}! 👋 Soy ${agentName}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
-      PA: `Bon dia ${firstName}! 👋 Mi ta ${agentName}, bo asistente. Kon mi por yudabo?`,
+      PA: `Bon dia${firstName ? ` ${firstName}` : ''}! 👋 Ami ta Dami, bo asistente. Kon mi por yudabo?`,
     }
     return greetings[lang as keyof typeof greetings] || greetings.EN
   }

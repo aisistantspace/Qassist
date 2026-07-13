@@ -22,7 +22,9 @@ function applyEnniaBrandingDefaults(data: Record<string, unknown>, slug: string 
     company_name: data.company_name || 'ENNIA',
     company_website: data.company_website || enniaTheme.website,
     widget_title: data.widget_title || b.widgetTitle,
-    agent_name: data.agent_name && data.agent_name !== 'Assistant' ? data.agent_name : b.agentName,
+    agent_name: data.agent_name && !['Assistant', 'ENNIA Assistant'].includes(String(data.agent_name))
+      ? data.agent_name
+      : b.agentName,
     agent_avatar_url: agentAvatarUrl,
     welcome_message: welcomeMessage,
     primary_color: data.primary_color || b.primaryColor,

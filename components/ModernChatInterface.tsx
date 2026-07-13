@@ -72,11 +72,16 @@ function welcomeForLanguage(
   brandingWelcome?: string,
   initialMessages?: string[]
 ): string {
+  const paWelcome =
+    brandingWelcome && /bon dia|ami ta|mi ta|asistente|yudabo/i.test(brandingWelcome)
+      ? brandingWelcome
+      : PA_WELCOME
+
   const welcomeByLang: Record<ChatLanguage, string> = {
     EN: initialMessages?.[0] || brandingWelcome || `Hi! I'm ${agent}. How can I help you today?`,
     NL: `Hallo! Ik ben ${agent}, je assistent. Hoe kan ik je helpen?`,
     ES: `¡Hola! Soy ${agent}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
-    PA: PA_WELCOME(agent),
+    PA: paWelcome,
   }
   return welcomeByLang[lang] || welcomeByLang.EN
 }
@@ -157,8 +162,8 @@ const PLACEHOLDERS: Record<ChatLanguage, string> = {
   PA: 'Skribí bo pregunta...',
 }
 
-const PA_WELCOME = (agentName: string) =>
-  `Bon dia! 👋 Mi ta ${agentName}, bo asistente. Kon mi por yudabo awe?`
+const PA_WELCOME =
+  'Bon dia! 👋 Ami ta Dami, bo asistente. Kon mi por yudabo awe?'
 
 // URL regex: do not include trailing ), ], > so links stay clickable
 const URL_SPLIT_REGEX = /(https?:\/\/[^\s)\]\}>]+)/g
@@ -688,12 +693,11 @@ export default function ModernChatInterface({
             <button
               key={i}
               onClick={() => sendMessage(suggestion)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md text-sm font-normal transition-colors border ${
                 isDark
-                  ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-transparent text-gray-400 border-gray-700 hover:bg-gray-800 hover:text-gray-300'
+                  : 'bg-transparent text-gray-600 border-gray-200 hover:bg-gray-50'
               }`}
-              style={{ borderColor: primaryColor + '40', borderWidth: '1px' }}
             >
               {suggestion}
             </button>
