@@ -11,8 +11,10 @@ const signika = Signika({
 })
 
 const C = enniaTheme.colors
+/** Soft radius — closer to ENNIA form controls than pills */
+const R = '12px'
+const Rsm = '8px'
 
-/** Industry ranges used as defaults — cited in Sources. */
 const BENCHMARKS = {
   humanCostMid: 8,
   insuranceContainmentMid: 0.38,
@@ -20,7 +22,6 @@ const BENCHMARKS = {
   partialResidual: 3,
   ahtAssist: 0.15,
   assistAdoption: 0.7,
-  afterHoursLift: 0.11,
 } as const
 
 function money(n: number) {
@@ -61,9 +62,7 @@ export default function EnniaCaseStudyPage() {
     const humanOnly = remainder - partial
 
     const costA =
-      contained * costAi +
-      partial * BENCHMARKS.partialResidual +
-      humanOnly * costHuman
+      contained * costAi + partial * BENCHMARKS.partialResidual + humanOnly * costHuman
     const saveA = Math.max(0, baseline - costA)
 
     const costB =
@@ -78,8 +77,6 @@ export default function EnniaCaseStudyPage() {
       humanOnly * (1 - assistShare) * costHuman
     const saveAB = Math.max(0, baseline - costAB)
 
-    const hoursFreed = (annual * assistShare * 8 * ahtCut) / 60
-
     return {
       annual,
       baseline,
@@ -92,25 +89,32 @@ export default function EnniaCaseStudyPage() {
       saveB,
       costAB,
       saveAB,
-      hoursFreed,
+      hoursFreed: (annual * assistShare * 8 * ahtCut) / 60,
       activeCost: mode === 'A' ? costA : mode === 'B' ? costB : costAB,
       activeSave: mode === 'A' ? saveA : mode === 'B' ? saveB : saveAB,
     }
   }, [monthly, costHuman, contain, costAi, ahtCut, assistShare, mode])
 
   return (
-    <div
-      className={`${signika.className} min-h-screen`}
-      style={{
-        color: C.text,
-        background: `linear-gradient(180deg, #FFFFFF 0%, ${C.greenBg} 42%, #FFFFFF 100%)`,
-      }}
-    >
+    <div className={`${signika.className} relative min-h-screen overflow-x-hidden`} style={{ color: C.text }}>
+      {/* Atmospheric ENNIA field — soft mint like quote tools */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background: `
+            radial-gradient(ellipse 90% 60% at 10% -10%, ${C.greenAccent}66, transparent 50%),
+            radial-gradient(ellipse 70% 50% at 100% 20%, ${C.greenLight}cc, transparent 45%),
+            radial-gradient(ellipse 60% 40% at 50% 100%, ${C.greenBg}, transparent 55%),
+            linear-gradient(165deg, #ffffff 0%, ${C.greenBg} 48%, #f7fbf2 100%)
+          `,
+        }}
+      />
+
       <style jsx global>{`
         @keyframes fadeUp {
           from {
             opacity: 0;
-            transform: translateY(16px);
+            transform: translateY(14px);
           }
           to {
             opacity: 1;
@@ -126,138 +130,225 @@ export default function EnniaCaseStudyPage() {
           }
         }
         .cs-fade {
-          animation: fadeUp 0.7s ease-out both;
+          animation: fadeUp 0.65s ease-out both;
         }
-        .cs-fade-delay {
-          animation: fadeUp 0.7s ease-out 0.12s both;
+        .cs-fade-d1 {
+          animation: fadeUp 0.65s ease-out 0.1s both;
         }
-        .cs-fade-delay-2 {
-          animation: fadeUp 0.7s ease-out 0.24s both;
+        .cs-fade-d2 {
+          animation: fadeUp 0.65s ease-out 0.2s both;
+        }
+        .glass {
+          background: rgba(255, 255, 255, 0.55);
+          border: 1px solid rgba(255, 255, 255, 0.72);
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.85) inset,
+            0 18px 40px -24px rgba(24, 61, 43, 0.28),
+            0 2px 8px rgba(48, 126, 87, 0.06);
+          backdrop-filter: blur(18px) saturate(1.35);
+          -webkit-backdrop-filter: blur(18px) saturate(1.35);
+          border-radius: ${R};
+        }
+        .glass-strong {
+          background: rgba(255, 255, 255, 0.72);
+          border: 1px solid rgba(203, 222, 213, 0.65);
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.9) inset,
+            0 22px 50px -28px rgba(24, 61, 43, 0.32);
+          backdrop-filter: blur(22px) saturate(1.4);
+          -webkit-backdrop-filter: blur(22px) saturate(1.4);
+          border-radius: ${R};
+        }
+        .btn-ennia {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: ${Rsm};
+          background: linear-gradient(180deg, #3b9070 0%, ${C.greenDark} 100%);
+          color: #fff;
+          font-weight: 600;
+          font-size: 0.875rem;
+          padding: 0.65rem 1.15rem;
+          border: 1px solid rgba(24, 61, 43, 0.15);
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.22) inset,
+            0 8px 18px -10px rgba(24, 61, 43, 0.55);
+          transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+        }
+        .btn-ennia:hover {
+          filter: brightness(1.05);
+          transform: translateY(-1px);
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.25) inset,
+            0 12px 22px -10px rgba(24, 61, 43, 0.5);
+        }
+        .btn-ennia-ghost {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: ${Rsm};
+          background: rgba(255, 255, 255, 0.55);
+          color: ${C.greenDark};
+          font-weight: 600;
+          font-size: 0.875rem;
+          padding: 0.65rem 1.15rem;
+          border: 1px solid rgba(48, 126, 87, 0.28);
+          backdrop-filter: blur(10px);
+          transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .btn-ennia-ghost:hover {
+          background: rgba(238, 246, 229, 0.9);
+          border-color: rgba(48, 126, 87, 0.45);
+        }
+        .field-glass {
+          border-radius: ${Rsm};
+          background: rgba(255, 255, 255, 0.5);
+          border: 1px solid rgba(203, 222, 213, 0.75);
+          padding: 0.9rem 1rem;
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .field-glass:focus-within {
+          border-color: rgba(48, 126, 87, 0.55);
+          box-shadow: 0 0 0 3px rgba(48, 126, 87, 0.12);
+          background: rgba(255, 255, 255, 0.78);
         }
         .cs-range {
           -webkit-appearance: none;
           appearance: none;
-          height: 4px;
+          height: 6px;
           border-radius: 999px;
-          background: ${C.greenBorder};
+          background: linear-gradient(90deg, ${C.greenLight}, ${C.greenBorder});
           outline: none;
         }
         .cs-range::-webkit-slider-thumb {
           -webkit-appearance: none;
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
-          background: ${C.greenDark};
+          background: linear-gradient(180deg, #4a9d78, ${C.greenDark});
           border: 3px solid #fff;
-          box-shadow: 0 1px 4px rgb(24 61 43 / 0.25);
+          box-shadow: 0 2px 8px rgba(24, 61, 43, 0.28);
           cursor: pointer;
         }
       `}</style>
 
-      {/* Top bar */}
-      <header className="sticky top-0 z-30 border-b border-[#CBDED5]/80 bg-white/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5 sm:px-8">
-          <div className="flex items-center gap-3">
-            <img
-              src={enniaTheme.logo.green}
-              alt="ENNIA"
-              width={enniaTheme.logo.greenWidth}
-              height={enniaTheme.logo.greenHeight}
-              className="h-7 w-auto"
-            />
-            <span className="hidden h-5 w-px bg-[#CBDED5] sm:block" />
-            <span className="hidden text-sm text-[#6B7280] sm:inline">Service case study</span>
+      {/* Glass nav like online tooling chrome */}
+      <header className="sticky top-0 z-40">
+        <div className="mx-auto max-w-5xl px-4 pt-3 sm:px-6">
+          <div className="glass flex items-center justify-between px-4 py-3 sm:px-5">
+            <div className="flex items-center gap-3">
+              <img
+                src={enniaTheme.logo.green}
+                alt="ENNIA"
+                width={enniaTheme.logo.greenWidth}
+                height={enniaTheme.logo.greenHeight}
+                className="h-7 w-auto"
+              />
+              <span className="hidden h-4 w-px bg-[#CBDED5] sm:block" />
+              <span className="hidden text-sm text-[#6B7280] sm:inline">Premium-style ROI tool</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <a href="#calc" className="btn-ennia-ghost hidden sm:inline-flex">
+                Calculate
+              </a>
+              <Link href="/chat" className="btn-ennia">
+                Try Demi
+              </Link>
+            </div>
           </div>
-          <nav className="flex items-center gap-2 text-sm">
-            <a href="#model" className="rounded px-3 py-1.5 text-[#307E57] hover:bg-[#EEF6E5]">
-              Models
-            </a>
-            <a href="#calc" className="rounded px-3 py-1.5 text-[#307E57] hover:bg-[#EEF6E5]">
-              Calculator
-            </a>
-            <Link
-              href="/chat"
-              className="rounded bg-[#307E57] px-3.5 py-1.5 font-semibold text-white hover:bg-[#183D2B]"
-            >
-              Try Demi
-            </Link>
-          </nav>
         </div>
       </header>
 
-      {/* Hero — light */}
-      <section className="relative overflow-hidden">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            background: `
-              radial-gradient(ellipse 70% 55% at 15% 0%, ${C.greenAccent}55, transparent 55%),
-              radial-gradient(ellipse 55% 45% at 95% 30%, ${C.greenLight}88, transparent 50%),
-              linear-gradient(180deg, #fff 0%, ${C.greenBg} 100%)
-            `,
-          }}
-        />
-        <div className="relative mx-auto max-w-5xl px-5 pb-16 pt-14 sm:px-8 sm:pb-20 sm:pt-20">
-          <p className="cs-fade text-xs font-semibold uppercase tracking-[0.18em] text-[#307E57]">
-            Feel Secure · Operations value
+      {/* Hero */}
+      <section className="mx-auto max-w-5xl px-4 pb-10 pt-12 sm:px-6 sm:pt-16">
+        <div className="glass-strong cs-fade max-w-3xl p-7 sm:p-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#307E57]">
+            Feel Secure · Service operations
           </p>
-          <h1 className="cs-fade-delay mt-4 max-w-3xl text-4xl font-bold leading-[1.08] tracking-tight text-[#183D2B] sm:text-5xl lg:text-[3.4rem]">
-            Demi for ENNIA — quieter desks, faster answers, clearer ROI
+          <h1 className="cs-fade-d1 mt-3 text-3xl font-bold leading-[1.1] tracking-tight text-[#183D2B] sm:text-5xl">
+            Calculate the value of Demi for ENNIA
           </h1>
-          <p className="cs-fade-delay-2 mt-5 max-w-2xl text-lg leading-relaxed text-[#6B7280]">
-            Two sober ways to run the AI: automate repetitive customer questions, or put the same
-            knowledge beside your service agents. Illustrating savings with published industry ranges —
-            swap in ENNIA’s volumes to make it yours.
+          <p className="cs-fade-d2 mt-4 max-w-xl text-base leading-relaxed text-[#6B7280] sm:text-lg">
+            Same quiet clarity as ENNIA’s online premium tools — tuned for an ops business case.
+            Adjust contacts and costs; see savings update like a quote.
           </p>
-        </div>
-      </section>
-
-      {/* Integrity — one line */}
-      <div className="border-y border-[#CBDED5] bg-white">
-        <p className="mx-auto max-w-5xl px-5 py-3.5 text-sm text-[#6B7280] sm:px-8">
-          <span className="font-semibold text-[#183D2B]">Illustrative model.</span> Defaults sit inside
-          insurance containment (~35–48%) and contact-cost (~$6–$12) benchmarks — not ENNIA internal
-          figures.
-        </p>
-      </div>
-
-      {/* Two models — compact */}
-      <section id="model" className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
-        <h2 className="text-2xl font-bold tracking-tight text-[#183D2B] sm:text-3xl">
-          Choose how you deploy
-        </h2>
-        <div className="mt-10 grid gap-10 md:grid-cols-2">
-          <ModelBlock
-            kicker="Model A"
-            title="Customer chat"
-            body="Demi answers FAQs, switches languages (EN/NL/ES/PA), and routes claims vs sales vs support. People take what needs judgment."
-            proof="Insurance bots typically contain 35–48% of chat."
-          />
-          <ModelBlock
-            kicker="Model B"
-            title="Desk copilot"
-            body="Same knowledge layer next to agents — drafts, policy lookup, summaries. Extends capacity; does not replace accountability."
-            proof="Peer assist cases: ~15% AHT cut (specialty insurer); up to ~26% in stronger rollouts."
-          />
-        </div>
-      </section>
-
-      {/* Calculator + viz */}
-      <section id="calc" className="border-y border-[#CBDED5] bg-white/70 py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl px-5 sm:px-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight text-[#183D2B] sm:text-3xl">
-                Operating cost model
-              </h2>
-              <p className="mt-2 text-[#6B7280]">Adjust inputs. Results update live.</p>
-            </div>
-            <ModeTabs mode={mode} onChange={setMode} />
+          <div className="mt-7 flex flex-wrap gap-3">
+            <a href="#calc" className="btn-ennia">
+              Open calculator
+            </a>
+            <a href="#model" className="btn-ennia-ghost">
+              View models
+            </a>
           </div>
+        </div>
+        <p className="mt-4 px-1 text-xs text-[#6B7280]">
+          Illustrative ranges (insurance containment ~35–48%, contact cost ~$6–$12) — not ENNIA
+          internal data.
+        </p>
+      </section>
 
-          <div className="mt-12 grid gap-12 lg:grid-cols-[0.95fr_1.05fr]">
-            {/* Controls */}
-            <div className="space-y-7">
+      {/* Models as glass cards — wizard-step feel */}
+      <section id="model" className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <h2 className="mb-6 text-xl font-bold text-[#183D2B] sm:text-2xl">Choose a path</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <button
+            type="button"
+            onClick={() => {
+              setMode('A')
+              document.getElementById('calc')?.scrollIntoView({ behavior: 'smooth' })
+            }}
+            className={`glass group p-6 text-left transition ${
+              mode === 'A' ? 'ring-2 ring-[#307E57]/35' : 'hover:bg-white/70'
+            }`}
+          >
+            <span className="inline-flex h-7 min-w-7 items-center justify-center rounded bg-[#307E57]/12 px-2 text-xs font-bold text-[#307E57]">
+              A
+            </span>
+            <h3 className="mt-3 text-lg font-bold text-[#183D2B]">Customer chat</h3>
+            <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">
+              Automate repetitive FAQs & route claims / sales / support. Humans keep judgment calls.
+            </p>
+            <p className="mt-4 text-sm font-semibold text-[#307E57]">Insurance containment ~35–48% →</p>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMode('B')
+              document.getElementById('calc')?.scrollIntoView({ behavior: 'smooth' })
+            }}
+            className={`glass group p-6 text-left transition ${
+              mode === 'B' ? 'ring-2 ring-[#307E57]/35' : 'hover:bg-white/70'
+            }`}
+          >
+            <span className="inline-flex h-7 min-w-7 items-center justify-center rounded bg-[#307E57]/12 px-2 text-xs font-bold text-[#307E57]">
+              B
+            </span>
+            <h3 className="mt-3 text-lg font-bold text-[#183D2B]">Desk copilot</h3>
+            <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">
+              Knowledge beside agents — drafts, lookup, summaries. Capacity up; accountability stays human.
+            </p>
+            <p className="mt-4 text-sm font-semibold text-[#307E57]">Peer assist AHT cuts ~15% →</p>
+          </button>
+        </div>
+      </section>
+
+      {/* Calculator — quote-form layout */}
+      <section id="calc" className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[#183D2B] sm:text-2xl">Your estimate</h2>
+            <p className="mt-1 text-sm text-[#6B7280]">Step through inputs — results refresh live.</p>
+          </div>
+          <ModeTabs mode={mode} onChange={setMode} />
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-[1fr_1.05fr]">
+          {/* Spec panel */}
+          <div className="glass-strong p-5 sm:p-6">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#307E57]">
+              Specification
+            </p>
+            <div className="space-y-3">
               <Range
                 label="Monthly contacts"
                 value={monthly}
@@ -279,7 +370,7 @@ export default function EnniaCaseStudyPage() {
               {(mode === 'A' || mode === 'AB') && (
                 <>
                   <Range
-                    label="AI containment rate"
+                    label="AI containment"
                     value={contain}
                     min={0.25}
                     max={0.5}
@@ -301,7 +392,7 @@ export default function EnniaCaseStudyPage() {
               {(mode === 'B' || mode === 'AB') && (
                 <>
                   <Range
-                    label="Handle-time reduction with assist"
+                    label="Handle-time reduction"
                     value={ahtCut}
                     min={0.1}
                     max={0.26}
@@ -310,7 +401,7 @@ export default function EnniaCaseStudyPage() {
                     onChange={setAhtCut}
                   />
                   <Range
-                    label="Agents using assist"
+                    label="Assist adoption"
                     value={assistShare}
                     min={0.4}
                     max={1}
@@ -321,205 +412,153 @@ export default function EnniaCaseStudyPage() {
                 </>
               )}
             </div>
+          </div>
 
-            {/* Results viz */}
-            <div>
-              <div
-                className="rounded border border-[#CBDED5] p-6 sm:p-8"
-                style={{
-                  background: `linear-gradient(145deg, #fff 0%, ${C.greenBg} 100%)`,
-                }}
-              >
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#307E57]">
-                  Estimated annual savings
-                </p>
-                <CountUp className="mt-2 text-5xl font-bold tracking-tight text-[#183D2B] sm:text-6xl">
-                  {model.activeSave}
-                </CountUp>
-                <p className="mt-2 text-sm text-[#6B7280]">
-                  vs baseline {money(model.baseline)} ·{' '}
-                  {pct(model.activeSave / Math.max(model.baseline, 1))} of current spend
-                </p>
+          {/* Quote result panel */}
+          <div className="glass-strong relative overflow-hidden p-5 sm:p-7">
+            <div
+              className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-40"
+              style={{ background: `radial-gradient(circle, ${C.greenAccent}, transparent 70%)` }}
+            />
+            <p className="relative text-xs font-semibold uppercase tracking-[0.14em] text-[#307E57]">
+              Indicative annual savings
+            </p>
+            <CountUp className="relative mt-2 text-5xl font-bold tracking-tight text-[#183D2B] sm:text-6xl">
+              {model.activeSave}
+            </CountUp>
+            <p className="relative mt-2 text-sm text-[#6B7280]">
+              Baseline {money(model.baseline)} · {pct(model.activeSave / Math.max(model.baseline, 1))} of
+              spend
+            </p>
 
-                <div className="mt-8">
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
-                    Annual cost
-                  </p>
-                  <CompareBars
-                    baseline={model.baseline}
-                    selected={model.activeCost}
-                    selectedLabel={
-                      mode === 'A' ? 'With chat automation' : mode === 'B' ? 'With desk assist' : 'Combined'
-                    }
-                  />
-                </div>
-
-                {(mode === 'A' || mode === 'AB') && (
-                  <div className="mt-8 flex items-center gap-6">
-                    <Donut
-                      parts={[
-                        { value: model.contained, color: C.greenDark, label: 'Contained' },
-                        { value: model.partial, color: C.greenAccent, label: 'Partial' },
-                        { value: model.humanOnly, color: C.greenDarker, label: 'Human' },
-                      ]}
-                    />
-                    <div className="space-y-2 text-sm">
-                      <LegendDot color={C.greenDark} label="AI resolved" n={model.contained} />
-                      <LegendDot color={C.greenAccent} label="Hybrid triage" n={model.partial} />
-                      <LegendDot color={C.greenDarker} label="Full human" n={model.humanOnly} />
-                    </div>
-                  </div>
-                )}
-
-                {mode === 'B' && (
-                  <p className="mt-8 text-sm text-[#6B7280]">
-                    About{' '}
-                    <strong className="text-[#183D2B]">
-                      {Math.round(model.hoursFreed).toLocaleString()} agent-hours
-                    </strong>{' '}
-                    freed per year (using an 8‑minute average handle-time assumption).
-                  </p>
-                )}
-              </div>
-
-              {mode === 'AB' && (
-                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                  <MiniStat label="Chat alone" value={money(model.saveA)} />
-                  <MiniStat label="Assist alone" value={money(model.saveB)} />
-                </div>
-              )}
+            <div className="relative mt-8 space-y-4">
+              <CompareBars
+                baseline={model.baseline}
+                selected={model.activeCost}
+                selectedLabel={
+                  mode === 'A' ? 'With chat' : mode === 'B' ? 'With assist' : 'Combined path'
+                }
+              />
             </div>
+
+            {(mode === 'A' || mode === 'AB') && (
+              <div className="relative mt-8 flex items-center gap-5 border-t border-[#CBDED5]/70 pt-6">
+                <Donut
+                  parts={[
+                    { value: model.contained, color: C.greenDark, label: 'Contained' },
+                    { value: model.partial, color: C.greenAccent, label: 'Partial' },
+                    { value: model.humanOnly, color: C.greenDarker, label: 'Human' },
+                  ]}
+                />
+                <div className="space-y-2 text-sm">
+                  <LegendDot color={C.greenDark} label="AI resolved" n={model.contained} />
+                  <LegendDot color={C.greenAccent} label="Hybrid" n={model.partial} />
+                  <LegendDot color={C.greenDarker} label="Human" n={model.humanOnly} />
+                </div>
+              </div>
+            )}
+
+            {mode === 'B' && (
+              <p className="relative mt-6 border-t border-[#CBDED5]/70 pt-5 text-sm text-[#6B7280]">
+                ≈{' '}
+                <strong className="text-[#183D2B]">
+                  {Math.round(model.hoursFreed).toLocaleString()} agent-hours
+                </strong>{' '}
+                / year (8‑min AHT assumption)
+              </p>
+            )}
+
+            {mode === 'AB' && (
+              <div className="relative mt-5 grid grid-cols-2 gap-3">
+                <MiniStat label="Chat alone" value={money(model.saveA)} />
+                <MiniStat label="Assist alone" value={money(model.saveB)} />
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Revenue — light, one row */}
-      <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
-        <h2 className="text-2xl font-bold tracking-tight text-[#183D2B] sm:text-3xl">
-          Revenue upside — test, don’t invent
-        </h2>
-        <p className="mt-3 max-w-2xl text-[#6B7280]">
-          Cost savings are the reliable day-one case. Growth needs a 90‑day measurement on ENNIA’s
-          funnels. Peer outcomes for context:
-        </p>
-        <div className="mt-10 grid gap-8 sm:grid-cols-3">
-          <Fact
-            num="~11%"
-            label="After-hours quote conversion lift"
-            detail="AA Ireland, when the bot covered closed hours"
-          />
-          <Fact
-            num="~13%"
-            label="Digital conversion lift"
-            detail="ACKO GenAI chat vs callback journeys"
-          />
-          <Fact
-            num="PA-ready"
-            label="Local-language trust"
-            detail="Demi’s Papiamentu layer is built for Curaçao orthography"
-          />
+      {/* Peer stats — glass row */}
+      <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <div className="glass p-6 sm:p-8">
+          <h2 className="text-lg font-bold text-[#183D2B]">Revenue peers — measure before claiming</h2>
+          <div className="mt-6 grid gap-6 sm:grid-cols-3">
+            <Fact num="~11%" label="After-hours conversion" detail="AA Ireland quote bot" />
+            <Fact num="~13%" label="Digital conversion lift" detail="ACKO GenAI chat" />
+            <Fact num="PA" label="Local-language trust" detail="Demi · Curaçao orthography" />
+          </div>
         </div>
       </section>
 
-      {/* Product strip */}
-      <section
-        className="border-y border-[#CBDED5] py-14"
-        style={{ background: `linear-gradient(90deg, ${C.greenBg}, #fff 40%, ${C.greenBg})` }}
-      >
-        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-6 px-5 sm:flex-row sm:items-center sm:px-8">
+      {/* CTA strip */}
+      <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+        <div className="glass-strong flex flex-col items-start justify-between gap-5 p-6 sm:flex-row sm:items-center sm:p-8">
           <div>
-            <h2 className="text-xl font-bold text-[#183D2B]">See Demi live</h2>
-            <p className="mt-1 text-sm text-[#6B7280]">
-              Multilingual RAG chat · routing · lead capture · ENNIA branding
-            </p>
+            <h2 className="text-lg font-bold text-[#183D2B]">Continue like a live quote flow</h2>
+            <p className="mt-1 text-sm text-[#6B7280]">Open Demi or the ENNIA demo workspace.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link
-              href="/chat"
-              className="rounded bg-[#307E57] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#183D2B]"
-            >
+            <Link href="/chat" className="btn-ennia">
               Open chat
             </Link>
-            <Link
-              href="/demo/ennia/login"
-              className="rounded border border-[#307E57]/40 bg-white px-5 py-2.5 text-sm font-semibold text-[#307E57] hover:bg-[#EEF6E5]"
-            >
+            <Link href="/demo/ennia/login" className="btn-ennia-ghost">
               Demo login
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Sources — compact */}
-      <footer className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-[#307E57]">Sources</h2>
-        <ul className="mt-4 space-y-1.5 text-xs leading-relaxed text-[#6B7280]">
-          <li>
-            Insurance containment 35–48% — Forrester CX benchmarks (via industry containment
-            syntheses).
-          </li>
-          <li>
-            Human contact ~$6–$12 · AI ~$0.25–$2 · phone ~$8 / chat ~$3.50 — Gartner / IBM / NICE-range
-            figures commonly cited in 2025–26 ROI literature.
-          </li>
-          <li>Assist AHT −15% — Foundever specialty insurer; higher cases (Tower ~26%, AXA wrap-up).</li>
-          <li>
-            Conversion peers — AA Ireland ~+11% after-hours (ServisBOT); ACKO ~+13% / −50% inbound calls
-            (Amplitude).
-          </li>
-        </ul>
-        <div className="mt-10 flex items-center justify-between border-t border-[#CBDED5] pt-6">
-          <img
-            src={enniaTheme.logo.green}
-            alt="ENNIA"
-            className="h-6 w-auto opacity-80"
-            width={90}
-            height={20}
-          />
-          <p className="text-xs text-[#6B7280]">Astute · Feel Secure</p>
+      <footer className="mx-auto max-w-5xl px-4 pb-14 pt-6 sm:px-6">
+        <div className="glass px-5 py-5 text-xs leading-relaxed text-[#6B7280]">
+          <p className="font-semibold text-[#307E57]">Sources</p>
+          <p className="mt-2">
+            Containment 35–48% (Forrester CX syntheses) · Human ~$6–$12 / AI ~$0.25–$2 (Gartner / IBM /
+            NICE ranges) · Assist −15% AHT (Foundever) · AA Ireland ~+11% · ACKO ~+13%
+          </p>
+          <div className="mt-5 flex items-center justify-between border-t border-[#CBDED5]/60 pt-4">
+            <img src={enniaTheme.logo.green} alt="ENNIA" className="h-5 w-auto opacity-80" />
+            <span>Astute · Feel Secure</span>
+          </div>
         </div>
       </footer>
     </div>
   )
 }
 
-function ModelBlock({
-  kicker,
-  title,
-  body,
-  proof,
+function ModeTabs({
+  mode,
+  onChange,
 }: {
-  kicker: string
-  title: string
-  body: string
-  proof: string
+  mode: 'A' | 'B' | 'AB'
+  onChange: (m: 'A' | 'B' | 'AB') => void
 }) {
-  return (
-    <div className="border-l-2 border-[#307E57] pl-5">
-      <p className="text-xs font-semibold uppercase tracking-wider text-[#307E57]">{kicker}</p>
-      <h3 className="mt-1 text-xl font-bold text-[#183D2B]">{title}</h3>
-      <p className="mt-3 text-sm leading-relaxed text-[#6B7280]">{body}</p>
-      <p className="mt-4 text-sm font-medium text-[#183D2B]">{proof}</p>
-    </div>
-  )
-}
-
-function ModeTabs({ mode, onChange }: { mode: 'A' | 'B' | 'AB'; onChange: (m: 'A' | 'B' | 'AB') => void }) {
   const items: { id: 'A' | 'B' | 'AB'; label: string }[] = [
     { id: 'A', label: 'Chat' },
     { id: 'B', label: 'Assist' },
     { id: 'AB', label: 'Both' },
   ]
   return (
-    <div className="inline-flex rounded border border-[#CBDED5] bg-white p-1">
+    <div
+      className="inline-flex p-1"
+      style={{
+        borderRadius: Rsm,
+        background: 'rgba(255,255,255,0.55)',
+        border: '1px solid rgba(203,222,213,0.8)',
+        backdropFilter: 'blur(12px)',
+      }}
+    >
       {items.map((item) => (
         <button
           key={item.id}
           type="button"
           onClick={() => onChange(item.id)}
-          className={`rounded px-4 py-1.5 text-sm font-semibold transition ${
-            mode === item.id ? 'bg-[#307E57] text-white' : 'text-[#6B7280] hover:text-[#183D2B]'
-          }`}
+          className="px-4 py-1.5 text-sm font-semibold transition"
+          style={{
+            borderRadius: '6px',
+            background: mode === item.id ? C.greenDark : 'transparent',
+            color: mode === item.id ? '#fff' : C.textMuted,
+            boxShadow: mode === item.id ? '0 6px 14px -8px rgba(24,61,43,0.5)' : 'none',
+          }}
         >
           {item.label}
         </button>
@@ -547,12 +586,14 @@ function Range({
 }) {
   const id = useId()
   return (
-    <div>
-      <div className="mb-2 flex items-baseline justify-between gap-3">
+    <div className="field-glass">
+      <div className="mb-2.5 flex items-baseline justify-between gap-3">
         <label htmlFor={id} className="text-sm font-semibold text-[#183D2B]">
           {label}
         </label>
-        <span className="text-sm font-bold text-[#307E57]">{display}</span>
+        <span className="rounded bg-[#307E57]/10 px-2 py-0.5 text-sm font-bold text-[#307E57]">
+          {display}
+        </span>
       </div>
       <input
         id={id}
@@ -603,9 +644,9 @@ function BarRow({
         <span>{label}</span>
         <span className="font-semibold text-[#183D2B]">{money(value)}</span>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-[#CBDED5]/50">
+      <div className="h-2.5 overflow-hidden rounded bg-[#CBDED5]/45">
         <div
-          className="h-full origin-left rounded-full"
+          className="h-full origin-left rounded"
           style={{
             width: `${Math.max(6, (value / max) * 100)}%`,
             backgroundColor: color,
@@ -617,11 +658,7 @@ function BarRow({
   )
 }
 
-function Donut({
-  parts,
-}: {
-  parts: { value: number; color: string; label: string }[]
-}) {
+function Donut({ parts }: { parts: { value: number; color: string; label: string }[] }) {
   const total = parts.reduce((s, p) => s + p.value, 0) || 1
   let cursor = 0
   const stops = parts
@@ -638,7 +675,7 @@ function Donut({
       className="h-28 w-28 shrink-0 rounded-full"
       style={{
         background: `conic-gradient(${stops})`,
-        boxShadow: 'inset 0 0 0 22px #fff',
+        boxShadow: 'inset 0 0 0 20px rgba(255,255,255,0.92)',
       }}
       role="img"
       aria-label={parts.map((p) => p.label).join(', ')}
@@ -649,7 +686,7 @@ function Donut({
 function LegendDot({ color, label, n }: { color: string; label: string; n: number }) {
   return (
     <div className="flex items-center gap-2 text-[#6B7280]">
-      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
+      <span className="h-2.5 w-2.5 rounded" style={{ backgroundColor: color }} />
       <span>
         {label}{' '}
         <strong className="font-semibold text-[#183D2B]">{Math.round(n).toLocaleString()}</strong>
@@ -660,7 +697,7 @@ function LegendDot({ color, label, n }: { color: string; label: string; n: numbe
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded border border-[#CBDED5] bg-white px-4 py-3">
+    <div className="field-glass !py-3">
       <p className="text-xs text-[#6B7280]">{label}</p>
       <p className="mt-0.5 text-lg font-bold text-[#307E57]">{value}</p>
     </div>
