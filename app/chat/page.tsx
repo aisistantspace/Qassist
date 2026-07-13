@@ -3,8 +3,9 @@ import { cookies } from 'next/headers'
 import { parseTenantSessionToken, TENANT_SESSION_COOKIE } from '@/lib/tenant-session'
 import ChatClient from './ChatClient'
 
-export default function ChatPage() {
-  const session = parseTenantSessionToken(cookies().get(TENANT_SESSION_COOKIE)?.value)
+export default async function ChatPage() {
+  const cookieStore = await cookies()
+  const session = parseTenantSessionToken(cookieStore.get(TENANT_SESSION_COOKIE)?.value)
   const initialEnniaSession = session?.slug === 'ennia'
 
   return (
