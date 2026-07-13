@@ -252,9 +252,6 @@ export default function ModernChatInterface({
   const rawAvatar = branding?.agent_avatar_url || branding?.logo_url
   const avatarUrl =
     rawAvatar && !isLegacyGenericAvatar(rawAvatar) ? rawAvatar : null
-  const headerLogo = isEnnia
-    ? enniaTheme.logo.white
-    : branding?.logo_url || avatarUrl
 
   useEffect(() => {
     if (!enniaPreset) return
@@ -525,7 +522,7 @@ export default function ModernChatInterface({
           <div className="flex items-center gap-3 min-w-0">
             {isEnnia ? (
               <img
-                src={headerLogo}
+                src={enniaTheme.logo.white}
                 alt="ENNIA"
                 className="h-7 w-auto shrink-0"
                 width={enniaTheme.logo.whiteWidth}
