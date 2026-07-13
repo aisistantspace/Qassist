@@ -8,6 +8,8 @@ import { updateLeadScore } from '@/lib/lead-scoring'
 import { getBrandingConfig } from '@/lib/branding'
 import { sendFormSubmissionEmail, sendFormNotificationEmail } from '@/lib/email'
 import { correctPapiamentu } from '@/lib/papiamentu'
+import { ensurePapiamentuOutbound } from '@/lib/papiamentu/outbound'
+import { PA_BOOKING_CTA } from '@/lib/papiamentu/ui-copy'
 import { sanitizeForPrompt, checkRateLimit, getClientIP } from '@/lib/security'
 import { containsAbusiveLanguage, getAbusiveMessageTurnNote } from '@/lib/conversation-conduct'
 import { getRecentConversation, summarizeConversation, isResumable, classifyDepartment, classifyPriority } from '@/lib/customer-matching'
@@ -566,43 +568,17 @@ export async function POST(request: NextRequest) {
         EN: `\n\nReady to take the next step? ${ctaText}: ${branding.booking_url}`,
         NL: `\n\nKlaar om de volgende stap te zetten? ${ctaText}: ${branding.booking_url}`,
         ES: `\n\n¿Listo para dar el siguiente paso? ${ctaText}: ${branding.booking_url}`,
-        PA: `\n\nKla pa tuma e siguiente paso? ${ctaText}: ${branding.booking_url}`,
+        PA: PA_BOOKING_CTA(ctaText, branding.booking_url!),
       }
       assistantResponse += bookingPrompts[effectiveLanguage] || bookingPrompts.EN
-    }
-
-    // Papiamentu correction layer: validate/correct PA responses with Buki di oro + official orthography
-    if (effectiveLanguage === 'PA') {
-      try {
-        const paLocale = (settings as any).papiamentu_locale || 'pap-CW'
-        const paLearning = (settings as any).papiamentu_learning ?? false
-        const result = correctPapiamentu(assistantResponse, { locale: paLocale })
-        assistantResponse = result.corrected
-        if (process.env.NODE_ENV === 'development' && result.changes?.length) {
-          console.log('[Papiamentu] corrections:', result.changes)
-        }
-        if ((paLearning || process.env.PAPIAMENTU_LEARNING_ENABLED === 'true') && result.changes?.length) {
-          const contextSnippet = assistantResponse.slice(0, 200)
-          for (const ch of result.changes) {
-            void Promise.resolve(
-              supabaseAdmin.from('papiamentu_corrections').insert({
-                tenant_id: tenantId,
-                from_text: ch.from,
-                to_text: ch.to,
-                change_type: ch.type,
-                context: contextSnippet,
-              })
-            ).catch((err: unknown) => console.error('[Papiamentu] log correction failed:', err))
-          }
-        }
-      } catch (e) {
-        console.error('[Papiamentu] correction failed:', e)
-      }
     }
 
     // Normalize URLs: unwrap (url) or [url] so links stay clickable — never spell-check or edit the URL itself
     assistantResponse = assistantResponse.replace(/\((https?:\/\/[^\s)]+)\)/g, '$1')
     assistantResponse = assistantResponse.replace(/\[(https?:\/\/[^\s\]]+)\]/g, '$1')
+
+    // NOTE: Papiamentu correction runs AFTER department-link append below
+    // so every outbound PA fragment goes through the layer.
 
     const assistantMessage: Message = {
       role: 'assistant',
@@ -655,8 +631,38 @@ export async function POST(request: NextRequest) {
       routingEval.suggestedAction === 'link'
     ) {
       assistantResponse += `\n\n${formatDepartmentLinkMessage(effectiveLanguage, finalDepartment, actionUrl)}`
-      assistantMessage.content = assistantResponse
     }
+
+    // Papiamentu correction layer — final outbound gate (covers LLM + CTAs + dept links)
+    if (effectiveLanguage === 'PA') {
+      try {
+        const paLocale = (settings as any).papiamentu_locale || 'pap-CW'
+        const paLearning = (settings as any).papiamentu_learning ?? false
+        const result = correctPapiamentu(assistantResponse, { locale: paLocale })
+        assistantResponse = result.corrected
+        if (process.env.NODE_ENV === 'development' && result.changes?.length) {
+          console.log('[Papiamentu] corrections:', result.changes)
+        }
+        if ((paLearning || process.env.PAPIAMENTU_LEARNING_ENABLED === 'true') && result.changes?.length) {
+          const contextSnippet = assistantResponse.slice(0, 200)
+          for (const ch of result.changes) {
+            void Promise.resolve(
+              supabaseAdmin.from('papiamentu_corrections').insert({
+                tenant_id: tenantId,
+                from_text: ch.from,
+                to_text: ch.to,
+                change_type: ch.type,
+                context: contextSnippet,
+              })
+            ).catch((err: unknown) => console.error('[Papiamentu] log correction failed:', err))
+          }
+        }
+      } catch (e) {
+        console.error('[Papiamentu] correction failed:', e)
+        assistantResponse = ensurePapiamentuOutbound(assistantResponse)
+      }
+    }
+    assistantMessage.content = assistantResponse
 
     // Update conversation in database
     const updatedMessages = [...existingMessages, userMessage, assistantMessage]

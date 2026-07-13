@@ -12,7 +12,9 @@
     "lint": "next lint",
     "pa:extract-book": "node scripts/extract-papiamentu-book-images.mjs --resume",
     "pa:merge-book": "node scripts/merge-papiamentu-book-extract.mjs",
-    "pa:import-book": "npm run pa:extract-book && npm run pa:merge-book",
+    "pa:clean-book": "node scripts/clean-papiamentu-school-data.mjs",
+    "pa:import-book": "npm run pa:extract-book && npm run pa:merge-book && npm run pa:clean-book",
+    "pa:test": "npx --yes tsx scripts/test-papiamentu.mts",
     "saas:provision-user": "node scripts/provision-tenant-user.mjs"
   },
   "dependencies": {

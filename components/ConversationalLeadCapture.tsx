@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { PA_LEAD_CAPTURE } from '@/lib/papiamentu/ui-copy'
 
 interface ConversationalLeadCaptureProps {
   onComplete: (lead: { name: string; phone: string; email: string }) => void
@@ -35,26 +36,30 @@ export default function ConversationalLeadCapture({ onComplete, language }: Conv
         EN: "Hi! 👋 I'm your assistant. To get started, what's your name?",
         NL: "Hallo! 👋 Ik ben je assistent. Om te beginnen, wat is je naam?",
         ES: "¡Hola! 👋 Soy tu asistente. Para empezar, ¿cuál es tu nombre?",
-        PA: "Bon dia! 👋 Mi ta bo asistente. Pa kuminsá, kua ta bo nòmber?",
+        PA: PA_LEAD_CAPTURE.askName,
       },
       phone: {
         EN: "Nice to meet you, {name}! What's your phone number?",
         NL: "Leuk je te ontmoeten, {name}! Wat is je telefoonnummer?",
         ES: "¡Encantado de conocerte, {name}! ¿Cuál es tu número de teléfono?",
-        PA: "Hopi gusto di konosebo, {name}! Kua ta bo number di telefòn?",
+        PA: "{name}", // replaced below with PA_LEAD_CAPTURE.askPhone
       },
       email: {
         EN: "Great! And what's your email address?",
         NL: "Geweldig! En wat is je e-mailadres?",
         ES: "¡Genial! ¿Y cuál es tu dirección de correo electrónico?",
-        PA: "Eksèlente! I kua ta bo email address?",
+        PA: PA_LEAD_CAPTURE.askEmail,
       },
       complete: {
         EN: "Perfect! I've got your information. By chatting with me, you consent to receive follow-ups about Curaçao immigration. Now, how can I help you today?",
         NL: "Perfect! Ik heb je informatie. Door met mij te chatten, ga je akkoord met het ontvangen van vervolgberichten over immigratie naar Curaçao. Hoe kan ik je vandaag helpen?",
         ES: "¡Perfecto! Tengo tu información. Al chatear conmigo, aceptas recibir seguimientos sobre inmigración a Curaçao. ¿Cómo puedo ayudarte hoy?",
-        PA: "Perfèkt! Mi tin bo informashon. Door di chatia ku mi, bo ta konsinti risibi follow-upnan tokante imigrashon na Kòrsou. Con mi por yudabo awe?",
+        PA: PA_LEAD_CAPTURE.consentDone,
       },
+    }
+
+    if (lang === 'PA' && currentStep === 'phone') {
+      return PA_LEAD_CAPTURE.askPhone(leadData.name || '{name}')
     }
 
     const message = (messages[currentStep] && messages[currentStep][lang]) || (messages[currentStep] && messages[currentStep].EN) || ''
@@ -84,7 +89,10 @@ export default function ConversationalLeadCapture({ onComplete, language }: Conv
     // Process based on current step
     if (step === 'name') {
       setLeadData(prev => ({ ...prev, name: value }))
-      const phoneMsg = getStepMessage('phone', language).replace('{name}', value)
+      const phoneMsg =
+        language === 'PA'
+          ? PA_LEAD_CAPTURE.askPhone(value)
+          : getStepMessage('phone', language).replace('{name}', value)
       setTimeout(() => {
         setMessages(prev => [...prev, { role: 'assistant', content: phoneMsg }])
         setStep('phone')
@@ -95,7 +103,7 @@ export default function ConversationalLeadCapture({ onComplete, language }: Conv
           EN: "That doesn't look like a valid phone number. Could you please check it? (e.g., 599-123-4567)",
           NL: "Dat lijkt geen geldig telefoonnummer te zijn. Kun je het controleren? (bijv. 599-123-4567)",
           ES: "Ese no parece un número de teléfono válido. ¿Podrías verificarlo? (ej. 599-123-4567)",
-          PA: "Esei no ta parse un number di telefòn válido. Por fabor verifiká? (ehèmpel: 599-123-4567)",
+          PA: PA_LEAD_CAPTURE.invalidPhone,
         }
         setTimeout(() => {
           setMessages(prev => [...prev, { role: 'assistant', content: errorMsg[language] }])
@@ -114,7 +122,7 @@ export default function ConversationalLeadCapture({ onComplete, language }: Conv
           EN: "That doesn't look like a valid email address. Could you please check it? (e.g., john@example.com)",
           NL: "Dat lijkt geen geldig e-mailadres te zijn. Kun je het controleren? (bijv. john@example.com)",
           ES: "Esa no parece una dirección de correo válida. ¿Podrías verificarla? (ej. john@example.com)",
-          PA: "Esei no ta parse un email address válido. Por fabor verifiká? (ehèmpel: john@example.com)",
+          PA: PA_LEAD_CAPTURE.invalidEmail,
         }
         setTimeout(() => {
           setMessages(prev => [...prev, { role: 'assistant', content: errorMsg[language] }])

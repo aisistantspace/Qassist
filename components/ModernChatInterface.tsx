@@ -14,6 +14,8 @@ import {
 import InlineForm from './InlineForm'
 import type { FormField } from '@/lib/types'
 import { enniaTheme, isEnniaBrand } from '@/lib/demo-themes/ennia'
+import { PA_WELCOME, PA_PLACEHOLDER } from '@/lib/papiamentu/ui-copy'
+import { ensurePapiamentuOutbound } from '@/lib/papiamentu/outbound'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -74,7 +76,7 @@ function welcomeForLanguage(
 ): string {
   const paWelcome =
     brandingWelcome && /bon dia|ami ta|mi ta|asistente|yudabo/i.test(brandingWelcome)
-      ? brandingWelcome
+      ? ensurePapiamentuOutbound(brandingWelcome)
       : PA_WELCOME
 
   const welcomeByLang: Record<ChatLanguage, string> = {
@@ -159,11 +161,8 @@ const PLACEHOLDERS: Record<ChatLanguage, string> = {
   EN: 'Type your message...',
   NL: 'Stel je vraag...',
   ES: 'Escribe tu pregunta...',
-  PA: 'Skribí bo pregunta...',
+  PA: PA_PLACEHOLDER,
 }
-
-const PA_WELCOME =
-  'Bon dia! 👋 Ami ta Demi, bo asistente. Kon mi por yudabo awe?'
 
 // URL regex: do not include trailing ), ], > so links stay clickable
 const URL_SPLIT_REGEX = /(https?:\/\/[^\s)\]\}>]+)/g

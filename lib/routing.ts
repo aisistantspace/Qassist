@@ -5,6 +5,7 @@
 import type { Department, Priority } from '@/lib/customer-matching'
 import { classifyDepartment, classifyPriority } from '@/lib/customer-matching'
 import { getRoutingConfig, getDepartmentUrl, type RoutingConfig } from '@/lib/routing-config'
+import { PA_ROUTING } from '@/lib/papiamentu/ui-copy'
 
 export type SuggestedAction = 'form' | 'link' | 'human' | 'none'
 
@@ -205,7 +206,7 @@ export function formatFormLinkMessage(
     EN: `You can complete our ${formName} here: ${url}`,
     NL: `U kunt ons ${formName} hier invullen: ${url}`,
     ES: `Puede completar nuestro ${formName} aquí: ${url}`,
-    PA: `Bo por kompletá nos ${formName} aki: ${url}`,
+    PA: PA_ROUTING.form(formName, url),
   }
   return templates[language] || templates.EN
 }
@@ -250,6 +251,13 @@ export function formatDepartmentLinkMessage(
   url: string
 ): string {
   const deptKey = department.toLowerCase()
+  if (language === 'PA') {
+    if (deptKey === 'claims') return PA_ROUTING.claim(url)
+    if (deptKey === 'sales') return PA_ROUTING.quote(url)
+    if (deptKey === 'billing') return PA_ROUTING.billing(url)
+    if (deptKey === 'support') return PA_ROUTING.support(url)
+    return PA_ROUTING.continue(url)
+  }
   const template =
     DEPARTMENT_LINK_TEMPLATES[deptKey]?.[language] ||
     DEPARTMENT_LINK_TEMPLATES[deptKey]?.EN ||

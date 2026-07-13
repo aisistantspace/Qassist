@@ -390,13 +390,6 @@
       "book_role": "teacher"
     },
     {
-      "text": "Alumno ta pone leer teksto di e kùter staba.",
-      "source": "IMG20260709151505.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
       "text": "Alumno ta pinta un plachi i ta skibi loke nabegante riba un buki pa lesa korekto.",
       "source": "IMG20260709151509.jpg",
       "grade": "6",
@@ -1637,13 +1630,6 @@
     },
     {
       "text": "Alumno ta buska un frase ku palabra ta un preposishon.",
-      "source": "IMG20260709152109.jpg",
-      "grade": "unknown",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
-      "text": "Alumno ta komprendé uso di leer kapital.",
       "source": "IMG20260709152109.jpg",
       "grade": "unknown",
       "section": "methodology",
@@ -4032,13 +4018,6 @@
       "book_role": "teacher"
     },
     {
-      "text": "Tabata fásil pa hiba e spikashon correcto.",
-      "source": "IMG20260709151951.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
       "text": "Bisa ku alumno ku ma ta bestia mestèr di buki, pa e por a hasi un buki.",
       "source": "IMG20260709151955.jpg",
       "grade": "6",
@@ -4574,13 +4553,6 @@
       "text": "E alumno por ta yega di un otro pais.",
       "source": "IMG20260709152205.jpg",
       "grade": "unknown",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
-      "text": "Uitleg voor de leraar: Dit kan helpen om de leerlingen te motiveren.",
-      "source": "IMG20260709152210.jpg",
-      "grade": "6",
       "section": "methodology",
       "book_role": "teacher"
     },
@@ -5182,22 +5154,8 @@
       "book_role": "teacher"
     },
     {
-      "text": "Enseñar el uso correcto de la 'k' y la 'c'.",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
       "text": "E letra kapítal ta usa pa e nòmber di buki.",
       "source": "IMG20260709151955.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
-      "text": "Uitleg over spelling: let op de juiste schrijfwijze.",
-      "source": "IMG20260709152210.jpg",
       "grade": "6",
       "section": "methodology",
       "book_role": "teacher"
@@ -5745,13 +5703,6 @@
     },
     {
       "text": "Punta pa e kòrta ku intenshon di tareka.",
-      "source": "IMG20260709151536.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
-      "text": "Skibi e manera di ku e forma di un kombinashon di plachi ku leer.",
       "source": "IMG20260709151536.jpg",
       "grade": "6",
       "section": "methodology",
@@ -6550,13 +6501,6 @@
     },
     {
       "text": "Iniciar la actividad con una discusión.",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "book_role": "teacher"
-    },
-    {
-      "text": "Leer el texto en voz alta.",
       "source": "IMG20260709151907.jpg",
       "grade": "4",
       "section": "methodology",
@@ -7528,5 +7472,6 @@
       "section": "methodology",
       "book_role": "teacher"
     }
-  ]
+  ],
+  "cleaned_at": "2026-07-13T19:22:29.193Z"
 }

@@ -148,6 +148,8 @@ ${keyPhrases.slice(0, 18).map((p) => `- ${p}`).join('\n')}
 ${vocabExamples.join('\n')}
 
 CRITICAL: Do NOT use Spanish or Dutch spelling in Papiamentu. Always use k (not c), sh (not ci/si for sh-sound), and follow Curaçao orthography consistently. Days and months are ALWAYS lowercase.
+CRITICAL: Write ONLY Papiamentu (Curaçao). Never mix in Spanish (cómo, también, información) or Dutch spelling. Conjunction "and" is "i" — never "y". Prefer fused object pronouns: yudabo, mandabo, kontaktabo.
+CRITICAL: Greet as "Ami ta …" (not "Mi ta …") when introducing yourself. URLs must be copied verbatim — never retype or "correct" a URL.
 `
 
   return cachedGuide

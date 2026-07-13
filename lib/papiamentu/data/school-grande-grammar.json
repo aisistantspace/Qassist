@@ -124,14 +124,6 @@
       "book_role": "teacher"
     },
     {
-      "text": "Enseñar el uso correcto de la 'k' y la 'c'.",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "book_role": "teacher",
-      "type": "orthography"
-    },
-    {
       "text": "Sustantivo ta un palabra ku ta nombra un persona, un lugar, of un kos.",
       "source": "IMG20260709151926.jpg",
       "grade": "6",
@@ -231,14 +223,6 @@
       "book_role": "teacher"
     },
     {
-      "text": "Uitleg over spelling: let op de juiste schrijfwijze.",
-      "source": "IMG20260709152210.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "book_role": "teacher",
-      "type": "orthography"
-    },
-    {
       "text": "Alumno ta desaroyá su nòmber metalinwísiko.",
       "source": "IMG20260709152227.jpg",
       "grade": "6",
@@ -267,5 +251,6 @@
       "section": "Mi por lesa",
       "book_role": "teacher"
     }
-  ]
+  ],
+  "cleaned_at": "2026-07-13T19:22:29.187Z"
 }

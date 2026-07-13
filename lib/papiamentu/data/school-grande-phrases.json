@@ -12,60 +12,12 @@
     "page_count": 531,
     "student_page_count": 370,
     "teacher_page_count": 161,
-    "phrase_count": 7771,
-    "conversation_rule_count": 132,
-    "reading_passage_count": 2472
+    "phrase_count": 7526,
+    "conversation_rule_count": 131,
+    "reading_passage_count": 2472,
+    "cleaned": true
   },
   "phrases": [
-    {
-      "pa": "¿Alumon ta konosé e yabinan?",
-      "source": "IMG20260709152429.jpg",
-      "grade": "6",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "¿Cómo se relacionan las palabras?",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "¿E hende ku djiénten ku tabata traha?",
-      "source": "IMG20260707203822.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "¿Kiko ta e pasta di diente spesial?",
-      "source": "IMG20260707203822.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "¿Kiko tabatin ku riba e tabata bira mòlí?",
-      "source": "IMG20260707203822.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "¿Kuant biahá pa bo ku limpia diente?",
-      "source": "IMG20260707203822.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "¿Qué aprendiste del texto?",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
     {
       "pa": "… i djinten ta spekerei ku indones ta usa.",
       "source": "IMG20260707210556.jpg",
@@ -396,13 +348,6 @@
       "type": "reading"
     },
     {
-      "pa": "'Kón tur e bèkina?' a bèkina e emperador.",
-      "source": "IMG20260707202700.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "'Ku un kar komenta mama ta bisi: 'Kukanan, mi ta mira un tiendita ku forma spesial.'",
       "source": "IMG20260707205620.jpg",
       "grade": "3",
@@ -552,13 +497,6 @@
     {
       "pa": "'Nos mestèr nèsta aktividat ku tin den Marshe Nobo.",
       "source": "IMG20260707205620.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "'Ora un lárgu Yanchi a keda den laira.",
-      "source": "IMG20260707210926.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -1353,13 +1291,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "question"
-    },
-    {
-      "pa": "6 Ban Parke Nashonal Arikòk na Aruba",
-      "source": "IMG20260707202548.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "6 Koreg i cromran",
@@ -2573,13 +2504,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Al alumno le gusta leer.",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "type": "conversation"
-    },
-    {
       "pa": "Al contrario.",
       "source": "IMG20260707204349.jpg",
       "grade": "3",
@@ -2734,13 +2658,6 @@
       "type": "reading"
     },
     {
-      "pa": "Algun tempu despues hende a inventá ekserkiri.",
-      "source": "IMG20260707210959.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Alimento ta kuminda.",
       "source": "IMG20260707204544.jpg",
       "grade": "3",
@@ -2783,20 +2700,6 @@
       "type": "reading"
     },
     {
-      "pa": "Alonso i su tripulashon tabata buska oro i e islanan ni na haña ni Korsou ni Aruba.",
-      "source": "IMG20260707201900.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "aluminio - glas - karto - palu - papel - plástik - rúber - tela",
-      "source": "IMG20260707202519.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Alumna ta amplía i profundisá su vocabulario.",
       "source": "IMG20260709152422.jpg",
       "grade": "6",
@@ -2818,20 +2721,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Alumno a amplia i profundis su vocabulario.",
-      "source": "IMG20260709151752.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Alumno a amplia i profundisá su vocabulario.",
-      "source": "IMG20260709151754.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "conversation"
-    },
-    {
       "pa": "Alumno a amplía su habilidad gramatikal.",
       "source": "IMG20260709151801.jpg",
       "grade": "unknown",
@@ -2846,13 +2735,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Alumno a amplía su profundidat su vocabulario.",
-      "source": "IMG20260709151801.jpg",
-      "grade": "unknown",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Alumno a desaroyá su abilidat metalinawisiko.",
       "source": "IMG20260709152153.jpg",
       "grade": "6",
@@ -2865,13 +2747,6 @@
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "Alumno a desaroyá su noshon metalin gwistiko.",
-      "source": "IMG20260709151754.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "conversation"
     },
     {
       "pa": "Alumno a diskribi un noshen relashon.",
@@ -2898,27 +2773,6 @@
       "pa": "Alumno a keña e krena.",
       "source": "IMG20260709151834.jpg",
       "grade": "unknown",
-      "section": "methodology",
-      "type": "conversation"
-    },
-    {
-      "pa": "Alumno a komprendé diferente frase i su verbo.",
-      "source": "IMG20260709151752.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "conversation"
-    },
-    {
-      "pa": "Alumno a komprendé diferente frase i un verbo.",
-      "source": "IMG20260709151752.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Alumno a komprendé i keuna realístiko akí.",
-      "source": "IMG20260709151213.jpg",
-      "grade": "4",
       "section": "methodology",
       "type": "conversation"
     },
@@ -2951,23 +2805,9 @@
       "type": "lesson_plan"
     },
     {
-      "pa": "Alumno a menó e frase i skibi e mía riba e palábra.",
-      "source": "IMG20260709151752.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Alumno a pone frase ku ta nifiká kasi meskos.",
       "source": "IMG20260709152140.jpg",
       "grade": "4",
-      "section": "methodology",
-      "type": "conversation"
-    },
-    {
-      "pa": "Alumno a skòte e profeshon korekto serka un deskripshon.",
-      "source": "IMG20260709151754.jpg",
-      "grade": "6",
       "section": "methodology",
       "type": "conversation"
     },
@@ -3019,20 +2859,6 @@
       "grade": "4",
       "section": "Mi por lesa",
       "type": "lesson_plan"
-    },
-    {
-      "pa": "Alumno lo a komprendé relashon entre palabra.",
-      "source": "IMG20260709152252.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "conversation"
-    },
-    {
-      "pa": "Alumno lo hasi disimón entre diferente artikulo den supermarktu.",
-      "source": "IMG20260709152252.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Alumno lo hasi disimón entre parti di vestuario i e respuestanan i mervi pa ku no a ensé.",
@@ -3133,25 +2959,11 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Alumno por traha un reïbos simpel: e por traha palabra di un kombinashon di plachi ku leer.",
-      "source": "IMG20260709151536.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "methodology"
-    },
-    {
       "pa": "Alumno por usa su titulo, tekstu i pintura pa forma un historia.",
       "source": "IMG20260709151834.jpg",
       "grade": "unknown",
       "section": "methodology",
       "type": "conversation"
-    },
-    {
-      "pa": "Alumno skibi e palabra di su plachi ku leer.",
-      "source": "IMG20260709151536.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "methodology"
     },
     {
       "pa": "Alumno ta amplia i por komprendé su vocabulario.",
@@ -4827,13 +4639,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Alumno ta komprendé uso di leer kapital.",
-      "source": "IMG20260709152109.jpg",
-      "grade": "unknown",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Alumno ta komprendé.",
       "source": "IMG20260709152415.jpg",
       "grade": "4",
@@ -5326,13 +5131,6 @@
     {
       "pa": "Alumno ta pone e frasnan den e kuenta den sustantivo kompleto.",
       "source": "IMG20260709151926.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Alumno ta pone leer teksto di e kùter staba.",
-      "source": "IMG20260709151505.jpg",
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
@@ -6458,13 +6256,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Antes hende mester a yeg na ser ke a konosé bestia.",
-      "source": "IMG20260707202515.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Antes hende tabata usa superfiсie di awa pa wak nan ...",
       "source": "IMG20260707210053.jpg",
       "grade": "3",
@@ -6547,13 +6338,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Antes tas tabata un artefakto dú uso...",
-      "source": "IMG20260707210712.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
     },
     {
       "pa": "Antes tur bebi tabata bisti bruki di tema.",
@@ -6642,13 +6426,6 @@
     {
       "pa": "Ardash ta riba e yádi ku e kaminda.",
       "source": "IMG20260707202519.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "arèpita - paella - pizza - sankoch",
-      "source": "IMG20260707203708.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -6948,13 +6725,6 @@
       "type": "reading"
     },
     {
-      "pa": "Asina Yanchi a yega kè, a kuminsá yena un bisi blasan.",
-      "source": "IMG20260707210926.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Asina, pa e kason di Maneki Neko, e ta simbolisa e orígen di e historia.",
       "source": "IMG20260707210610.jpg",
       "grade": "3",
@@ -6964,13 +6734,6 @@
     {
       "pa": "asistent di dentista.",
       "source": "IMG20260707203833.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Asomá Yuma a keda wak e berel.",
-      "source": "IMG20260707204519.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -7058,13 +6821,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "comprehension"
-    },
-    {
-      "pa": "Australia tin un selva tropikal masha grandi: Selva Tropical Daintree.",
-      "source": "IMG20260707210457.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Ave ku no ta gina di hasi.",
@@ -7555,13 +7311,6 @@
       "grade": "3",
       "section": "Skucha i papia",
       "type": "comprehension"
-    },
-    {
-      "pa": "Awenda kais tur hende un frìshidèr den kuxina.",
-      "source": "IMG20260707205830.jpg",
-      "grade": "6",
-      "section": "Skucha i papia",
-      "type": "reading"
     },
     {
       "pa": "Awendá ku surta di bisi, e ta bisi un banda.",
@@ -8313,13 +8062,6 @@
       "type": "reading"
     },
     {
-      "pa": "Basta tempu pasa e inventa e promé wasmashin na Inglaterra.",
-      "source": "IMG20260707210037.jpg",
-      "grade": "6",
-      "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
       "pa": "Basta tempu pasa, pone ku hende por a skibi, nan tabata pasa riba baranka di kubu.",
       "source": "IMG20260707210959.jpg",
       "grade": "6",
@@ -8944,13 +8686,6 @@
     },
     {
       "pa": "Bisa e alumno ku ta bai buska preposishon den kada frase.",
-      "source": "IMG20260709152109.jpg",
-      "grade": "unknown",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Bisa e alumno ku ta lesa e frase i ta usa e letra ku ta leer kapital.",
       "source": "IMG20260709152109.jpg",
       "grade": "unknown",
       "section": "methodology",
@@ -11330,20 +11065,6 @@
       "type": "reading"
     },
     {
-      "pa": "Buki chinta – kanguru – mosel – kef",
-      "source": "IMG20260709151748.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Buki chinta – kanguru – mosel – kef?",
-      "source": "IMG20260709151748.jpg",
-      "grade": "6",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
       "pa": "Buki, revista i korant",
       "source": "IMG20260707205938.jpg",
       "grade": "3",
@@ -11379,20 +11100,6 @@
       "type": "question"
     },
     {
-      "pa": "Buska e lètternan den e raki bou.",
-      "source": "IMG20260707204153.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
-      "pa": "Buska e palabra ber, e fala, e ora.",
-      "source": "IMG20260707210439.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
       "pa": "Buska e palabra den e skref.",
       "source": "IMG20260707205555.jpg",
       "grade": "3",
@@ -11416,13 +11123,6 @@
     {
       "pa": "Buska e palabra di buki pa skref.",
       "source": "IMG20260707202223.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
-    },
-    {
-      "pa": "Buska e palabra e falá, den e skèf.",
-      "source": "IMG20260707205549.jpg",
       "grade": "3",
       "section": "vocabulary",
       "type": "conversation"
@@ -11799,13 +11499,6 @@
       "type": "reading"
     },
     {
-      "pa": "Cristóbal tabata fés, sekretamente e tabata biba.",
-      "source": "IMG20260707201851.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Da Gama a hasi un error.",
       "source": "IMG20260707201959.jpg",
       "grade": "3",
@@ -12037,13 +11730,6 @@
       "type": "reading"
     },
     {
-      "pa": "Den Dinah su hardin tin hopi palu grandinan, i yerba shimaron.",
-      "source": "IMG20260707205754.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Den djins di karson tin zip.",
       "source": "IMG20260707203924.jpg",
       "grade": "6",
@@ -12233,20 +11919,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Den e tempu a yá tabata mangel.",
-      "source": "IMG20260707205500.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Den e tempu ayé tabatin tribunan hostil na África.",
-      "source": "IMG20260707202032.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Den e tempu e e inglesnan tabata gusta kan kópi di e i kome pida.",
       "source": "IMG20260707205915.jpg",
       "grade": "6",
@@ -12290,13 +11962,6 @@
     },
     {
       "pa": "Den Fort Amsterdam, e prome forti di nos isla, ta un forti di kóku.",
-      "source": "IMG20260707205653.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Den Fort Amsterdam, Fort Nassau a konstruí ...",
       "source": "IMG20260707205653.jpg",
       "grade": "3",
       "section": "Mi por lesa",
@@ -12359,32 +12024,11 @@
       "type": "reading"
     },
     {
-      "pa": "Den kada frase tin un óf mas sustantivo.",
-      "source": "IMG20260707202419.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Den kada frase tin un palabra",
       "source": "IMG20260707205631.jpg",
       "grade": "3",
       "section": "Skucha i papia",
       "type": "conversation"
-    },
-    {
-      "pa": "Den kada frase tin un palabra korékt.",
-      "source": "IMG20260707202402.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Den kada frase tin un palabra kursivo.",
-      "source": "IMG20260707202402.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Den kada frase tin un palabra.",
@@ -12410,13 +12054,6 @@
     {
       "pa": "Den kantidat di buki e tekstu ta parti?",
       "source": "IMG20260707205925.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Den kashi den kamber mester tin tur nobo.",
-      "source": "IMG20260707203818.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -12462,13 +12099,6 @@
       "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Den lèsa i skibi e palabra korekto.",
-      "source": "IMG20260707204153.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
     },
     {
       "pa": "Den mènd di hopi palu i mata.",
@@ -12637,13 +12267,6 @@
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "Den tabata bisti peluka, hende mester tabata bisti peluka.",
-      "source": "IMG20260707211057.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Den tempu antigüo a tabata un tipo di restoran na Roma.",
@@ -13250,13 +12873,6 @@
     {
       "pa": "Despué Walt a inventá un figura grasioso, e konèchi Oswald.",
       "source": "IMG20260707203647.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Despué Walt a inventá un figura grasioso, e kóntchi Oswald.",
-      "source": "IMG20260707203640.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -13913,13 +13529,6 @@
       "type": "lesson_plan"
     },
     {
-      "pa": "Diko e emperador tabata gusta su bisi?",
-      "source": "IMG20260707203612.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Diko e kon Fisher a inventá?",
       "source": "IMG20260707210037.jpg",
       "grade": "6",
@@ -14123,13 +13732,6 @@
       "type": "question"
     },
     {
-      "pa": "Dikon e a haña e kuminsá ten un band?",
-      "source": "IMG20260707211033.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
       "pa": "Dikon e a kòrte e aña?",
       "source": "IMG20260707210604.jpg",
       "grade": "3",
@@ -14221,13 +13823,6 @@
       "type": "question"
     },
     {
-      "pa": "Dikon e indjan na e tienta Hinto mas?",
-      "source": "IMG20260707204349.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Dikon e ku Hinto?",
       "source": "IMG20260707204349.jpg",
       "grade": "3",
@@ -14291,27 +13886,6 @@
       "type": "question"
     },
     {
-      "pa": "Dikon e persona a bin bai segun Milán?",
-      "source": "IMG20260707211012.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
-      "pa": "Dikon e persona a bin bati segun Milani?",
-      "source": "IMG20260707210146.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "Dikon e persona a bini bini segun Milani?",
-      "source": "IMG20260707210152.jpg",
-      "grade": "3",
-      "section": "Skucha i papia",
-      "type": "comprehension"
-    },
-    {
       "pa": "Dikon e pigenonan no ta hasi ku ta kana un bonchi den polmon?",
       "source": "IMG20260707211022.jpg",
       "grade": "3",
@@ -14331,13 +13905,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "question"
-    },
-    {
-      "pa": "Dikon e selva tabata den notisia den aña '80?",
-      "source": "IMG20260707210457.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Dikon e ta biba di hòbè?",
@@ -14417,20 +13984,6 @@
       "type": "reading"
     },
     {
-      "pa": "Dikon hende tabata traha pintura den kueba?",
-      "source": "IMG20260707211003.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "Dikon hende tabata traha pintura den kuiba?",
-      "source": "IMG20260707205920.jpg",
-      "grade": "6",
-      "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
       "pa": "Dikon henden ta bisti peluka awendia?",
       "source": "IMG20260707211052.jpg",
       "grade": "3",
@@ -14501,13 +14054,6 @@
       "type": "reading"
     },
     {
-      "pa": "Dikon Liliana a keda wa Urvin strafa?",
-      "source": "IMG20260707210952.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
       "pa": "Dikon Maite ta sinti tristu ku e ta skól?",
       "source": "IMG20260707204119.jpg",
       "grade": "3",
@@ -14527,13 +14073,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "question"
-    },
-    {
-      "pa": "Dikon mestre a tuma e medidá é?",
-      "source": "IMG20260707211033.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
     },
     {
       "pa": "Dikon mi no por skucha e lanta di la?",
@@ -14683,13 +14222,6 @@
       "type": "reading"
     },
     {
-      "pa": "Dikon tabata bisti peluka den siglo 18 na Europa?",
-      "source": "IMG20260707211054.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Dikon tabata pinta e kabé pretu?",
       "source": "IMG20260707211057.jpg",
       "grade": "3",
@@ -14725,24 +14257,10 @@
       "type": "comprehension"
     },
     {
-      "pa": "Dikon Toyotama meser a bai laman bek?",
-      "source": "IMG20260707211039.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
       "pa": "Dikon Toyotami a mester di hasi un yuchí?",
       "source": "IMG20260707210604.jpg",
       "grade": "3",
       "section": "Mi por lesa",
-      "type": "comprehension"
-    },
-    {
-      "pa": "Dikon tres mobiu dikon Ravi no tabata pustu su tabou?",
-      "source": "IMG20260707210920.jpg",
-      "grade": "3",
-      "section": "comprehension",
       "type": "comprehension"
     },
     {
@@ -14765,13 +14283,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "question"
-    },
-    {
-      "pa": "Dikón tur para den hòltá eèkstá asina?",
-      "source": "IMG20260707210647.jpg",
-      "grade": "3",
-      "section": "Skucha i papia",
-      "type": "comprehension"
     },
     {
       "pa": "Dikon un hende no por miri ku selva di Australia mas?",
@@ -14947,13 +14458,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Dit kan helpen om de leerlingen te motiveren.",
-      "source": "IMG20260709152210.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Dividí moda ta kambia munchu mas iñele adivina kompará ku ántes?",
@@ -15446,13 +14950,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Duna e kombersashon lok'tan biba den laman.",
-      "source": "IMG20260709151834.jpg",
-      "grade": "unknown",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Duna e les ta e leksion ku e muchanan.",
       "source": "IMG20260709151557.jpg",
       "grade": "unknown",
@@ -15682,13 +15179,6 @@
       "grade": "3",
       "section": "methodology",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "Durante algun siman na nabegá simi mirá.",
-      "source": "IMG20260707201851.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Durante di aña tin varios fiesta.",
@@ -16720,13 +16210,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "E alumno wak e plachin den maske",
-      "source": "IMG20260709152218.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "E alumno wake e plachinan den nan.",
       "source": "IMG20260709152044.jpg",
       "grade": "unknown",
@@ -16937,13 +16420,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "E bai traha kartun, den kua figura pintá un kóntinu.",
-      "source": "IMG20260707203640.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E baile di samba ta kuminsá for di Brasil.",
       "source": "IMG20260707210257.jpg",
       "grade": "3",
@@ -16998,13 +16474,6 @@
       "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "E baiskel tin mas moderno tin akinan.",
-      "source": "IMG20260707203757.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
     },
     {
       "pa": "E balunan e ta bini pa e ke pa supre di e selva.",
@@ -17180,13 +16649,6 @@
       "grade": "3",
       "section": "vocabulary",
       "type": "conversation"
-    },
-    {
-      "pa": "E bishiña a bai hasha biba den leku Afrika.",
-      "source": "IMG20260707202019.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "E bisi ku ta bisi un bisi, pa nan ta bisi un shimi kolorido i un biba nan tanto pa asuntó ku ta bisi.",
@@ -17544,13 +17006,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "comprehension"
-    },
-    {
-      "pa": "E deskribí plachi bai Anka i yega.",
-      "source": "IMG20260709151513.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "lesson_plan"
     },
     {
       "pa": "E destruktór pa defénsor",
@@ -17931,13 +17386,6 @@
       "type": "reading"
     },
     {
-      "pa": "E hende mùhen tabata pelika pendenando un peluka tabata peluka.",
-      "source": "IMG20260707211054.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E hendenan ta keda den un otro grandí ku ta bini.",
       "source": "IMG20260707203604.jpg",
       "grade": "3",
@@ -18155,13 +17603,6 @@
       "type": "conversation"
     },
     {
-      "pa": "E katibunan mester a traha den ...",
-      "source": "IMG20260707202148.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E ke ròbe bèk Hispaniola.",
       "source": "IMG20260707201933.jpg",
       "grade": "6",
@@ -18169,22 +17610,8 @@
       "type": "reading"
     },
     {
-      "pa": "e keda - Pero - un mèis - monopoli - mashá gustá.",
-      "source": "IMG20260707210104.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E keda bisi di e bisi di Su Majestá.",
       "source": "IMG20260707203612.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "E ken tabata pinta e kabei pretu?",
-      "source": "IMG20260707211052.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -19156,13 +18583,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "E muchanan ken a yega formulario nechi sin erte un.",
-      "source": "IMG20260709152037.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "methodology"
-    },
-    {
       "pa": "E muchanan ku a ven na e bai un formulario.",
       "source": "IMG20260709152037.jpg",
       "grade": "6",
@@ -19231,13 +18651,6 @@
       "grade": "3",
       "section": "vocabulary",
       "type": "conversation"
-    },
-    {
-      "pa": "E n trònchi tin tentalaria, kachó i djente kachó.",
-      "source": "IMG20260707205555.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "E nan a inènti i a kuminsá skibi riba papel?",
@@ -19758,13 +19171,6 @@
       "type": "conversation"
     },
     {
-      "pa": "E piská tin strepi pretu vertikal riba un kurpa koló ká.",
-      "source": "IMG20260707202405.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E piskadó ta masha rabia.",
       "source": "IMG20260707202350.jpg",
       "grade": "3",
@@ -19989,13 +19395,6 @@
       "type": "reading"
     },
     {
-      "pa": "E primer baiskel inventá tabata esun k'ana.",
-      "source": "IMG20260707203755.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E primun a bèrch na e pretu na nos konèchi i tin.",
       "source": "IMG20260707202533.jpg",
       "grade": "3",
@@ -20022,13 +19421,6 @@
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "E pròmè baiskel inventá tabata e baiskel.",
-      "source": "IMG20260707203757.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
     },
     {
       "pa": "E prome habitante di Mèxiko ta indiano.",
@@ -20388,13 +19780,6 @@
       "type": "conversation"
     },
     {
-      "pa": "E sima kaminda su mama tabata traha.",
-      "source": "IMG20260707210945.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E siman aki nos ta papia di Indonesia i e kultura indonesiano.",
       "source": "IMG20260707210549.jpg",
       "grade": "3",
@@ -20561,13 +19946,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "E strea tabata apreisa loke Koyote a hasi?",
-      "source": "IMG20260707210115.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
     },
     {
       "pa": "E studio di sinema, Universal Pictures, a pidi Walt pa krea un figura ku Oswald.",
@@ -24616,13 +23994,6 @@
       "type": "reading"
     },
     {
-      "pa": "E tabata bisti peluka den siglo 18 na?",
-      "source": "IMG20260707211052.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "E tabata di kòrta di e skuchi e keda di un bòm.",
       "source": "IMG20260707210915.jpg",
       "grade": "3",
@@ -24642,13 +24013,6 @@
       "grade": "3",
       "section": "other",
       "type": "conversation"
-    },
-    {
-      "pa": "E tabata feita den siglo 18 na Europa?",
-      "source": "IMG20260707210734.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
     },
     {
       "pa": "E tabata grita pa e koyote ta biba na un bushi ku ta strea di bushi tur un mundu di e strea ku Koyote tabata pasa.",
@@ -24719,13 +24083,6 @@
       "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "E tabata neger, i e tabata lité.",
-      "source": "IMG20260707203757.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
     },
     {
       "pa": "E tabata perkura di henden tabata e nòmber di e hèk.",
@@ -25006,20 +24363,6 @@
       "grade": "3",
       "section": "other",
       "type": "conversation"
-    },
-    {
-      "pa": "E tin pluma presioso koló pretu lombrá.",
-      "source": "IMG20260707205406.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "E tin pluma prèssoso koló pretu lombrá.",
-      "source": "IMG20260707205358.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "E tin un emperador ku le gusta.",
@@ -25323,23 +24666,9 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "El a baiha riba kamel den un ...",
-      "source": "IMG20260707202003.jpg",
-      "grade": "6",
-      "section": "vocabulary",
-      "type": "conversation"
-    },
-    {
       "pa": "El a traha un tapet di strepi di zebra.",
       "source": "IMG20260707204014.jpg",
       "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "El alumno debe comprender el texto y relacionar las palabras.",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -25349,13 +24678,6 @@
       "grade": "4",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "El alumno puede participar en la actividad.",
-      "source": "IMG20260709151907.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "type": "conversation"
     },
     {
       "pa": "El alumno ta amplía i profundi su vokabulario.",
@@ -25764,13 +25086,6 @@
       "type": "reading"
     },
     {
-      "pa": "Esei e biai de regreso a duna kás kuater luna.",
-      "source": "IMG20260707201959.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Esei ke mester ku India a bini di Portugal.",
       "source": "IMG20260707201959.jpg",
       "grade": "3",
@@ -25900,13 +25215,6 @@
       "pa": "Eska i dibertí palabra ku tin abèr.",
       "source": "IMG20260707210141.jpg",
       "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Eski'r, bolo, mangú i hopi otro hapones ...",
-      "source": "IMG20260707210613.jpg",
-      "grade": "4",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -26982,25 +26290,11 @@
       "type": "methodology"
     },
     {
-      "pa": "Finalmente, e tin punta Nadir kuant'or e vega.",
-      "source": "IMG20260707205705.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Flamingo gusta keda den sulu.",
       "source": "IMG20260707205726.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Flamingo gusta kome krefi un likit hunter dia.",
-      "source": "IMG20260707205804.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
     },
     {
       "pa": "Fleki di idioma C2, página 164-165",
@@ -27173,20 +26467,6 @@
     {
       "pa": "Ga Korek i erorran",
       "source": "IMG20260707210328.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Gaya e galina, Moki e moriki i Bongo e kachó.",
-      "source": "IMG20260707205358.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Gaya e galina, Mòki i morku i Bingo e kachó.",
-      "source": "IMG20260707205406.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -27528,20 +26808,6 @@
       "type": "reading"
     },
     {
-      "pa": "Hende a traha kas den tiger su",
-      "source": "IMG20260707202515.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
-    },
-    {
-      "pa": "Hende a traha kas den tiger su.",
-      "source": "IMG20260707202515.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Hendé e inventa eskritura?",
       "source": "IMG20260707211003.jpg",
       "grade": "3",
@@ -27717,20 +26983,6 @@
       "type": "reading"
     },
     {
-      "pa": "Hende tabata laga kuminda fresku akí den e frìshidèr.",
-      "source": "IMG20260707205830.jpg",
-      "grade": "6",
-      "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
-      "pa": "Hende tabata laga kuminda fresku akí den frìshidèr.",
-      "source": "IMG20260707205830.jpg",
-      "grade": "6",
-      "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
       "pa": "Hende tabata trestia un loke ta bria stima.",
       "source": "IMG20260707205653.jpg",
       "grade": "3",
@@ -27813,13 +27065,6 @@
       "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Hinka un tomati chèrè riba e snèntwich.",
-      "source": "IMG20260707205441.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
     },
     {
       "pa": "Hinta un snèchi di pan ku manteka.",
@@ -27957,13 +27202,6 @@
     {
       "pa": "Hòmber i hende mester ta bini den kabé, i depas bisti un peluka.",
       "source": "IMG20260707211054.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Hopi a pasa hendan den tabata frishier.",
-      "source": "IMG20260707203916.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -28158,20 +27396,6 @@
       "type": "reading"
     },
     {
-      "pa": "Hopi tempu pasá hendenan no tabatin sen na kumpar kós.",
-      "source": "IMG20260707203949.jpg",
-      "grade": "3",
-      "section": "Skucha i papia",
-      "type": "conversation"
-    },
-    {
-      "pa": "Hopi tempu pasá hendenan no tabatin sep na kumprá kos.",
-      "source": "IMG20260707203957.jpg",
-      "grade": "3",
-      "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
       "pa": "Hopi tempu pasa na...",
       "source": "IMG20260707202036.jpg",
       "grade": "3",
@@ -28214,13 +27438,6 @@
       "type": "reading"
     },
     {
-      "pa": "Hopi, hopi a pasa yá tabatin plancha.",
-      "source": "IMG20260707203924.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Hopi, hopi a pasa yé hende di nechi.",
       "source": "IMG20260707205506.jpg",
       "grade": "3",
@@ -28242,20 +27459,6 @@
       "type": "reading"
     },
     {
-      "pa": "Hopí, hopi tempu pasá no tabatin supermercado.",
-      "source": "IMG20260707205338.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
-    },
-    {
-      "pa": "Hopí, hopí tempu pasá no tabatin supermercado.",
-      "source": "IMG20260707205328.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
-    },
-    {
       "pa": "Hopi, hopi tempu pasa tabatin riba nos isla.",
       "source": "IMG20260707204259.jpg",
       "grade": "3",
@@ -28266,13 +27469,6 @@
       "pa": "hòreka",
       "source": "IMG20260707205851.jpg",
       "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Hori tempu pasa na barbulèt hel, un barbulèt bieu na barbulèt ros tabata biba riba e mas den selva trópikal.",
-      "source": "IMG20260707210504.jpg",
-      "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -28462,13 +27658,6 @@
       "pa": "I ta triki.",
       "source": "IMG20260707210411.jpg",
       "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "i un karta na rei Kubai Khan.",
-      "source": "IMG20260707202007.jpg",
-      "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -28935,13 +28124,6 @@
       "type": "reading"
     },
     {
-      "pa": "Kaba tra e frase frase tokante ak aparato.",
-      "source": "IMG20260707205903.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Kaba un nan tabata gulé.",
       "source": "IMG20260707205314.jpg",
       "grade": "3",
@@ -29024,20 +28206,6 @@
       "grade": "6",
       "section": "Bo a komprendé",
       "type": "question"
-    },
-    {
-      "pa": "Kada pais tabatin su kultura, idioma, animál i matanan.",
-      "source": "IMG20260707201955.jpg",
-      "grade": "3",
-      "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
-      "pa": "Kada pais tin su mes kuminda tipiko.",
-      "source": "IMG20260707203708.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Kada un beso ta haña un frase.",
@@ -29348,13 +28516,6 @@
       "type": "reading"
     },
     {
-      "pa": "Ke e alumno a hasi e tare?",
-      "source": "IMG20260709152259.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Ke e alumno ta hasi e tare?",
       "source": "IMG20260709152259.jpg",
       "grade": "6",
@@ -29381,13 +28542,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Ken a hiba Ravi skòl e promé dia?",
-      "source": "IMG20260707210920.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
     },
     {
       "pa": "Ken a suginente...",
@@ -29453,13 +28607,6 @@
       "type": "comprehension"
     },
     {
-      "pa": "Ken tabata bisti peluka den siglo 18 na?",
-      "source": "IMG20260707211052.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
       "pa": "Ken tabata laba paña pa man?",
       "source": "IMG20260707210037.jpg",
       "grade": "6",
@@ -29472,13 +28619,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "question"
-    },
-    {
-      "pa": "Ken tabatin bisti peluka den sjòlo 18 na Europa?",
-      "source": "IMG20260707211057.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Kena yega di bai Seru di Kristofél?",
@@ -29633,13 +28773,6 @@
       "grade": "unknown",
       "section": "methodology",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "Kí kome e pishi biba den e kuenta?",
-      "source": "IMG20260707210610.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Ki les kuenta ke sina nos?",
@@ -33884,13 +33017,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Kombersashon den kren\nAwe nos ta bai papia den kren tokante flakans i:\n- Ahamá.\n- Temperatúra.\n- Flakans i dushi. Tur hende ta planiá.\n- E tempo ta biba flakans pa riba e bió i.\n- E flakans ta biba pa krea.\n- Bo por splika e flakans.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.",
-      "source": "IMG20260707202626.jpg",
-      "grade": "3",
-      "section": "Regla di kòmbersashon",
-      "type": "rule"
-    },
-    {
       "pa": "Kòmbersashon den kren — Alumno ta ekspresá su mes tokanan laman i océano.",
       "source": "IMG20260709151746.jpg",
       "grade": "6",
@@ -33926,13 +33052,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Kòmè den batata kome kumindú stù despuès a kumisá frash.",
-      "source": "IMG20260707205447.jpg",
-      "grade": "3",
-      "section": "Regla di kòmbersashon",
-      "type": "rule"
-    },
-    {
       "pa": "Kome posi kosi di bon pa bo salú?",
       "source": "IMG20260707204544.jpg",
       "grade": "3",
@@ -33959,13 +33078,6 @@
       "grade": "3",
       "section": "Skucha i papia",
       "type": "conversation"
-    },
-    {
-      "pa": "Komentá un algo mas importante den un hende su bida.",
-      "source": "IMG20260707205851.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "komersial ku ta sirbi kuminda i bídida.",
@@ -34647,20 +33759,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Koni bin stòru a bai laira mesora ora Yanchi a mare e blàsnan na dje?",
-      "source": "IMG20260707210930.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
-      "pa": "Koni Yanchi a ker a bora e blàsnan?",
-      "source": "IMG20260707210930.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
       "pa": "konosé - nos hopi - wega di Kòmputer - Awendia.",
       "source": "IMG20260707210104.jpg",
       "grade": "3",
@@ -34822,13 +33920,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Kontrolá e frasnan den e orman ortografíko.",
-      "source": "IMG20260709151738.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "lesson_plan"
-    },
-    {
       "pa": "Kontrolá ku riko nan tabatin problema ku e palabranan.",
       "source": "IMG20260709151012.jpg",
       "grade": "6",
@@ -34841,13 +33932,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Kontrolá si e alumonan a yega na e palabrannan.",
-      "source": "IMG20260709152246.jpg",
-      "grade": "4",
-      "section": "Mi por lesa",
-      "type": "teacher_guide"
     },
     {
       "pa": "konversashon den kren",
@@ -35676,13 +34760,6 @@
       "type": "reading"
     },
     {
-      "pa": "Kua mo manhana a halá e zèrt?",
-      "source": "IMG20260709152252.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Kua mucha bo a mira e girá: 'Atenshon, atenshon!",
       "source": "IMG20260707202337.jpg",
       "grade": "3",
@@ -35758,13 +34835,6 @@
       "grade": "3",
       "section": "other",
       "type": "conversation"
-    },
-    {
-      "pa": "Kua piramidi Tirza si su mayoran a bishi?",
-      "source": "IMG20260707210942.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
     },
     {
       "pa": "Kua sabrá di mas?",
@@ -35877,13 +34947,6 @@
       "grade": "3",
       "section": "comprehension",
       "type": "comprehension"
-    },
-    {
-      "pa": "Kuantu aná mucha tin ora n'haña djente nobo?",
-      "source": "IMG20260707203828.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
     },
     {
       "pa": "Kuántu aña mucha tin ora nan haña djente nobo?",
@@ -36285,25 +35348,11 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Laga e alumno lesa e pròmè frase.",
-      "source": "IMG20260709151932.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "type": "lesson_plan"
-    },
-    {
       "pa": "Laga e alumno mira un somber di kalana di",
       "source": "IMG20260709152026.jpg",
       "grade": "6",
       "section": "methodology",
       "type": "methodology"
-    },
-    {
-      "pa": "Laga e alumno na bai kompleta e frasen.",
-      "source": "IMG20260709151043.jpg",
-      "grade": "unknown",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Laga e alumno na buska e palabra ku falta, di reid e frasen.",
@@ -36439,29 +35488,8 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Laga e alumno traha e frase 5h.",
-      "source": "IMG20260709151228.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Laga e alumno wak e plachinan nan página 136-137.",
       "source": "IMG20260709152016.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Laga e alumno wak e plachinan serka tareca.",
-      "source": "IMG20260709151639.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Laga e alumno wak página 154 i 155 den e libro.",
-      "source": "IMG20260709152122.jpg",
       "grade": "4",
       "section": "methodology",
       "type": "teacher_guide"
@@ -36470,20 +35498,6 @@
       "pa": "Laga e alumnonan habri nan buki na página 12.",
       "source": "IMG20260709151054.jpg",
       "grade": "unknown",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Laga e alumnonan komprá dos mucha den plaka.",
-      "source": "IMG20260709151607.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "lesson_plan"
-    },
-    {
-      "pa": "Laga e alumnonan lesa e teksto i pronóstiká diskusí.",
-      "source": "IMG20260709151554.jpg",
-      "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
     },
@@ -36516,20 +35530,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Laga e alumnonan wak plachi 1A i 1B.",
-      "source": "IMG20260709151607.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "lesson_plan"
-    },
-    {
-      "pa": "Laga e alumnonan wak trankil den aun buki.",
-      "source": "IMG20260709151554.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Laga e alumonan krea un plachi.",
       "source": "IMG20260709152329.jpg",
       "grade": "6",
@@ -36552,13 +35552,6 @@
     },
     {
       "pa": "Laga e alumonan ta yene e palabranan den e partí di e plachi.",
-      "source": "IMG20260709151012.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Laga e alumonan waka e plachinan den e tema.",
       "source": "IMG20260709151012.jpg",
       "grade": "6",
       "section": "methodology",
@@ -36595,13 +35588,6 @@
     {
       "pa": "Laga e muchanan pa deskri ku e ta eksplorá tin.",
       "source": "IMG20260709151033.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Laga e muchanan skura e tres plachián serka.",
-      "source": "IMG20260709152033.jpg",
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
@@ -36747,22 +35733,8 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Laga un alumno lesa e prome tekstu na buki.",
-      "source": "IMG20260709152355.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Laga un alumno lesa ku palabranan.",
       "source": "IMG20260709151033.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Laga un alumno na lesa e nota ba asubi.",
-      "source": "IMG20260709152113.jpg",
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
@@ -36771,13 +35743,6 @@
       "pa": "Laga un alumno skibi e frase ku ta bon skibi.",
       "source": "IMG20260709152033.jpg",
       "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Laga un alumno studia e dós plachinan.",
-      "source": "IMG20260709152355.jpg",
-      "grade": "4",
       "section": "methodology",
       "type": "teacher_guide"
     },
@@ -36880,13 +35845,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Lamentablemente e biai de regreso no a bini manera plani.",
-      "source": "IMG20260707201959.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Lamentablemente e bisi ta un piskita chiki, e ta bisi di un bòrnan ku e ta bisi di un bòrnan.",
       "source": "IMG20260707211036.jpg",
       "grade": "3",
@@ -36927,13 +35885,6 @@
       "grade": "3",
       "section": "Bo a komprendé",
       "type": "question"
-    },
-    {
-      "pa": "Lè e frasnan i traha un pregunta serka kada frase.",
-      "source": "IMG20260707202150.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Lè s'ase bou di kada pintura.",
@@ -37069,13 +36020,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Lega e alumno na sintan den un kren.",
-      "source": "IMG20260709151551.jpg",
-      "grade": "4",
-      "section": "Skucha i papia",
-      "type": "lesson_plan"
-    },
-    {
       "pa": "Lega e alumno na un pa un pa mundu tin museo.",
       "source": "IMG20260709151551.jpg",
       "grade": "4",
@@ -37101,13 +36045,6 @@
       "source": "IMG20260709151926.jpg",
       "grade": "6",
       "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Lega e lètèr kapital den un frase.",
-      "source": "IMG20260709151613.jpg",
-      "grade": "6",
-      "section": "Skucha i papia",
       "type": "teacher_guide"
     },
     {
@@ -37223,13 +36160,6 @@
       "type": "reading"
     },
     {
-      "pa": "Lesa e deskripshon i skòhe e profeshon korèkt.",
-      "source": "IMG20260707203621.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
       "pa": "Lesa e espikashon i buska e palabra ku ta kuadra kuné.",
       "source": "IMG20260707202211.jpg",
       "grade": "3",
@@ -37286,20 +36216,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Lèsa e frase i pensa kua palabra mester yena.",
-      "source": "IMG20260707204532.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
-      "pa": "Lesa e frase i yega e palabra korekto.",
-      "source": "IMG20260707205759.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
       "pa": "Lèsa e frasen aki bota.",
       "source": "IMG20260707204532.jpg",
       "grade": "3",
@@ -37319,13 +36235,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Lesa e instrukshon serka tare na página 102.",
-      "source": "IMG20260709151826.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Lèsa e instruksion ku ta plachi serka 6i.",
@@ -37356,13 +36265,6 @@
       "type": "reading"
     },
     {
-      "pa": "Lèsa e palabranan den e siguiente hòki.",
-      "source": "IMG20260707204153.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
       "pa": "Lesa e parti di kuenta aki bou.",
       "source": "IMG20260707203855.jpg",
       "grade": "3",
@@ -37377,29 +36279,8 @@
       "type": "lesson_plan"
     },
     {
-      "pa": "Lesa e teks i komprondé e teks.",
-      "source": "IMG20260709152016.jpg",
-      "grade": "4",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Lesa e teksito kortiku aki bou.",
       "source": "IMG20260707205705.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Lesa e tekst i kontestá e preguntanan.",
-      "source": "IMG20260707210156.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Lesa e tekstu i kontésté e preguntanan.",
-      "source": "IMG20260707210652.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -37482,13 +36363,6 @@
       "type": "question"
     },
     {
-      "pa": "Lese e frase i pensa kua palabra mester yena.",
-      "source": "IMG20260707204328.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Lese e frasen akí bon i ta pregunta di kada frase. Hasi asina.",
       "source": "IMG20260707210751.jpg",
       "grade": "3",
@@ -37508,13 +36382,6 @@
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "Lese e kuenta i koré i e orá.",
-      "source": "IMG20260707202419.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Lese e parát di kuenta aki bou.",
@@ -37547,13 +36414,6 @@
     {
       "pa": "Lese e siguiente tekstu.",
       "source": "IMG20260707210546.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Lese e tekst i kontestá e preguntanan.",
-      "source": "IMG20260707205925.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -37639,13 +36499,6 @@
       "pa": "Lesu informashon i enkrako hunto ku klas.",
       "source": "IMG20260709151700.jpg",
       "grade": "3",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Libér = bishi na ser den kund.",
-      "source": "IMG20260709151639.jpg",
-      "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
     },
@@ -38063,13 +36916,6 @@
       "type": "reading"
     },
     {
-      "pa": "Maintan konvòi o tra klas yega Bándabou.",
-      "source": "IMG20260707204323.jpg",
-      "grade": "3",
-      "section": "vocabulary",
-      "type": "conversation"
-    },
-    {
       "pa": "Mair di e tripulashon a bisi un bisi ku e sorko.",
       "source": "IMG20260707201959.jpg",
       "grade": "3",
@@ -38159,13 +37005,6 @@
       "grade": "3",
       "section": "Skucha i papia",
       "type": "conversation"
-    },
-    {
-      "pa": "Makamba marinir gusta landa na par den rewa.",
-      "source": "IMG20260707202405.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Mama Abestrus ta masá kontentu ku su yunan.",
@@ -38327,13 +37166,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Mami a kumpra un kuadro den e galeria.",
-      "source": "IMG20260707205659.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
     },
     {
       "pa": "Mami di pa di asha di fruta fresku?",
@@ -38518,20 +37350,6 @@
       "type": "reading"
     },
     {
-      "pa": "Marco Polo a biba bai un ...",
-      "source": "IMG20260707202003.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Marco Polo a biba hunto i a hende i kàmel.",
-      "source": "IMG20260707202007.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Marco Polo a bini ku e frase ku e palabra.",
       "source": "IMG20260709151258.jpg",
       "grade": "6",
@@ -38591,13 +37409,6 @@
       "pa": "Mas bo mi ta invitá bo pa bisi.",
       "source": "IMG20260707210954.jpg",
       "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Màs despues e ekspresion a inventá perkament.",
-      "source": "IMG20260707210959.jpg",
-      "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -38721,13 +37532,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Masha no kada palabra den e skref.",
-      "source": "IMG20260709152101.jpg",
-      "grade": "3",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Masha òf hopi?",
       "source": "IMG20260707205938.jpg",
       "grade": "3",
@@ -38768,13 +37572,6 @@
       "grade": "3",
       "section": "Regla di kòmbersashon",
       "type": "rule"
-    },
-    {
-      "pa": "Master teni kuadra e selvana na Australia.",
-      "source": "IMG20260707210512.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
     },
     {
       "pa": "Mat chiki ku nan tabata traha di",
@@ -38973,13 +37770,6 @@
       "type": "reading"
     },
     {
-      "pa": "Mener lesina a duna tur un tarek na kas.",
-      "source": "IMG20260707204241.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "mèner ta hasi awor.",
       "source": "IMG20260707204111.jpg",
       "grade": "3",
@@ -39143,13 +37933,6 @@
     {
       "pa": "merikano",
       "source": "IMG20260707202502.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Meskos tur Rubina su soño a bai.",
-      "source": "IMG20260707205648.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -40289,20 +39072,6 @@
       "type": "reading"
     },
     {
-      "pa": "Museo Kurá Hulanda tin un kolekshon afrikan amplio, bunitu i impreshonante.",
-      "source": "IMG20260707202150.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
-      "pa": "Museo Kurá Hulanda tin un kolekshon afrikan bunitu i impreshonante.",
-      "source": "IMG20260707202150.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
       "pa": "Museo Marítimo",
       "source": "IMG20260709151722.jpg",
       "grade": "4",
@@ -40394,20 +39163,6 @@
       "type": "question"
     },
     {
-      "pa": "Na 1499 Alonso i su tripulashon tabata buska oro i e islanan.",
-      "source": "IMG20260707201900.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Na 1800s un hende, Oliver Evans, a diseni e primer frìshidèr.",
-      "source": "IMG20260707205830.jpg",
-      "grade": "6",
-      "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
       "pa": "Na 1920, e bisti ta bisti shims di binta.",
       "source": "IMG20260707210746.jpg",
       "grade": "3",
@@ -40450,32 +39205,11 @@
       "type": "reading"
     },
     {
-      "pa": "Na anda Ravi tabata biba un aña pasa?",
-      "source": "IMG20260707210920.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
       "pa": "Na apropos di internashonal José Martí na un puru biba, mi por komprendé ku e ta un buki di historia di un papa di e akshon.",
       "source": "IMG20260707202637.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Na Australia tin un selva tropical masha grand.",
-      "source": "IMG20260707210508.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Na baha nanka a hasi nómber ora.",
-      "source": "IMG20260709151122.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Na Bali, un biali indones ku ta forma parti di un biali.",
@@ -40525,13 +39259,6 @@
       "grade": "3",
       "section": "vocabulary",
       "type": "conversation"
-    },
-    {
-      "pa": "Na Boneiru i hopi otro isla tambe.",
-      "source": "IMG20260707205718.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Na Boneiru lora ta trata nèshí, komo na Bònesi.",
@@ -40649,13 +39376,6 @@
       "pa": "Na deti di diskeutèr ahe e muchanan por a halta un otro nòmber, pero esé i tabata pa semper.",
       "source": "IMG20260707210850.jpg",
       "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Na e aña 1984, e instituto a kuminsá un investigashon.",
-      "source": "IMG20260707202204.jpg",
-      "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -40892,13 +39612,6 @@
     },
     {
       "pa": "Na Italia e ta escucha, komponé i toka muzik.",
-      "source": "IMG20260707210546.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Na Italia e talianonan kome mas ekstenso.",
       "source": "IMG20260707210546.jpg",
       "grade": "3",
       "section": "Mi por lesa",
@@ -41262,13 +39975,6 @@
       "type": "reading"
     },
     {
-      "pa": "Na siglo 20 hopi italiano a bai biba na Merka.",
-      "source": "IMG20260707210538.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "comprehension"
-    },
-    {
       "pa": "Na siman tera nos ta mira un palabra aña.",
       "source": "IMG20260707202150.jpg",
       "grade": "3",
@@ -41306,20 +40012,6 @@
     {
       "pa": "Na ta planiá pa e buki di historia di un papa di e akshon.",
       "source": "IMG20260707202637.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Na tabata un barbulèt bieu i un barbulèt ros.",
-      "source": "IMG20260707210504.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Na tabata yama e restoran un termopólio.",
-      "source": "IMG20260707205845.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -41420,20 +40112,6 @@
       "source": "IMG20260707210408.jpg",
       "grade": "3",
       "section": "Mi por lesa",
-      "type": "comprehension"
-    },
-    {
-      "pa": "Na unda Marcelino a bai busca mas informashon?",
-      "source": "IMG20260707210535.jpg",
-      "grade": "3",
-      "section": "Skucha i papia",
-      "type": "comprehension"
-    },
-    {
-      "pa": "Na unda Marcelino a bai buska mas informashon?",
-      "source": "IMG20260707211033.jpg",
-      "grade": "3",
-      "section": "comprehension",
       "type": "comprehension"
     },
     {
@@ -42172,28 +40850,7 @@
       "type": "reading"
     },
     {
-      "pa": "Nèt ora e ke habrí kashi ...",
-      "source": "IMG20260707203855.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Ni hopi aña pa a pasa hendena no tabatin frishider.",
-      "source": "IMG20260707203920.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Ni tampoko no tabata kuminda na fresku.",
-      "source": "IMG20260707203916.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Ni tampoko no tabatin kuminda na bleki.",
       "source": "IMG20260707203920.jpg",
       "grade": "3",
       "section": "Mi por lesa",
@@ -42289,13 +40946,6 @@
       "grade": "6",
       "section": "Skucha i papia",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "Nin kaminda e tabata mira e wak.",
-      "source": "IMG20260707211036.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Ninun hende ta e siña e.",
@@ -42928,13 +41578,6 @@
       "type": "comprehension"
     },
     {
-      "pa": "Nu sa kabe k'asi i argantina tin kolóbloko.",
-      "source": "IMG20260707205358.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Numeral kardina i ordinal",
       "source": "IMG20260707210132.jpg",
       "grade": "3",
@@ -43024,13 +41667,6 @@
       "grade": "4",
       "section": "methodology",
       "type": "teacher_guide"
-    },
-    {
-      "pa": "Oh, amiga Yuana, últmo tempu no 'nò.",
-      "source": "IMG20260707210954.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
     },
     {
       "pa": "Olo e kategoria tabata?",
@@ -43292,13 +41928,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Ora e mestre a krusa kaya e tabata habri e tapiet abou i krusa 'i'.",
-      "source": "IMG20260707204014.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Ora e moda di bisti peluka a pasa pa pasado, e difrente estilonan di kabé a kambia.",
       "source": "IMG20260707211054.jpg",
       "grade": "3",
@@ -43525,13 +42154,6 @@
     {
       "pa": "Otro siman djamar nos ta bisi keiru tanchi Lea.",
       "source": "IMG20260707202150.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "P'esé den un kuenta tin un sekunsia.",
-      "source": "IMG20260707205705.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -44258,13 +42880,6 @@
       "type": "reading"
     },
     {
-      "pa": "Pero den biaha solamente bolente e buki.",
-      "source": "IMG20260707202728.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Pero den biaha solamente ku e hendenan ta faki.",
       "source": "IMG20260707203604.jpg",
       "grade": "3",
@@ -44293,13 +42908,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Pero e mes anochi algu teribel a pasa.",
-      "source": "IMG20260707201933.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Pero e no biba tera ku bichi, e ta kiki Kali a mira?",
       "source": "IMG20260707205358.jpg",
       "grade": "3",
@@ -44309,13 +42917,6 @@
     {
       "pa": "Però e no e bòlta tera pa un bichi, su kó ta kiki Kali a mira?",
       "source": "IMG20260707205406.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Pero e peluka tabata un funsion pratikó tambe.",
-      "source": "IMG20260707211052.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -44433,13 +43034,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Pérò na 1990 e toren tabá bisi un bisi.",
-      "source": "IMG20260707211029.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Pero net a momentu ku mama ta basha zeta den de, portá di baña to habri.",
       "source": "IMG20260707203818.jpg",
       "grade": "3",
@@ -44450,13 +43044,6 @@
       "pa": "Pero no ta nèna ku ta biba.",
       "source": "IMG20260707211018.jpg",
       "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Pero ora Cristóbal a yega, e a spanta mashi.",
-      "source": "IMG20260707201933.jpg",
-      "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -44625,20 +43212,6 @@
       "pa": "Pesei e a krea un figura ku ta Mickey Mouse.",
       "source": "IMG20260707203640.jpg",
       "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Pesei mes masha hopi bestia a masha gusta e mangel.",
-      "source": "IMG20260707202242.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Pesei Niko hopi e biba den un leku peligroso.",
-      "source": "IMG20260707202019.jpg",
-      "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
     },
@@ -44951,13 +43524,6 @@
       "type": "reading"
     },
     {
-      "pa": "Pinta un flora of un prichiki riba un blachi grandi.",
-      "source": "IMG20260707202502.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Pinta un plachi na plachi di kiko na plaka.",
       "source": "IMG20260709151607.jpg",
       "grade": "6",
@@ -45161,13 +43727,6 @@
       "type": "reading"
     },
     {
-      "pa": "Plural: dos — den dos — separá den dos.",
-      "source": "IMG20260707202211.jpg",
-      "grade": "3",
-      "section": "Regla di kòmbersashon",
-      "type": "rule"
-    },
-    {
       "pa": "Pochi den awi, anka, i pori, kóki, bai ku buki, e buki ta bini bon",
       "source": "IMG20260709151621.jpg",
       "grade": "6",
@@ -45245,13 +43804,6 @@
       "type": "reading"
     },
     {
-      "pa": "Pokopoko mas i mas hende a deskubrí xocolati.",
-      "source": "IMG20260707205540.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Pokopoko moda di trahè di bano a kambía.",
       "source": "IMG20260707210702.jpg",
       "grade": "3",
@@ -45259,29 +43811,8 @@
       "type": "reading"
     },
     {
-      "pa": "Pokopoko moda di trahè di bano a kambía. Medio siglo 19 hende tabata bisi di landa den un sorto di kamisa luru. Kòmbersashon den kren ta bisi di landa ku ta bisi di bano. Riba nan tabata bisi un tip di bano.",
-      "source": "IMG20260707210702.jpg",
-      "grade": "3",
-      "section": "Regla di kòmbersashon",
-      "type": "rule"
-    },
-    {
-      "pa": "Polis, pilot, stewardes, sorker, bisi, bisi, bisi.",
-      "source": "IMG20260707210632.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Polo Nort i Antártika",
       "source": "IMG20260707202412.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Pòlske e bole ba hinka mas frùt den skonde.",
-      "source": "IMG20260707210954.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -45341,13 +43872,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Pone un muchanan kan non lo pone buki den.",
-      "source": "IMG20260709151826.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Pone un plachi ku biko ku intenshon di tare.",
@@ -45770,13 +44294,6 @@
       "type": "reading"
     },
     {
-      "pa": "Problèma restante a keda den e cupcake a keda.",
-      "source": "IMG20260707205915.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "produkto di limpia",
       "source": "IMG20260709152252.jpg",
       "grade": "6",
@@ -46008,13 +44525,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Promé tu lo lage e alumnonan wake e plachi.",
-      "source": "IMG20260709152252.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Promé tur hende ta atrabou ku e fió enkantá di dispuér ku Aram pono un plasa piesa, tan lóbido di kiki e kóntak.",
       "source": "IMG20260707210156.jpg",
       "grade": "3",
@@ -46171,13 +44681,6 @@
     {
       "pa": "Punta: E ta dishe ku Marco Polo ta un persona ku a bini di un otro pais.",
       "source": "IMG20260709151421.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "Puntcha un pregunta na un haña e tera?",
-      "source": "IMG20260709151033.jpg",
       "grade": "6",
       "section": "methodology",
       "type": "teacher_guide"
@@ -46439,13 +44942,6 @@
       "source": "IMG20260707204343.jpg",
       "grade": "3",
       "section": "Skucha i papia",
-      "type": "reading"
-    },
-    {
-      "pa": "Raton djancho gusta biba den kueba i den edifisio bashí manera ...",
-      "source": "IMG20260707204355.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
       "type": "reading"
     },
     {
@@ -46799,13 +45295,6 @@
       "type": "rule"
     },
     {
-      "pa": "Rei Kublai Khan a duna Marco un ...",
-      "source": "IMG20260707202003.jpg",
-      "grade": "6",
-      "section": "vocabulary",
-      "type": "conversation"
-    },
-    {
       "pa": "Rei Manuel a bisi ku e spekular di Portugal.",
       "source": "IMG20260707201959.jpg",
       "grade": "3",
@@ -46892,13 +45381,6 @@
     {
       "pa": "Restorant E TRIT tin plató masha dushi, bishi pa kuminda kriyó.",
       "source": "IMG20260707205915.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Restorant E TRIT tin un sorpresa kulinario!",
-      "source": "IMG20260707205903.jpg",
       "grade": "6",
       "section": "Mi por lesa",
       "type": "reading"
@@ -47254,13 +45736,6 @@
       "type": "reading"
     },
     {
-      "pa": "Riba un kèntro tabata Teri i Ori.",
-      "source": "IMG20260707210604.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "comprehension"
-    },
-    {
       "pa": "Riba un...",
       "source": "IMG20260707202706.jpg",
       "grade": "3",
@@ -47390,13 +45865,6 @@
       "pa": "Runtun den e pregunta.",
       "source": "IMG20260709152305.jpg",
       "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
-      "pa": "S i d u c h a i p a p i a",
-      "source": "IMG20260709152205.jpg",
-      "grade": "unknown",
       "section": "methodology",
       "type": "teacher_guide"
     },
@@ -47667,13 +46135,6 @@
       "type": "reading"
     },
     {
-      "pa": "Sèmper henda a t'uské kome algu stù.",
-      "source": "IMG20260707205447.jpg",
-      "grade": "3",
-      "section": "Regla di kòmbersashon",
-      "type": "rule"
-    },
-    {
       "pa": "Semper hende tabata kurioso pa sa si tin mas pais na mundu ku nan no konosé akinda.",
       "source": "IMG20260709150919.jpg",
       "grade": "6",
@@ -47788,13 +46249,6 @@
     {
       "pa": "Serun di Andrès ku ta bisi den mundo.",
       "source": "IMG20260707204422.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Sheila a pasa un fakan si tremendo na Kòrsou.",
-      "source": "IMG20260707205636.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -48220,25 +46674,11 @@
       "type": "rule"
     },
     {
-      "pa": "Si Pone e palabran den e rei korekto",
-      "source": "IMG20260709151421.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Si Pone e palabranan na lugá.",
       "source": "IMG20260707204226.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Si pone p alabr an den e rëi korekto",
-      "source": "IMG20260709151252.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Si por hasi un otro bisi, leki esaki, ekshakmente sabata forma e problema!",
@@ -48612,13 +47052,6 @@
       "type": "conversation"
     },
     {
-      "pa": "Skib i nombra e bisi den e skref.",
-      "source": "IMG20260707201911.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
       "pa": "Skiba e frase bieu.",
       "source": "IMG20260707205653.jpg",
       "grade": "3",
@@ -48843,13 +47276,6 @@
       "type": "reading"
     },
     {
-      "pa": "Skibi e manera di ku e forma di un kombinashon di plachi ku leer.",
-      "source": "IMG20260709151536.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "methodology"
-    },
-    {
       "pa": "Skibi e nòmber di e frase ku e palabra ku ta skèr.",
       "source": "IMG20260707210024.jpg",
       "grade": "3",
@@ -48916,20 +47342,6 @@
       "pa": "Skibi e palabra kòrèkto den bo skref.",
       "source": "IMG20260707205341.jpg",
       "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
-      "pa": "Skibi e palabra korekto den e skref.",
-      "source": "IMG20260707204153.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
-      "pa": "Skibi e palabra korrekto den e skref.",
-      "source": "IMG20260707204538.jpg",
-      "grade": "4",
       "section": "other",
       "type": "conversation"
     },
@@ -49075,13 +47487,6 @@
     },
     {
       "pa": "Skibi ko e ta prepara e sèntrwich.",
-      "source": "IMG20260707205441.jpg",
-      "grade": "3",
-      "section": "Bo a komprendé",
-      "type": "question"
-    },
-    {
-      "pa": "Skibi ko Karina mester tin e prèpará e sèntrwich.",
       "source": "IMG20260707205441.jpg",
       "grade": "3",
       "section": "Bo a komprendé",
@@ -49613,13 +48018,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Spika e diferente entre nasi puti i",
-      "source": "IMG20260707210556.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Spiká e muchanan ku den kuenta di e kuenta.",
       "source": "IMG20260709150947.jpg",
       "grade": "6",
@@ -50101,13 +48499,6 @@
       "grade": "6",
       "section": "methodology",
       "type": "lesson_plan"
-    },
-    {
-      "pa": "Súmnan no tin un rei ó reina.",
-      "source": "IMG20260707203616.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "conversation"
     },
     {
       "pa": "Supe flecha veneno.",
@@ -50866,13 +49257,6 @@
       "type": "reading"
     },
     {
-      "pa": "Tabatin burka brùka grandi e burka i tabata bini den bènèndò bandoná bòrku.",
-      "source": "IMG20260707201933.jpg",
-      "grade": "6",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Tabatin diferensia di preshenta na algun plachi?",
       "source": "IMG20260709151639.jpg",
       "grade": "6",
@@ -50903,13 +49287,6 @@
     {
       "pa": "tama alves",
       "source": "IMG20260707210328.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Tamba, bèk, chukulá, dròp, góm, blòblip, marmelada, peperment, spek, karamel, i bobo otro sorto mas.",
-      "source": "IMG20260707205500.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -51111,13 +49488,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Tema 10 Ban biahá • siman 3",
-      "source": "IMG20260709152358.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "lesson_plan"
-    },
-    {
       "pa": "Tema 10 Fakansi riba nos isla",
       "source": "IMG20260707205615.jpg",
       "grade": "3",
@@ -51174,13 +49544,6 @@
       "type": "teacher_guide"
     },
     {
-      "pa": "Tema 6 | Eksplorá | siman 6",
-      "source": "IMG20260709151304.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
-    },
-    {
       "pa": "Tema 6 Invento",
       "source": "IMG20260707203822.jpg",
       "grade": "3",
@@ -51225,13 +49588,6 @@
     {
       "pa": "Tema 7 Poesia",
       "source": "IMG20260707204036.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Tema 8 Bida den kueba i den seru",
-      "source": "IMG20260707204519.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -51622,13 +49978,6 @@
       "type": "reading"
     },
     {
-      "pa": "Tín poema prèti i tin poema serio.",
-      "source": "IMG20260707204119.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Tin poko ku por hasi di un bisi poesia ku forma spesial.",
       "source": "IMG20260707204201.jpg",
       "grade": "3",
@@ -51743,13 +50092,6 @@
     {
       "pa": "Tirza, ta keda di un bisi di dios i asim por introduci di un mama.",
       "source": "IMG20260707210939.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Tog Nahele i Hinto tabata sufri hambre.",
-      "source": "IMG20260707204349.jpg",
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
@@ -51944,13 +50286,6 @@
       "type": "reading"
     },
     {
-      "pa": "Trankil e a bota e kanta rón.",
-      "source": "IMG20260707205406.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Trankil i e sigui pa 'Kaimán', e asina.",
       "source": "IMG20260707210553.jpg",
       "grade": "3",
@@ -52105,13 +50440,6 @@
       "type": "reading"
     },
     {
-      "pa": "Tur kaminda tabata biba, e tabata den muzik.",
-      "source": "IMG20260707210945.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "Tur kaminda tabata pidi di awa grandi.",
       "source": "IMG20260707204349.jpg",
       "grade": "3",
@@ -52215,13 +50543,6 @@
       "grade": "6",
       "section": "methodology",
       "type": "conversation"
-    },
-    {
-      "pa": "Uitleg voor de leraar:",
-      "source": "IMG20260709152210.jpg",
-      "grade": "6",
-      "section": "methodology",
-      "type": "teacher_guide"
     },
     {
       "pa": "Un ...",
@@ -53260,13 +51581,6 @@
       "type": "comprehension"
     },
     {
-      "pa": "Un piloto a yudé bàba su stùl.",
-      "source": "IMG20260707210930.jpg",
-      "grade": "3",
-      "section": "comprehension",
-      "type": "comprehension"
-    },
-    {
       "pa": "Un piskíngu no por biba.",
       "source": "IMG20260707202412.jpg",
       "grade": "3",
@@ -53356,13 +51670,6 @@
       "grade": "3",
       "section": "Mi por lesa",
       "type": "reading"
-    },
-    {
-      "pa": "Un responsabel a preshenta e museo i a risibí e bisitanten.",
-      "source": "IMG20260707202150.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
     },
     {
       "pa": "Un restoran ta ...",
@@ -53848,13 +52155,6 @@
       "type": "reading"
     },
     {
-      "pa": "Victoria tabata un bábán na Afrika fin.",
-      "source": "IMG20260707202032.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
       "pa": "vitamina - vitamina",
       "source": "IMG20260707203943.jpg",
       "grade": "6",
@@ -54170,20 +52470,6 @@
       "type": "rule"
     },
     {
-      "pa": "Yena e pronòmber personal den e siguiente frasen.",
-      "source": "IMG20260707210024.jpg",
-      "grade": "3",
-      "section": "Mi por lesa",
-      "type": "reading"
-    },
-    {
-      "pa": "Yena e verbo ko'rekto den kada frase.",
-      "source": "IMG20260707201911.jpg",
-      "grade": "3",
-      "section": "other",
-      "type": "conversation"
-    },
-    {
       "pa": "Yena lètèr ku falta",
       "source": "IMG20260707204153.jpg",
       "grade": "3",
@@ -54489,11 +52775,6 @@
     {
       "text": "Nos ta duna tur hende chens di papia.",
       "source": "IMG20260707202527.jpg",
-      "grade": "3"
-    },
-    {
-      "text": "Kombersashon den kren\nAwe nos ta bai papia den kren tokante flakans i:\n- Ahamá.\n- Temperatúra.\n- Flakans i dushi. Tur hende ta planiá.\n- E tempo ta biba flakans pa riba e bió i.\n- E flakans ta biba pa krea.\n- Bo por splika e flakans.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.\n- E flakans ta biba pa krea.",
-      "source": "IMG20260707202626.jpg",
       "grade": "3"
     },
     {
@@ -67446,5 +65727,6 @@
       }
     ],
     "unknown": []
-  }
+  },
+  "cleaned_at": "2026-07-13T19:22:29.124Z"
 }

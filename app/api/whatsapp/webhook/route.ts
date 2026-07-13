@@ -3,6 +3,8 @@ import OpenAI from 'openai'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { sendWhatsAppMessage, markWhatsAppMessageRead, formatWhatsAppNumber } from '@/lib/whatsapp'
 import { searchKnowledgeBaseWithFallback, buildContext, generateSystemPrompt, isCaseSpecific, detectLanguageFromText } from '@/lib/rag'
+import { ensurePapiamentuOutbound } from '@/lib/papiamentu/outbound'
+import { PA_BOOKING_CTA } from '@/lib/papiamentu/ui-copy'
 import { containsAbusiveLanguage, getAbusiveMessageTurnNote } from '@/lib/conversation-conduct'
 import { createChatCompletion } from '@/lib/openai'
 import { updateLeadScore } from '@/lib/lead-scoring'
@@ -169,7 +171,10 @@ export async function POST(request: NextRequest) {
         EN: '\n\nReady to take the next step? Book a consultation: https://www.getprobooking.com/livinginparadise/Immigration-Advice',
         NL: '\n\nKlaar om de volgende stap te zetten? Boek een consultatie: https://www.getprobooking.com/livinginparadise/Immigration-Advice',
         ES: '\n\n¿Listo para dar el siguiente paso? Reserva una consulta: https://www.getprobooking.com/livinginparadise/Immigration-Advice',
-        PA: '\n\nKla pa tuma e siguiente paso? Reservá un konsulta: https://www.getprobooking.com/livinginparadise/Immigration-Advice',
+        PA: PA_BOOKING_CTA(
+          'Reservá un konsulta',
+          'https://www.getprobooking.com/livinginparadise/Immigration-Advice'
+        ),
       }
       assistantResponse += bookingPrompts[effectiveLanguage] || bookingPrompts.EN
     }
@@ -178,6 +183,9 @@ export async function POST(request: NextRequest) {
     assistantResponse = assistantResponse.replace(/\((https?:\/\/[^\s)]+)\)/g, '$1')
     assistantResponse = assistantResponse.replace(/\[(https?:\/\/[^\s\]]+)\]/g, '$1')
 
+    if (effectiveLanguage === 'PA') {
+      assistantResponse = ensurePapiamentuOutbound(assistantResponse)
+    }
     const assistantMessage: Message = {
       role: 'assistant',
       content: assistantResponse,

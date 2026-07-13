@@ -1,0 +1,39 @@
+{
+  "cleaned_at": "2026-07-13T19:22:29.253Z",
+  "vocab": {
+    "before": 1781,
+    "after": 922
+  },
+  "phrases": {
+    "phrasesBefore": 7771,
+    "phrasesAfter": 7526,
+    "rulesBefore": 132,
+    "rulesAfter": 131
+  },
+  "grammar": {
+    "before": 35,
+    "after": 33
+  },
+  "teacher": {
+    "objectives": {
+      "before": 310,
+      "after": 308
+    },
+    "notes": {
+      "before": 424,
+      "after": 422
+    },
+    "ortho": {
+      "before": 7,
+      "after": 5
+    },
+    "methodology": {
+      "before": 331,
+      "after": 329
+    }
+  },
+  "wordlist": {
+    "before": 22539,
+    "after": 21151
+  }
+}

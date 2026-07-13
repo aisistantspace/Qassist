@@ -9,22 +9,27 @@ function applyEnniaBrandingDefaults(data: Record<string, unknown>, slug: string 
   const b = enniaTheme.branding
   const storedWelcome = typeof data.welcome_message === 'string' ? data.welcome_message : ''
   const welcomeMessage =
-    storedWelcome && !/welkom|waarmee/i.test(storedWelcome)
-      ? storedWelcome
+    storedWelcome &&
+    !/welkom|waarmee/i.test(storedWelcome) &&
+    !/^welcome to ennia/i.test(storedWelcome)
+      ? storedWelcome.replace(/\bDami\b/g, 'Demi').replace(/\bMi ta Demi\b/g, 'Ami ta Demi')
       : b.welcomeMessage
   const storedAvatar = typeof data.agent_avatar_url === 'string' ? data.agent_avatar_url : ''
   const agentAvatarUrl =
     storedAvatar && !storedAvatar.includes('chatbase.co')
       ? storedAvatar
       : (typeof data.logo_url === 'string' && data.logo_url) || b.logoUrl
+  const rawAgent = typeof data.agent_name === 'string' ? data.agent_name : ''
+  const agentName =
+    rawAgent && !['Assistant', 'ENNIA Assistant', 'Dami'].includes(rawAgent)
+      ? rawAgent
+      : b.agentName
   return {
     ...data,
     company_name: data.company_name || 'ENNIA',
     company_website: data.company_website || enniaTheme.website,
     widget_title: data.widget_title || b.widgetTitle,
-    agent_name: data.agent_name && !['Assistant', 'ENNIA Assistant'].includes(String(data.agent_name))
-      ? data.agent_name
-      : b.agentName,
+    agent_name: agentName,
     agent_avatar_url: agentAvatarUrl,
     welcome_message: welcomeMessage,
     primary_color: data.primary_color || b.primaryColor,

@@ -26,7 +26,7 @@ export const enniaTheme = {
     primaryColor: '#307E57',
     agentName: 'Demi',
     widgetTitle: 'ENNIA Chat',
-    welcomeMessage: 'Welcome to ENNIA! How can we help you today?',
+    welcomeMessage: 'Bon dia! 👋 Ami ta Demi, bo asistente. Kon mi por yudabo awe?',
     defaultLanguage: 'PA',
     logoUrl: '/ennia/logo-green.webp',
     faviconUrl: '/ennia/favicon-32x32.png',

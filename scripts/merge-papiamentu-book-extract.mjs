@@ -36,10 +36,13 @@ function normalizeWord(w) {
 }
 
 function isValidPaWord(w) {
-  if (!w || w.length < 2) return false
+  if (!w || w.length < 2 || w.length > 40) return false
+  if (/\s/.test(w)) return false
+  if (/[?]/.test(w)) return false
   if (/^\d+$/.test(w)) return false
   if (/^[A-E][12]$/i.test(w)) return false
   if (/^(tema|siman|grande|fiesta)$/i.test(w)) return false
+  if (/\b(enseñar|ensenar|uitleg|cómo|¿|¡)\b/i.test(w)) return false
   return /[a-zàèéìòùüñáíóú]/i.test(w)
 }
 

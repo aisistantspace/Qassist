@@ -75,11 +75,6 @@ const GREETING_FIXES: [RegExp, string][] = [
   [/\bde\s+nada\b/gi, 'Nada'],
   // "Lo siento" (Spanish) → "Sòri"
   [/\blo\s+siento\b/gi, 'Sòri'],
-  // "y" (Spanish conjunction) → "i" (PA conjunction)
-  // Only match standalone "y" between word boundaries (not inside words)
-  [/\by\b/gi, 'i'],
-  // English/Spanish "or" → PA "òf"
-  [/\bof\b/gi, 'òf'],
   // "Con mi por" (misspelled "How can I") → "Kon mi por"
   [/\bcon\s+mi\s+por\b/gi, 'Kon mi por'],
   // Spanish "equipo" (team) — NOT "ekipá" (verb: to equip)
@@ -91,7 +86,69 @@ const GREETING_FIXES: [RegExp, string][] = [
   [/\bnomber\b/gi, 'nòmber'],
   [/\bcon\s+mi\s+por\s+yuda\s+bo\b/gi, 'kon mi por yudabo'],
   [/\bmi\s+por\s+yuda\s+bo\b/gi, 'mi por yudabo'],
+  // Identity / greeting — force Ami + Demi (never Mi ta / Dami / ENNIA Assistant)
+  [/\bMi\s+ta\s+Dami\b/g, 'Ami ta Demi'],
+  [/\bmi\s+ta\s+dami\b/gi, 'Ami ta Demi'],
+  [/\bAmi\s+ta\s+Dami\b/g, 'Ami ta Demi'],
+  [/\bami\s+ta\s+dami\b/gi, 'Ami ta Demi'],
+  [/\bMi\s+ta\s+Demi\b/g, 'Ami ta Demi'],
+  [/\bmi\s+ta\s+demi\b/gi, 'Ami ta Demi'],
+  [/\bMi\s+ta\s+ENNIA\s+Assistant\b/gi, 'Ami ta Demi'],
+  [/\bAmi\s+ta\s+ENNIA\s+Assistant\b/gi, 'Ami ta Demi'],
+  [/\bMi\s+ta\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñüèòùà\-]+),\s*bo\s+asistente\b/g, 'Ami ta $1, bo asistente'],
 ]
+
+/** English/Dutch tokens where standalone "of"/"y" must not be rewritten to PA. */
+const EN_NL_PROTECT = new Set([
+  'the', 'and', 'or', 'of', 'to', 'for', 'with', 'from', 'this', 'that', 'you', 'your',
+  'is', 'are', 'was', 'were', 'have', 'has', 'will', 'can', 'should', 'would',
+  'please', 'click', 'here', 'link', 'email', 'phone', 'address', 'name',
+  'insurance', 'claim', 'policy', 'quote', 'home', 'auto', 'health',
+  'de', 'het', 'een', 'van', 'voor', 'met', 'niet', 'zijn', 'wordt', 'worden',
+  'verzekering', 'schade', 'polis',
+])
+
+const PA_CONTEXT_HINT =
+  /\b(ta|ku|di|bo|mi|nos|nan|pa|kon|bon|por|yuda|skucha|skirbi|papiamentu|kiko|ami|demi|seguro|kas|bai|tin|sa|den|mas|tambe|awe|aki|danki|fabor)\b/i
+
+function looksLikePapiamentuContext(text: string): boolean {
+  const tokens = text.toLowerCase().match(/[a-záéíóúñüèòùàâêîôûäëïöÿ]+/gi) || []
+  if (tokens.length === 0) return false
+  let paHits = 0
+  let enNlHits = 0
+  for (const t of tokens) {
+    if (EN_NL_PROTECT.has(t)) enNlHits++
+    if (PA_CONTEXT_HINT.test(t) || /shon$|mentu$|á$|ò|è|ù|ñ/.test(t)) paHits++
+  }
+  // Prefer PA when clear PA markers exist and EN/NL is not dominant
+  return paHits >= 2 || (paHits >= 1 && enNlHits <= paHits)
+}
+
+/** Conjunction fixes only when text is predominantly PA (avoids mangling EN/NL fragments). */
+function applyPaOnlyConjunctionFixes(text: string, corrections: PhraseCorrection[]): string {
+  if (!looksLikePapiamentuContext(text)) return text
+  let result = text
+  // Standalone Spanish "y" → PA "i" (not inside English/Dutch-heavy text)
+  result = result.replace(/\by\b/gi, (match, offset, full) => {
+    const before = full.slice(Math.max(0, offset - 24), offset)
+    const after = full.slice(offset + match.length, offset + match.length + 24)
+    const window = `${before} ${after}`
+    const hasEnNlNeighbor = [...(window.match(/[a-záéíóúñüèòùàâêîôûäëïöÿ]+/gi) || [])].some((w) =>
+      EN_NL_PROTECT.has(w.toLowerCase())
+    )
+    if (hasEnNlNeighbor && !PA_CONTEXT_HINT.test(window)) return match
+    if (match.toLowerCase() !== 'i') corrections.push({ from: match, to: 'i' })
+    return match[0] === 'Y' ? 'I' : 'i'
+  })
+  // English/Spanish "of" → PA "òf" only in PA context (not "of the...")
+  result = result.replace(/\bof\b/gi, (match, offset, full) => {
+    const after = full.slice(offset + match.length, offset + match.length + 16)
+    if (/^\s+(the|a|an|this|that|your|our|de|het|een)\b/i.test(after)) return match
+    corrections.push({ from: match, to: 'òf' })
+    return 'òf'
+  })
+  return result
+}
 
 // ── Verb + object pronoun merges (Buki di Oro Chapter IX style) ─────
 // AI often writes "yuda bo" instead of fused "yudabo"
@@ -230,6 +287,28 @@ const VALID_CONTRACTIONS = new Set([
 export function correctPhrases(text: string): PhraseCorrectionResult {
   const corrections: PhraseCorrection[] = []
   let result = text
+  const paContext = looksLikePapiamentuContext(text)
+
+  // Always fix Spanish greetings + identity — even on short/isolated strings
+  for (const [pattern, replacement] of GREETING_FIXES) {
+    const match = result.match(pattern)
+    if (match) {
+      const original = match[0]
+      result = result.replace(pattern, replacement)
+      if (original.toLowerCase() !== replacement.toLowerCase()) {
+        corrections.push({ from: original, to: replacement })
+      }
+    }
+  }
+
+  // English/Dutch-dominant fragments: stop after greeting/identity fixes
+  if (!paContext) {
+    return {
+      corrected: result,
+      changed: corrections.length > 0,
+      corrections,
+    }
+  }
 
   // 0. Insurance demo phrase fixes (Spanish bleed → PA)
   for (const { pattern, replacement } of getInsurancePhraseFixes()) {
@@ -248,17 +327,10 @@ export function correctPhrases(text: string): PhraseCorrectionResult {
     }
   }
 
-  // 1. Apply greeting/phrase pattern fixes (Spanish → Papiamentu)
-  for (const [pattern, replacement] of GREETING_FIXES) {
-    const match = result.match(pattern)
-    if (match) {
-      const original = match[0]
-      result = result.replace(pattern, replacement)
-      if (original.toLowerCase() !== replacement.toLowerCase()) {
-        corrections.push({ from: original, to: replacement })
-      }
-    }
-  }
+  // 1. Greeting/identity already applied above
+
+  // 1a. Scoped conjunction fixes (y→i, of→òf) only in PA-dominant text
+  result = applyPaOnlyConjunctionFixes(result, corrections)
 
   // 1b. Apply Spanish imperative/phrase fixes (must run before word-level substitution)
   for (const [pattern, replacement] of SPANISH_PHRASE_FIXES) {

@@ -170,9 +170,10 @@ export function getSchoolConversationRules(): string[] {
 /** Grammar notes from school books for prompt injection. */
 export function getSchoolGrammarRules(): string[] {
   const data = loadSchoolGrammarFile()
+  const meta = /\b(enseñar|ensenar|uitleg|cómo|¿|¡)\b/i
   const fromGrammar = (data.rules || [])
     .map((r) => r.text)
-    .filter((s) => typeof s === 'string' && s.length > 10)
+    .filter((s) => typeof s === 'string' && s.length > 10 && !meta.test(s))
   const orthography = getSchoolTeacherOrthographyRules()
   return [...orthography, ...fromGrammar].slice(0, 50)
 }
@@ -180,9 +181,10 @@ export function getSchoolGrammarRules(): string[] {
 /** Orthography teaching points from the teacher guide (highest authority for spelling). */
 export function getSchoolTeacherOrthographyRules(): string[] {
   const data = loadSchoolTeacherGuideFile()
+  const meta = /\b(enseñar|ensenar|uitleg|cómo|como se|¿|¡|spelling|correcto)\b/i
   return (data.orthography_teaching || [])
     .map((r) => r.text)
-    .filter((s) => typeof s === 'string' && s.length > 10)
+    .filter((s) => typeof s === 'string' && s.length > 10 && !meta.test(s))
     .slice(0, 20)
 }
 
@@ -207,16 +209,27 @@ export function getSchoolTeacherMethodology(): string[] {
 /** Sample school phrases for AI prompt (diverse, natural PA). */
 export function getSchoolGrandePromptSamples(): string[] {
   const data = loadSchoolPhrasesFile()
+  const meta = /\b(enseñar|ensenar|uitleg|cómo|¿|¡)\b/i
   const phrases = (data.phrases || [])
     .map((p) => (typeof p === 'string' ? p : p.pa))
-    .filter((s): s is string => typeof s === 'string' && s.length >= 10 && s.length <= 120)
-  // Prefer reading + conversation over questions
+    .filter(
+      (s): s is string =>
+        typeof s === 'string' && s.length >= 10 && s.length <= 120 && !meta.test(s)
+    )
   const typed = (data.phrases || []).filter(
-    (p) => typeof p !== 'string' && (p.type === 'reading' || p.type === 'conversation')
+    (p) =>
+      typeof p !== 'string' &&
+      (p.type === 'reading' || p.type === 'conversation') &&
+      typeof p.pa === 'string' &&
+      !meta.test(p.pa)
   ) as { pa: string }[]
   const preferred = typed.map((p) => p.pa)
   const pool = preferred.length >= 8 ? preferred : phrases
-  return pool.slice(0, 15)
+  // Prefer natural PA chat-like samples
+  const scored = pool
+    .filter((p) => /\b(ta|ku|bo|mi|nos|bon|kon|por)\b/i.test(p))
+    .slice(0, 15)
+  return scored.length >= 6 ? scored : pool.slice(0, 15)
 }
 
 function dataDir(): string {
@@ -231,10 +244,26 @@ export function getWordSet(): Set<string> {
     wordSet.add(w)
   }
   for (const w of getBookVocabularyWords()) {
-    wordSet.add(w.toLowerCase())
-    for (const part of w.split(/\s+/)) {
-      if (part.length > 2) wordSet.add(part.toLowerCase())
-    }
+    const lower = w.toLowerCase().trim()
+    // Skip polluted OCR leftovers (sentences masquerading as words)
+    if (!lower || lower.length > 40 || /\s/.test(lower) || /[?]/.test(lower)) continue
+    wordSet.add(lower)
+  }
+  // Always keep chat identity + common fused pronouns known so fuzzy spell cannot rewrite them
+  wordSet.add('ami')
+  wordSet.add('demi')
+  wordSet.add('dami')
+  for (const fused of [
+    'yudabo',
+    'mandabo',
+    'kontaktabo',
+    'informabo',
+    'segurabo',
+    'eksplikabo',
+    'bishitá',
+    'bishita',
+  ]) {
+    wordSet.add(fused)
   }
   return wordSet
 }

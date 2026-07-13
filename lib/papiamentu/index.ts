@@ -86,6 +86,18 @@ function correctPapiamentuText(
     return { corrected: text || '', changes: undefined }
   }
 
+  // Skip word-level transforms on English/Dutch-dominant fragments
+  // (phrase layer also no-ops; protects mixed language leaks)
+  const paHint =
+    /\b(ta|ku|di|bo|mi|nos|nan|pa|kon|bon|por|yuda|ami|demi|seguro|danki|fabor|aki|awe|bai|tin|sa)\b/i
+  const enNlHeavy =
+    /\b(please|click|the|policy|page|with|from|your|insurance|verzekering|schade)\b/i
+  const tokenCount = (text.match(/[a-záéíóúñüèòùàâêîôûäëïöÿ]+/gi) || []).length
+  const paHits = (text.match(paHint) || []).length
+  if (tokenCount >= 4 && paHits === 0 && enNlHeavy.test(text)) {
+    return { corrected: text, changes: undefined }
+  }
+
   // ── Step 1: Phrase-level pre-pass (greetings, Spanish→Papiamentu) ──
   // Run BEFORE word-level corrections so phrases like "Bon beni" and "Buenos dias"
   // get fixed before fuzzy spell can mangle them

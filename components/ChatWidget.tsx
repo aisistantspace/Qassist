@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import type { Lead, Message, ChatResponse } from '@/lib/types'
 import InlineForm from './InlineForm'
+import { paWelcomeWithName, PA_PLACEHOLDER } from '@/lib/papiamentu/ui-copy'
 
 interface RecentConversation {
   id: string
@@ -149,7 +150,7 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
       EN: `Hi ${firstName}! 👋 I'm ${agentName}, your assistant. How can I help you today?`,
       NL: `Hallo ${firstName}! 👋 Ik ben ${agentName}, je assistent. Hoe kan ik je helpen?`,
       ES: `¡Hola ${firstName}! 👋 Soy ${agentName}, tu asistente. ¿Cómo te puedo ayudar hoy?`,
-      PA: `Bon dia${firstName ? ` ${firstName}` : ''}! 👋 Ami ta Demi, bo asistente. Kon mi por yudabo?`,
+      PA: paWelcomeWithName(firstName === 'there' ? undefined : firstName),
     }
     return greetings[lang as keyof typeof greetings] || greetings.EN
   }
@@ -352,7 +353,7 @@ export default function ChatWidget({ lead, embedded = false, initialLanguage = '
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={language === 'EN' ? 'Type your question...' : language === 'NL' ? 'Stel je vraag...' : language === 'ES' ? 'Escribe tu pregunta...' : 'Skribí bo pregunta...'}
+            placeholder={language === 'EN' ? 'Type your question...' : language === 'NL' ? 'Stel je vraag...' : language === 'ES' ? 'Escribe tu pregunta...' : PA_PLACEHOLDER}
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             disabled={isLoading}
           />
