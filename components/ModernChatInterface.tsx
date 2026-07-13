@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, type CSSProperties } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { 
   PaperAirplaneIcon, 
@@ -160,6 +160,7 @@ export default function ModernChatInterface({
   const [selectedLanguage, setSelectedLanguage] = useState<ChatLanguage>(initialLang)
   const [languageExplicit, setLanguageExplicit] = useState(!!langParam || initialLang !== 'EN')
   const [widgetSuggestions, setWidgetSuggestions] = useState<string[]>([])
+  const [inputFocused, setInputFocused] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const isDark = theme === 'dark'
@@ -600,10 +601,16 @@ export default function ModernChatInterface({
         className={`p-4 pb-[max(1rem,env(safe-area-inset-bottom))] relative z-50 shrink-0 ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white'}`}
       >
         <div
-          className={`flex items-center gap-2 px-3 py-2.5 mx-2 sm:mx-4 mb-4 rounded-2xl bg-white border-[1.5px] shadow-sm transition-all focus-within:border-gray-400`}
-          style={{ borderColor: '#e4e4e7' }}
+          className="flex items-center gap-2 px-3 py-2.5 mx-2 sm:mx-4 mb-4 rounded-lg bg-white border transition-[border-color,box-shadow] duration-200 ease-out"
+          style={{
+            borderColor: inputFocused ? `${primaryColor}55` : '#e5e7eb',
+            boxShadow: inputFocused
+              ? `0 0 0 3px ${primaryColor}20`
+              : '0 1px 2px 0 rgb(0 0 0 / 0.04)',
+          }}
         >
           <button
+            type="button"
             className="flex min-w-[44px] min-h-[44px] items-center justify-center -m-2 text-gray-400 hover:text-gray-600 transition-colors shrink-0"
             aria-label="Emoji"
           >
@@ -614,13 +621,15 @@ export default function ModernChatInterface({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
+            onFocus={() => setInputFocused(true)}
+            onBlur={() => setInputFocused(false)}
             placeholder={placeholder || PLACEHOLDERS[selectedLanguage]}
             rows={1}
             disabled={loading}
-            className={`flex-1 bg-transparent border-none focus:ring-0 text-sm resize-none py-0.5 max-h-40 overflow-y-auto leading-tight min-w-0 ${
+            className={`flex-1 bg-transparent border-0 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none text-sm resize-none py-0.5 max-h-40 overflow-y-auto leading-tight min-w-0 ${
               isDark ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'
             }`}
-            style={{ fieldSizing: 'content' } as any}
+            style={{ fieldSizing: 'content' } as CSSProperties}
           />
 
           <button
