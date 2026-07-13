@@ -683,23 +683,17 @@ export default function ModernChatInterface({
 
       {/* Suggested Messages */}
       {(suggestedMessages.length > 0 || widgetSuggestions.length > 0) && messages.length <= 5 && (
-        <div
-          className={`px-2 sm:px-4 py-2 flex flex-wrap gap-2 border-t ${
-            isDark ? 'bg-gray-800 border-gray-700' : isEnnia ? 'bg-[#EEF6E5] border-[#CBDED5]' : 'bg-white border-gray-200'
-          }`}
-        >
+        <div className={`px-2 sm:px-4 py-2 flex flex-wrap gap-2 border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           {(suggestedMessages.length > 0 ? suggestedMessages : widgetSuggestions).map((suggestion, i) => (
             <button
               key={i}
               onClick={() => sendMessage(suggestion)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors border ${
-                isEnnia
-                  ? 'bg-white text-[#307E57] border-[#CBDED5] hover:bg-[#CCEAD8] hover:border-[#307E57]/35'
-                  : isDark
-                    ? 'bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600'
-                    : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                isDark
+                  ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
-              style={!isEnnia ? { borderColor: primaryColor + '40' } : undefined}
+              style={{ borderColor: primaryColor + '40', borderWidth: '1px' }}
             >
               {suggestion}
             </button>
