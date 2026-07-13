@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { ShieldCheckIcon } from '@heroicons/react/24/outline'
 import EnniaLogo from '@/components/demo/EnniaLogo'
 import { enniaTheme } from '@/lib/demo-themes/ennia'
 
@@ -39,7 +40,9 @@ export default function EnniaLoginPage({ onSubmit }: EnniaLoginPageProps) {
         <a href={enniaTheme.website} target="_blank" rel="noopener noreferrer" className="shrink-0">
           <EnniaLogo variant="light" />
         </a>
-        <span className="hidden sm:block text-white/90 text-sm font-semibold">{enniaTheme.tagline}</span>
+        <span className="flex items-center justify-center text-white/90" aria-label="Feel Secure">
+          <ShieldCheckIcon className="w-6 h-6" strokeWidth={1.75} />
+        </span>
       </header>
 
       <div className="flex-1 flex flex-col lg:flex-row">
