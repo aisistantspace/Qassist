@@ -12,12 +12,18 @@ function applyEnniaBrandingDefaults(data: Record<string, unknown>, slug: string 
     storedWelcome && !/welkom|waarmee/i.test(storedWelcome)
       ? storedWelcome
       : b.welcomeMessage
+  const storedAvatar = typeof data.agent_avatar_url === 'string' ? data.agent_avatar_url : ''
+  const agentAvatarUrl =
+    storedAvatar && !storedAvatar.includes('chatbase.co')
+      ? storedAvatar
+      : (typeof data.logo_url === 'string' && data.logo_url) || b.logoUrl
   return {
     ...data,
     company_name: data.company_name || 'ENNIA',
     company_website: data.company_website || enniaTheme.website,
     widget_title: data.widget_title || b.widgetTitle,
-    agent_name: data.agent_name || b.agentName,
+    agent_name: data.agent_name && data.agent_name !== 'Assistant' ? data.agent_name : b.agentName,
+    agent_avatar_url: agentAvatarUrl,
     welcome_message: welcomeMessage,
     primary_color: data.primary_color || b.primaryColor,
     logo_url: data.logo_url || b.logoUrl,

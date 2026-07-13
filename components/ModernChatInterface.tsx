@@ -6,7 +6,6 @@ import {
   PaperAirplaneIcon, 
   XMarkIcon, 
   EllipsisHorizontalIcon,
-  HomeIcon,
   HandThumbUpIcon,
   HandThumbDownIcon,
   ArrowPathIcon,
@@ -50,7 +49,10 @@ interface Props {
   placeholder?: string
   disclaimer?: string
   defaultLanguage?: ChatLanguage
+  enniaPreset?: boolean
 }
+
+type ChatLanguage = 'EN' | 'NL' | 'ES' | 'PA'
 
 function resolveInitialLanguage(
   langParam: string | undefined,
@@ -79,11 +81,67 @@ function welcomeForLanguage(
   return welcomeByLang[lang] || welcomeByLang.EN
 }
 
-// Default values while loading
-const DEFAULT_AVATAR = "https://backend.chatbase.co/storage/v1/object/public/chatbots-profile-pictures/82428ef0-b36b-48e1-bf3f-9a94f7fac629/P4HvZfc4t5WKWkbDOEwcm.ico?width=40&height=40&quality=50"
-const DEFAULT_PRIMARY_COLOR = "#3A7D7D"
+// Legacy Chatbase placeholder — never show this to users
+const LEGACY_GENERIC_AVATAR_MARKERS = ['chatbase.co', 'P4HvZfc4t5WKWkbDOEwcm']
 
-type ChatLanguage = 'EN' | 'NL' | 'ES' | 'PA'
+const ENNIA_DEFAULT_BRANDING: BrandingConfig = {
+  company_name: 'ENNIA',
+  agent_name: enniaTheme.branding.agentName,
+  agent_avatar_url: enniaTheme.branding.logoUrl,
+  primary_color: enniaTheme.branding.primaryColor,
+  welcome_message: enniaTheme.branding.welcomeMessage,
+  developer_branding_enabled: true,
+  logo_url: enniaTheme.branding.logoUrl,
+}
+
+function isLegacyGenericAvatar(url?: string | null): boolean {
+  if (!url) return true
+  return LEGACY_GENERIC_AVATAR_MARKERS.some((marker) => url.includes(marker))
+}
+
+function AssistantMeta({
+  isEnnia,
+  agentName,
+  avatarUrl,
+}: {
+  isEnnia: boolean
+  agentName: string
+  avatarUrl?: string | null
+}) {
+  if (isEnnia) {
+    return (
+      <div className="flex items-center gap-2 mb-1">
+        <img
+          src={enniaTheme.branding.logoUrl}
+          alt="ENNIA"
+          className="h-5 w-auto shrink-0"
+          width={enniaTheme.logo.greenWidth}
+          height={enniaTheme.logo.greenHeight}
+        />
+        <span className="text-[12px] font-medium text-gray-900 tracking-tight">{agentName}</span>
+      </div>
+    )
+  }
+
+  const showImage = avatarUrl && !isLegacyGenericAvatar(avatarUrl)
+
+  return (
+    <div className="flex items-center gap-2 mb-1">
+      {showImage ? (
+        <div className="w-6 h-6 rounded-full overflow-hidden border border-gray-100 flex-shrink-0">
+          <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
+        </div>
+      ) : (
+        <div className="w-6 h-6 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0">
+          <span className="text-[10px] font-bold text-gray-600">{agentName.charAt(0).toUpperCase()}</span>
+        </div>
+      )}
+      <span className="text-[12px] font-medium text-gray-900 tracking-tight">{agentName}</span>
+    </div>
+  )
+}
+
+const DEFAULT_PRIMARY_COLOR = '#3A7D7D'
 
 const LANGUAGES: { code: ChatLanguage; name: string }[] = [
   { code: 'EN', name: 'English' },
@@ -145,14 +203,37 @@ export default function ModernChatInterface({
   placeholder,
   disclaimer,
   defaultLanguage: defaultLanguageProp,
+  enniaPreset = false,
 }: Props) {
   const searchParams = useSearchParams()
   const tenantSlug = searchParams.get('slug') ?? searchParams.get('tenantSlug')
   const tenantId = searchParams.get('tenant') ?? searchParams.get('tenantId')
   const langParam = searchParams.get('lang')?.toUpperCase()
   const initialLang = resolveInitialLanguage(langParam, tenantSlug, defaultLanguageProp)
-  const [branding, setBranding] = useState<BrandingConfig | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const enniaMode =
+    enniaPreset ||
+    tenantSlug?.toLowerCase() === 'ennia' ||
+    defaultLanguageProp === 'PA'
+
+  const [branding, setBranding] = useState<BrandingConfig | null>(() =>
+    enniaMode ? ENNIA_DEFAULT_BRANDING : null
+  )
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (!enniaMode) return []
+    const welcome = welcomeForLanguage(
+      initialLang,
+      ENNIA_DEFAULT_BRANDING.agent_name,
+      ENNIA_DEFAULT_BRANDING.welcome_message,
+      initialMessages
+    )
+    return [
+      {
+        role: 'assistant' as const,
+        content: welcome,
+        timestamp: new Date().toISOString(),
+      },
+    ]
+  })
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [leadId, setLeadId] = useState<string | null>(null)
@@ -165,12 +246,36 @@ export default function ModernChatInterface({
 
   const isDark = theme === 'dark'
   const primaryColor = propPrimaryColor || branding?.primary_color || DEFAULT_PRIMARY_COLOR
-  const agentName = branding?.agent_name || 'Assistant'
-  const avatarUrl = branding?.agent_avatar_url || DEFAULT_AVATAR
-  const isEnnia = isEnniaBrand(branding?.company_name, primaryColor)
+  const isEnnia = enniaMode || isEnniaBrand(branding?.company_name, primaryColor)
+  const agentName =
+    branding?.agent_name || (isEnnia ? enniaTheme.branding.agentName : '')
+  const rawAvatar = branding?.agent_avatar_url || branding?.logo_url
+  const avatarUrl =
+    rawAvatar && !isLegacyGenericAvatar(rawAvatar) ? rawAvatar : null
   const headerLogo = isEnnia
     ? enniaTheme.logo.white
     : branding?.logo_url || avatarUrl
+
+  useEffect(() => {
+    if (!enniaPreset) return
+    setBranding((prev) => prev ?? ENNIA_DEFAULT_BRANDING)
+    setMessages((prev) => {
+      if (prev.length > 0) return prev
+      const welcome = welcomeForLanguage(
+        selectedLanguage,
+        ENNIA_DEFAULT_BRANDING.agent_name,
+        ENNIA_DEFAULT_BRANDING.welcome_message,
+        initialMessages
+      )
+      return [
+        {
+          role: 'assistant' as const,
+          content: welcome,
+          timestamp: new Date().toISOString(),
+        },
+      ]
+    })
+  }, [enniaPreset, initialMessages, selectedLanguage])
 
   useEffect(() => {
     fetchBranding()
@@ -191,9 +296,12 @@ export default function ModernChatInterface({
       const res = await fetch(url)
       if (res.ok) {
         const data = await res.json()
+        if (isLegacyGenericAvatar(data.agent_avatar_url)) {
+          data.agent_avatar_url = data.logo_url || ''
+        }
         setBranding(data)
 
-        const agent = data.agent_name || 'your assistant'
+        const agent = data.agent_name || (isEnniaBrand(data.company_name, data.primary_color) ? enniaTheme.branding.agentName : 'your assistant')
         const ennia = isEnniaBrand(data.company_name, data.primary_color)
         let lang = selectedLanguage
         if (ennia && !langParam) {
@@ -311,7 +419,9 @@ export default function ModernChatInterface({
     setLanguageExplicit(true)
     // Update welcome message when user switches before chatting
     if (messages.length === 1 && messages[0].role === 'assistant') {
-      const agent = branding?.agent_name || 'Assistant'
+      const agent =
+        branding?.agent_name ||
+        (isEnnia ? enniaTheme.branding.agentName : 'your assistant')
       setMessages([
         {
           role: 'assistant',
@@ -421,15 +531,23 @@ export default function ModernChatInterface({
                 width={enniaTheme.logo.whiteWidth}
                 height={enniaTheme.logo.whiteHeight}
               />
-            ) : (
+            ) : branding ? (
               <>
                 <div className="relative flex shrink-0 overflow-hidden rounded-full size-10 border border-gray-100">
-                  <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                      <span className="text-sm font-bold text-gray-600">{agentName.charAt(0).toUpperCase()}</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col justify-center min-w-0">
                   <h1 className="font-semibold text-sm tracking-tight truncate text-gray-900">{agentName}</h1>
                 </div>
               </>
+            ) : (
+              <div className="h-10 w-36 rounded-lg bg-gray-100 animate-pulse" aria-hidden />
             )}
           </div>
           <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
@@ -508,12 +626,7 @@ export default function ModernChatInterface({
                     />
                   ) : (
                     <>
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className="w-6 h-6 rounded-full overflow-hidden border border-gray-100 flex-shrink-0">
-                          <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
-                        </div>
-                        <span className="text-[12px] font-medium text-gray-900 tracking-tight">{agentName}</span>
-                      </div>
+                      <AssistantMeta isEnnia={isEnnia} agentName={agentName} avatarUrl={avatarUrl} />
                       <div
                         className={`rounded-2xl px-4 py-3 ${
                           isDark ? 'bg-gray-800 text-gray-100' : 'bg-gray-100 text-gray-900'
@@ -557,12 +670,7 @@ export default function ModernChatInterface({
           
           {loading && (
             <div className="flex flex-col gap-2 animate-fadeIn">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-6 h-6 rounded-full overflow-hidden border border-gray-100 flex-shrink-0">
-                  <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
-                </div>
-                <span className="text-[12px] font-medium text-gray-900 tracking-tight">{agentName}</span>
-              </div>
+              <AssistantMeta isEnnia={isEnnia} agentName={agentName} avatarUrl={avatarUrl} />
               <div className={`rounded-2xl px-4 py-3 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`} style={{ borderRadius: '18px 18px 18px 2px' }}>
                 <div className="flex gap-1">
                   <div className="w-1.5 h-1.5 rounded-full animate-bounce bg-gray-400" style={{ animationDelay: '0ms' }} />
@@ -578,17 +686,23 @@ export default function ModernChatInterface({
 
       {/* Suggested Messages */}
       {(suggestedMessages.length > 0 || widgetSuggestions.length > 0) && messages.length <= 5 && (
-        <div className={`px-2 sm:px-4 py-2 flex flex-wrap gap-2 border-t ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+        <div
+          className={`px-2 sm:px-4 py-2 flex flex-wrap gap-2 border-t ${
+            isDark ? 'bg-gray-800 border-gray-700' : isEnnia ? 'bg-[#EEF6E5] border-[#CBDED5]' : 'bg-white border-gray-200'
+          }`}
+        >
           {(suggestedMessages.length > 0 ? suggestedMessages : widgetSuggestions).map((suggestion, i) => (
             <button
               key={i}
               onClick={() => sendMessage(suggestion)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                isDark
-                  ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors border ${
+                isEnnia
+                  ? 'bg-white text-[#307E57] border-[#CBDED5] hover:bg-[#CCEAD8] hover:border-[#307E57]/35'
+                  : isDark
+                    ? 'bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600'
+                    : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
               }`}
-              style={{ borderColor: primaryColor + '40', borderWidth: '1px' }}
+              style={!isEnnia ? { borderColor: primaryColor + '40' } : undefined}
             >
               {suggestion}
             </button>
