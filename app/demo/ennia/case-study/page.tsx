@@ -45,11 +45,11 @@ function pct(n: number) {
 
 export default function EnniaCaseStudyPage() {
   const [monthly, setMonthly] = useState(4000)
-  const [costHuman, setCostHuman] = useState(BENCHMARKS.humanCostMid)
-  const [contain, setContain] = useState(BENCHMARKS.insuranceContainmentMid)
-  const [costAi, setCostAi] = useState(BENCHMARKS.botCostMid)
-  const [ahtCut, setAhtCut] = useState(BENCHMARKS.ahtAssist)
-  const [assistShare, setAssistShare] = useState(BENCHMARKS.assistAdoption)
+  const [costHuman, setCostHuman] = useState<number>(BENCHMARKS.humanCostMid)
+  const [contain, setContain] = useState<number>(BENCHMARKS.insuranceContainmentMid)
+  const [costAi, setCostAi] = useState<number>(BENCHMARKS.botCostMid)
+  const [ahtCut, setAhtCut] = useState<number>(BENCHMARKS.ahtAssist)
+  const [assistShare, setAssistShare] = useState<number>(BENCHMARKS.assistAdoption)
   const [mode, setMode] = useState<'A' | 'B' | 'AB'>('AB')
 
   const model = useMemo(() => {
